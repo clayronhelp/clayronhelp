@@ -14,13 +14,44 @@
       <div class="card-body text-center">
         <h2 class="card-title mb-3">Logout</h2>
         <p class="card-text mb-4">Sei stato disconnesso con successo.</p>
-        <a href="home.html" class="btn btn-primary">Torna alla Home</a>
+        <a href="index.html" class="btn btn-primary">Torna alla Home</a>
       </div>
     </div>
   </div>
   
   <script>
-    document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    fetch('/api/logout', { method: 'POST' })
+      .then(() => { window.location.href = 'index.html'; })
+      .catch(() => { window.location.href = 'index.html'; });
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const authArea = document.getElementById('auth-area');
+      const user = JSON.parse(localStorage.getItem('user'));
+  
+      if (user) {
+        authArea.innerHTML = `
+          <div class="dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+              <img src="${user.profileImage || '/img/default-avatar.png'}" class="rounded-circle me-2" style="width: 30px; height: 30px;" />
+              Area Personale
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/profilo.html">Modifica Profilo</a></li>
+              <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+            </ul>
+          </div>
+        `;
+      } else {
+        authArea.innerHTML = `<a class="nav-link" href="/login.html">Registrati / Accedi</a>`;
+      }
+    });
+  
+    function logout() {
+      localStorage.removeItem('user');
+      window.location.href = '/';
+    }
+  </script>
+  
 </body>
 </html>

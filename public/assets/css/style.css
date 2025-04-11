@@ -38,7 +38,7 @@ body {
 .hero {
   position: relative;
   height: 100vh;
-  background: url('../img/hero-bg.jpg') no-repeat center center;
+  background: url('../img/Progetto\ senza\ titolo.png') no-repeat center center;
   background-size: cover;
   display: flex;
   align-items: center;
@@ -70,7 +70,7 @@ body {
   margin-bottom: 30px;
   background: #f9f9f9;
   border-radius: 8px;
-  transition: transform 0.3s;
+  transition: transform 0.2s;
 }
 .feature-box:hover {
   transform: translateY(-5px);
@@ -81,7 +81,7 @@ body {
 
 /* Accordion (Materiali) */
 .accordion-toggle i {
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.2s ease-in-out;
 }
 .accordion-toggle i.rotate {
   transform: rotate(180deg);
@@ -90,7 +90,7 @@ body {
 /* Carousel Personalizzato (Chi Siamo) */
 .custom-control .custom-icon {
   filter: invert(100%);
-  transition: transform 0.3s;
+  transition: transform 0.2s;
 }
 .custom-control:hover .custom-icon {
   transform: scale(1.1);
@@ -99,7 +99,7 @@ body {
   padding-bottom: 1.5rem;
 }
 
-/* Cards e blocchi in dashboard, materials, community */
+/* Cards e blocchi */
 .card, .bg-light.rounded {
   transition: box-shadow 0.3s;
 }
@@ -136,5 +136,8 @@ a:hover {
   }
   .hero p.lead {
     font-size: 1.1rem;
+  }
+  footer .social-icons a {
+    font-size: 1rem;
   }
 }

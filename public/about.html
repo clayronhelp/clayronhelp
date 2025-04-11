@@ -9,30 +9,25 @@
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <!-- Navbar Pubblica -->
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
     <div class="container">
-      <a class="navbar-brand" href="home.html">
+      <a class="navbar-brand" href="index.html">
         <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
       </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAbout" aria-controls="navbarNavAbout"
-              aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAbout" aria-controls="navbarNavAbout" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAbout">
-         <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
-            <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
-         </ul>
-         <a href="login.html" class="btn btn-outline-light ml-2">Accedi/Registrati</a>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
+        </ul>
+        <a href="login.html" class="btn btn-outline-light ml-2">Accedi/Registrati</a>
       </div>
     </div>
   </nav>
-  
-  <script>
-    document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  </script>
   
   <div class="container mt-5">
     <h2 class="text-center">Chi Siamo</h2>
@@ -43,8 +38,8 @@
     
     <!-- Carousel Team -->
     <div id="teamCarousel" class="carousel slide" data-ride="carousel" data-interval="5000">
-      <!-- Indicators -->
-      <ol class="carousel-indicators">
+      <!-- Indicators posizionati correttamente -->
+      <ol class="carousel-indicators" style="bottom: -30px;">
         <li data-target="#teamCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#teamCarousel" data-slide-to="1"></li>
         <li data-target="#teamCarousel" data-slide-to="2"></li>
@@ -96,10 +91,40 @@
     </div>
   </div>
   
-  <!-- Script: jQuery, Popper.js, Bootstrap -->
+  <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="assets/js/script.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const authArea = document.getElementById('auth-area');
+      const user = JSON.parse(localStorage.getItem('user'));
+  
+      if (user) {
+        authArea.innerHTML = `
+          <div class="dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+              <img src="${user.profileImage || '/img/default-avatar.png'}" class="rounded-circle me-2" style="width: 30px; height: 30px;" />
+              Area Personale
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/profilo.html">Modifica Profilo</a></li>
+              <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+            </ul>
+          </div>
+        `;
+      } else {
+        authArea.innerHTML = `<a class="nav-link" href="/login.html">Registrati / Accedi</a>`;
+      }
+    });
+  
+    function logout() {
+      localStorage.removeItem('user');
+      window.location.href = '/';
+    }
+  </script>
+  
 </body>
 </html>
