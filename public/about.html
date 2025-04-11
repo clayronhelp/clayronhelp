@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chi Siamo - ClayRon S.P.A.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Navbar Pubblica -->
+  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="home.html">
+        <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAbout" aria-controls="navbarNavAbout"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAbout">
+         <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
+         </ul>
+         <a href="login.html" class="btn btn-outline-light ml-2">Accedi/Registrati</a>
+      </div>
+    </div>
+  </nav>
+  
+  <script>
+    document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  </script>
+  
+  <div class="container mt-5">
+    <h2 class="text-center">Chi Siamo</h2>
+    <p class="text-center mb-4">
+      ClayRon S.P.A. nasce per supportare gli studenti con DSA e PDP, offrendo materiali didattici di alta qualità, strumenti di pianificazione e una community di supporto.
+      Siamo un team di professionisti appassionati che credono nel valore dell’istruzione personalizzata.
+    </p>
+    
+    <!-- Carousel Team -->
+    <div id="teamCarousel" class="carousel slide" data-ride="carousel" data-interval="5000">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#teamCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#teamCarousel" data-slide-to="1"></li>
+        <li data-target="#teamCarousel" data-slide-to="2"></li>
+      </ol>
+      
+      <!-- Carousel Items -->
+      <div class="carousel-inner">
+        <!-- Card 1 -->
+        <div class="carousel-item active">
+          <div class="card mx-auto team-card" style="width: 18rem;">
+            <img src="assets/img/team1.jpg" class="card-img-top" alt="Foto di Mario Rossi">
+            <div class="card-body text-center">
+              <h5 class="card-title">Mario Rossi</h5>
+              <p class="card-text">Amministratore Delegato</p>
+            </div>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="carousel-item">
+          <div class="card mx-auto team-card" style="width: 18rem;">
+            <img src="assets/img/team2.jpg" class="card-img-top" alt="Foto di Laura Bianchi">
+            <div class="card-body text-center">
+              <h5 class="card-title">Laura Bianchi</h5>
+              <p class="card-text">Responsabile Marketing</p>
+            </div>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="carousel-item">
+          <div class="card mx-auto team-card" style="width: 18rem;">
+            <img src="assets/img/team3.jpg" class="card-img-top" alt="Foto di Giuseppe Verdi">
+            <div class="card-body text-center">
+              <h5 class="card-title">Giuseppe Verdi</h5>
+              <p class="card-text">Responsabile Tecnico</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Carousel Controls Personalizzate -->
+      <a class="carousel-control-prev custom-control" href="#teamCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon custom-icon" aria-hidden="true"></span>
+        <span class="sr-only">Precedente</span>
+      </a>
+      <a class="carousel-control-next custom-control" href="#teamCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon custom-icon" aria-hidden="true"></span>
+        <span class="sr-only">Successivo</span>
+      </a>
+    </div>
+  </div>
+  
+  <!-- Script: jQuery, Popper.js, Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="assets/js/script.js"></script>
+</body>
+</html>

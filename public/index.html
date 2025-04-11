@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ClayRon S.P.A. | Home</title>
+  <!-- Google Fonts: Montserrat -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Animate.css (opzionale) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <!-- Foglio di stile personalizzato -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+<body>
+  <!-- Navbar Pubblica con logo e bottone Accedi/Registrati -->
+  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="home.html">
+        <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome" aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavHome">
+         <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
+         </ul>
+         <a href="login.html" class="btn btn-outline-light ml-2">Accedi/Registrati</a>
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Script per forzare il logout nelle pagine pubbliche -->
+  <script>
+    document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  </script>
+  
+  <!-- Hero Section -->
+  <section class="hero d-flex align-items-center">
+    <div class="overlay"></div>
+    <div class="container text-center hero-content">
+      <h1 class="display-4 animate__animated animate__fadeInDown">Studiare non è facile, ma così di più</h1>
+      <p class="lead animate__animated animate__fadeInUp animate__delay-1s">Supporto personalizzato per studenti con DSA e PDP.</p>
+      <a href="login.html" class="btn btn-primary btn-lg mt-3 animate__animated animate__fadeInUp animate__delay-2s">Accedi o Registrati</a>
+    </div>
+  </section>
+  
+  <!-- Features Section -->
+  <section class="features py-5">
+    <div class="container">
+       <div class="row">
+         <div class="col-md-4">
+           <div class="feature-box text-center animate__animated animate__fadeInUp">
+              <i class="fas fa-book fa-3x"></i>
+              <h3 class="mt-3">Materiali di Qualità</h3>
+              <p>Contenuti preparati da docenti e tutor per supportare il tuo studio.</p>
+           </div>
+         </div>
+         <div class="col-md-4">
+           <div class="feature-box text-center animate__animated animate__fadeInUp animate__delay-1s">
+              <i class="fas fa-calendar-alt fa-3x"></i>
+              <h3 class="mt-3">Calendario Interattivo</h3>
+              <p>Pianifica verifiche, interrogazioni e appuntamenti in modo intelligente.</p>
+           </div>
+         </div>
+         <div class="col-md-4">
+           <div class="feature-box text-center animate__animated animate__fadeInUp animate__delay-2s">
+              <i class="fas fa-users fa-3x"></i>
+              <h3 class="mt-3">Community di Supporto</h3>
+              <p>Interagisci con studenti simili e cresci insieme nella conoscenza.</p>
+           </div>
+         </div>
+       </div>
+    </div>
+  </section>
+  
+  <!-- Footer con Social Icons -->
+  <footer class="py-4 text-white text-center">
+    <div class="container">
+      <div class="social-icons mb-3">
+        <a href="https://instagram.com" class="text-white mx-2" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://facebook.com" class="text-white mx-2" target="_blank"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://tiktok.com" class="text-white mx-2" target="_blank"><i class="fab fa-tiktok"></i></a>
+      </div>
+      <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
+    </div>
+  </footer>
+  
+  <!-- Script: jQuery, Popper.js, Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Script personalizzato -->
+  <script src="assets/js/script.js"></script>
+</body>
+</html>
