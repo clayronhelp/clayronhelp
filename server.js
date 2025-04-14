@@ -13,9 +13,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Leggi la stringa di connessione e la chiave JWT dalle variabili d'ambiente
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/clayronDB';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://MyUser:Giuseppe08@cluster0.hco2yrt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 const JWT_SECRET = process.env.JWT_SECRET || 'mySuperSecretKey123!';
-const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET || 'TUO_RECAPTCHA_SECRET';
+const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET || '6LdO1BQrAAAAALIopx8_pYdIROzgrH0lWE1vfg3o';
 
 // Connetti a MongoDB
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
