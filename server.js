@@ -12,21 +12,20 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Variabili d'ambiente (se non sono definite, usa i valori di default per test locale)
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://MyUser:Giuseppe08@cluster0.hco2yrt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+// Leggi la stringa di connessione e la chiave JWT dalle variabili d'ambiente
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/clayronDB';
 const JWT_SECRET = process.env.JWT_SECRET || 'mySuperSecretKey123!';
-const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET || '6LdO1BQrAAAAALIopx8_pYdIROzgrH0lWE1vfg3o';
+const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET || 'TUO_RECAPTCHA_SECRET';
 
 // Connetti a MongoDB
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connesso a MongoDB'))
-  .catch(err => console.error('Errore di connessione a MongoDB:', err));
+  .catch(err => console.error('Errore nella connessione a MongoDB:', err));
 
 // Definisci il modello Utente
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  // Impostiamo verified a true subito (visto che usiamo reCAPTCHA)
   verified: { type: Boolean, default: true },
   name: { type: String, default: '' },
   surname: { type: String, default: '' },
@@ -38,7 +37,7 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', userSchema);
 
-// Definisci il modello Materiale (se vuoi materiali esclusivi)
+// Definisci il modello Materiale (se necessario)
 const materialSchema = new mongoose.Schema({
   title: String,
   description: String,
@@ -60,7 +59,7 @@ function createToken(user) {
   return jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: '7d' });
 }
 
-// Middleware per proteggere le route usando JWT
+// Middleware per autenticare usando JWT (legge l'header Authorization)
 function authenticateToken(req, res, next) {
   const token = req.headers['authorization'];
   if (!token) return res.status(401).json({ success: false, message: 'Token mancante' });
@@ -71,19 +70,17 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// Route homepage: "/" serve index.html
+// Route principale: "/" serve index.html
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// API per la registrazione con reCAPTCHA
+// API per la registrazione (con reCAPTCHA)
 app.post('/api/register', async (req, res) => {
   const { email, password, 'g-recaptcha-response': recaptchaResponse } = req.body;
   if (!email || !password || !recaptchaResponse) {
     return res.status(400).json({ success: false, message: 'Email, password e verifica reCAPTCHA sono richiesti' });
   }
-  
-  // Verifica reCAPTCHA
   try {
     const verificationURL = `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_SECRET}&response=${recaptchaResponse}`;
     const recaptchaRes = await axios.post(verificationURL);
@@ -94,13 +91,10 @@ app.post('/api/register', async (req, res) => {
     console.error('Errore reCAPTCHA:', err);
     return res.status(500).json({ success: false, message: 'Errore nella verifica reCAPTCHA' });
   }
-  
-  // Controlla se l'email è già registrata
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     return res.status(400).json({ success: false, message: 'Email già registrata' });
   }
-  
   const hashedPassword = bcrypt.hashSync(password, 10);
   const newUser = new User({
     email,
@@ -109,7 +103,6 @@ app.post('/api/register', async (req, res) => {
   });
   try {
     await newUser.save();
-    // Genera un token per tenere l'utente loggato e salva i dati lato client
     const token = createToken(newUser);
     return res.json({ success: true, message: 'Registrazione avvenuta con successo', token, redirect: '/survey.html' });
   } catch (err) {
@@ -117,7 +110,7 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// API per il login (usa JWT)
+// API per il login
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
@@ -133,7 +126,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// API per ottenere i dati del profilo (usando JWT)
+// API per ottenere il profilo (JWT)
 app.get('/api/profile', authenticateToken, async (req, res) => {
   try {
     const user = await User.findOne({ email: req.user.email });
@@ -164,7 +157,7 @@ app.post('/api/profile', authenticateToken, async (req, res) => {
   }
 });
 
-// API per ottenere i materiali (tutti); a livello demo
+// API per ottenere i materiali (tutti)
 app.get('/api/materials', async (req, res) => {
   try {
     const materials = await Material.find();
@@ -185,13 +178,12 @@ app.get('/api/material/:id', async (req, res) => {
   }
 });
 
-// API per il logout (su client, elimina il token)
+// API per il logout (JWT è stateless, il client deve eliminare il token)
 app.post('/api/logout', (req, res) => {
-  // Poiché usiamo JWT (stateless), il client deve semplicemente eliminare il token.
   return res.json({ success: true, message: 'Logout effettuato con successo' });
 });
 
-// Route protetta per l'area personale
+// Route per l'area personale
 app.get('/area', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'area.html'));
 });
