@@ -13,7 +13,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Variabili d'ambiente (se non sono definite, usa i valori di default per test locale)
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://MyUser:Giuseppe08@cluster0.hco2yrt.mongodb.net/clayron-db?retryWrites=true&w=majority';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://MyUser:Giuseppe08@cluster0.hco2yrt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 const JWT_SECRET = process.env.JWT_SECRET || 'mySuperSecretKey123!';
 const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET || 'TUO_RECAPTCHA_SECRET';
 
