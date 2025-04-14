@@ -34,8 +34,8 @@
               <li class="requirement" id="reqSpecial">Almeno 1 carattere speciale</li>
             </ul>
           </div>
-          <!-- reCAPTCHA -->
-          <div class="g-recaptcha" data-sitekey="6LdO1BQrAAAAAHTWEGgP4lY_ccB7fiRn__K63jSs"></div>
+          <!-- reCAPTCHA: sostituisci TUO_SITE_KEY con la tua chiave -->
+          <div class="g-recaptcha" data-sitekey="TUO_SITE_KEY"></div>
           <br/>
           <button type="submit" class="btn btn-primary btn-block">Registrati</button>
         </form>
@@ -44,7 +44,7 @@
     </div>
   </div>
   
-  <!-- JS -->
+  <!-- JS: jQuery, Popper.js, Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -74,9 +74,9 @@
         contentType: 'application/json',
         success: function(response){
           $('#registerMessage').html('<div class="alert alert-success">' + response.message + '</div>');
-          // Salva il token JWT in localStorage per mantenere l'autenticazione
+          // Salva il token JWT in localStorage
           localStorage.setItem('token', response.token);
-          // Dopo la registrazione, reindirizza alla pagina del sondaggio
+          // Reindirizza alla pagina del sondaggio
           setTimeout(function(){ window.location.href = 'survey.html'; }, 1500);
         },
         error: function(xhr){
