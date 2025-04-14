@@ -11,7 +11,7 @@
     .requirement { font-size: 0.9rem; color: red; }
     .requirement.valid { color: green; }
   </style>
-  <!-- Includi il JS di reCAPTCHA -->
+  <!-- Includi lo script reCAPTCHA -->
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
@@ -27,15 +27,15 @@
           <div class="form-group">
             <label for="regPassword">Password</label>
             <input type="password" class="form-control" id="regPassword" placeholder="Inserisci una password" required>
-            <small class="form-text">Requisiti: almeno 5 caratteri, 1 lettera maiuscola, 1 carattere speciale.</small>
+            <small class="form-text">Requisiti: almeno 5 caratteri, 1 lettera maiuscola e 1 carattere speciale.</small>
             <ul id="passwordRequirements">
               <li class="requirement" id="reqLength">Almeno 5 caratteri</li>
               <li class="requirement" id="reqUpper">Almeno 1 lettera maiuscola</li>
-              <li class="requirement" id="reqSpecial">Almeno 1 carattere speciale (es. !, @, #, ...)</li>
+              <li class="requirement" id="reqSpecial">Almeno 1 carattere speciale</li>
             </ul>
           </div>
-          <!-- Aggiungi il reCAPTCHA -->
-          <div class="g-recaptcha" data-sitekey="6LdQfBQrAAAAAOvF656_GezJKp0bX6CjwU1sc5cA"></div>
+          <!-- reCAPTCHA -->
+          <div class="g-recaptcha" data-sitekey="TUO_SITE_KEY"></div>
           <br/>
           <button type="submit" class="btn btn-primary btn-block">Registrati</button>
         </form>
@@ -49,31 +49,18 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
-    // Validazione in tempo reale per il campo password
     $('#regPassword').on('input', function() {
       const value = $(this).val();
-      if (value.length >= 5) {
-        $('#reqLength').addClass('valid');
-      } else {
-        $('#reqLength').removeClass('valid');
-      }
-      if (/[A-Z]/.test(value)) {
-        $('#reqUpper').addClass('valid');
-      } else {
-        $('#reqUpper').removeClass('valid');
-      }
-      if (/[^A-Za-z0-9]/.test(value)) {
-        $('#reqSpecial').addClass('valid');
-      } else {
-        $('#reqSpecial').removeClass('valid');
-      }
+      if (value.length >= 5) { $('#reqLength').addClass('valid'); } else { $('#reqLength').removeClass('valid'); }
+      if (/[A-Z]/.test(value)) { $('#reqUpper').addClass('valid'); } else { $('#reqUpper').removeClass('valid'); }
+      if (/[^A-Za-z0-9]/.test(value)) { $('#reqSpecial').addClass('valid'); } else { $('#reqSpecial').removeClass('valid'); }
     });
     
     $('#registerForm').submit(function(e){
       e.preventDefault();
       const recaptchaResponse = grecaptcha.getResponse();
       if (!recaptchaResponse) {
-        $('#registerMessage').html('<div class="alert alert-danger">Completa la verifica reCAPTCHA</div>');
+        $('#registerMessage').html('<div class="alert alert-danger">Completa la verifica reCAPTCHA.</div>');
         return;
       }
       $.ajax({
@@ -87,7 +74,9 @@
         contentType: 'application/json',
         success: function(response){
           $('#registerMessage').html('<div class="alert alert-success">' + response.message + '</div>');
-          // Dopo la registrazione, reindirizza alla pagina del sondaggio dinamico
+          // Salva il token JWT in localStorage per mantenere l'autenticazione
+          localStorage.setItem('token', response.token);
+          // Dopo la registrazione, reindirizza alla pagina del sondaggio
           setTimeout(function(){ window.location.href = 'survey.html'; }, 1500);
         },
         error: function(xhr){
@@ -96,34 +85,5 @@
       });
     });
   </script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const authArea = document.getElementById('auth-area');
-      const user = JSON.parse(localStorage.getItem('user'));
-  
-      if (user) {
-        authArea.innerHTML = `
-          <div class="dropdown">
-            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-              <img src="${user.profileImage || '/img/default-avatar.png'}" class="rounded-circle me-2" style="width: 30px; height: 30px;" />
-              Area Personale
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/profilo.html">Modifica Profilo</a></li>
-              <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
-            </ul>
-          </div>
-        `;
-      } else {
-        authArea.innerHTML = `<a class="nav-link" href="/login.html">Registrati / Accedi</a>`;
-      }
-    });
-  
-    function logout() {
-      localStorage.removeItem('user');
-      window.location.href = '/';
-    }
-  </script>
-  
 </body>
 </html>

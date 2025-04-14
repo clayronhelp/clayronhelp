@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sondaggio - ClayRon S.P.A.</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
-  <!-- Puoi usare lo stesso CSS, oppure includi uno specifico se lo desideri -->
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
   <style>
-    /* Stili semplici per il sondaggio */
     .survey-container {
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      background: #f4f6f8;
+      align-items: center;
+      background: linear-gradient(to right, #0055aa, #003366);
+      color: white;
+      text-align: center;
       animation: fadeIn 1.2s ease;
     }
     .survey-title {
@@ -26,23 +26,25 @@
       display: flex;
       gap: 2rem;
     }
-    .option {
-      background-color: #fff;
-      border-radius: 1rem;
+    .survey-option {
+      background: white;
+      color: #333;
       padding: 1rem;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
+      border-radius: 20px;
       width: 220px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       text-align: center;
     }
-    .option img {
-      width: 100%;
-      border-radius: 1rem;
-    }
-    .option:hover {
+    .survey-option:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 30px rgba(0,0,0,0.2);
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+    .survey-option img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      margin-bottom: 1rem;
     }
     @keyframes fadeIn {
       from {opacity: 0; transform: translateY(20px);}
@@ -54,52 +56,24 @@
   <div class="survey-container">
     <h1 class="survey-title">Per cosa userai questo sito?</h1>
     <div class="survey-options">
-      <div class="option" onclick="submitAnswer('Imparare cose nuove')">
-        <!-- Puoi sostituire l'immagine con quella che preferisci -->
-        <img src="assets/img/imparare.png" alt="Imparare">
-        <p>Imparare cose nuove</p>
+      <div class="survey-option" onclick="nextStep('imparare')">
+        <img src="assets/img/imparare.jpg" alt="Imparare">
+        <strong>Imparare cose nuove</strong>
       </div>
-      <div class="option" onclick="submitAnswer('Ripassare')">
-        <img src="assets/img/ripassare.png" alt="Ripassare">
-        <p>Ripassare</p>
+      <div class="survey-option" onclick="nextStep('ripassare')">
+        <img src="assets/img/ripassare.jpg" alt="Ripassare">
+        <strong>Per ripassare</strong>
       </div>
     </div>
   </div>
+
   <script>
-    function submitAnswer(risposta) {
-      alert('Hai scelto: ' + risposta);
-      // Qui puoi salvare la scelta in un database o nel localStorage
-      window.location.href = 'area.html';
+    function nextStep(answer) {
+      // Eventuale salvataggio risposta nel localStorage o in un database
+      alert("Hai scelto: " + answer);
+      // Reindirizza all'area personale
+      window.location.href = "area.html";
     }
   </script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const authArea = document.getElementById('auth-area');
-      const user = JSON.parse(localStorage.getItem('user'));
-  
-      if (user) {
-        authArea.innerHTML = `
-          <div class="dropdown">
-            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-              <img src="${user.profileImage || '/img/default-avatar.png'}" class="rounded-circle me-2" style="width: 30px; height: 30px;" />
-              Area Personale
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/profilo.html">Modifica Profilo</a></li>
-              <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
-            </ul>
-          </div>
-        `;
-      } else {
-        authArea.innerHTML = `<a class="nav-link" href="/login.html">Registrati / Accedi</a>`;
-      }
-    });
-  
-    function logout() {
-      localStorage.removeItem('user');
-      window.location.href = '/';
-    }
-  </script>
-  
 </body>
 </html>

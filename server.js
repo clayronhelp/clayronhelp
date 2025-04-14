@@ -3,7 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const session = require('express-session');
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const axios = require('axios');
 const bcrypt = require('bcryptjs');
@@ -12,59 +12,78 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Connetti a MongoDB (sostituisci <username>, <password> e <dbname> con i tuoi dati)
-const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://MyUser:Giuseppe08@cluster0.hco2yrt.mongodb.net/clayron-db?retryWrites=true&w=majority';
-mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
+// Variabili d'ambiente (se non sono definite, usa i valori di default per test locale)
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://MyUser:myRealPassword@cluster0.hco2yrt.mongodb.net/clayron-db?retryWrites=true&w=majority';
+const JWT_SECRET = process.env.JWT_SECRET || 'mySuperSecretKey123!';
+const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET || 'TUO_RECAPTCHA_SECRET';
+
+// Connetti a MongoDB
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connesso a MongoDB'))
   .catch(err => console.error('Errore di connessione a MongoDB:', err));
 
-// Modello utente con campi per il profilo e un indice TTL per eliminare automaticamente utenti non verificati dopo 5 minuti
+// Definisci il modello Utente
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  verified: { type: Boolean, default: true }, // Ora verifichiamo solo con reCAPTCHA, quindi settiamo true
-  // Campi del profilo
+  // Impostiamo verified a true subito (visto che usiamo reCAPTCHA)
+  verified: { type: Boolean, default: true },
   name: { type: String, default: '' },
   surname: { type: String, default: '' },
   nationality: { type: String, default: '' },
   region: { type: String, default: '' },
   municipality: { type: String, default: '' },
   profilePicture: { type: String, default: 'assets/img/default-profile.png' },
-  createdAt: { type: Date, default: Date.now },
-  expireAt: { type: Date, default: undefined } // Non serve ora, eliminato il sistema email
+  createdAt: { type: Date, default: Date.now }
 });
 const User = mongoose.model('User', userSchema);
+
+// Definisci il modello Materiale (se vuoi materiali esclusivi)
+const materialSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  subject: String,
+  price: { type: Number, default: 0 },
+  image: { type: String, default: 'assets/img/default-material.jpg' },
+  file: { type: String, default: '' },
+  createdAt: { type: Date, default: Date.now }
+});
+const Material = mongoose.model('Material', materialSchema);
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(session({
-  secret: 'il_mio_segreto_super_sicuro',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false }
-}));
-
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Route principale: "/" mostra index.html
+// Funzione per creare un token JWT
+function createToken(user) {
+  return jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+}
+
+// Middleware per proteggere le route usando JWT
+function authenticateToken(req, res, next) {
+  const token = req.headers['authorization'];
+  if (!token) return res.status(401).json({ success: false, message: 'Token mancante' });
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ success: false, message: 'Token non valido' });
+    req.user = user;
+    next();
+  });
+}
+
+// Route homepage: "/" serve index.html
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Per il reCAPTCHA, registra il tuo sito su: https://www.google.com/recaptcha/admin/create
-// Ottieni la "Site Key" e la "Secret Key"
-// Inserisci la Secret Key qui (meglio usarla via variabile d'ambiente, ma per semplicità la mettiamo direttamente)
-const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET || '6LdQfBQrAAAAAHIH7k8BQODEpIPZlzVPTn8I7dRD';
-
-// API di registrazione con reCAPTCHA
+// API per la registrazione con reCAPTCHA
 app.post('/api/register', async (req, res) => {
   const { email, password, 'g-recaptcha-response': recaptchaResponse } = req.body;
   if (!email || !password || !recaptchaResponse) {
-    return res.status(400).json({ success: false, message: 'Email, Password e Verifica sono richiesti' });
+    return res.status(400).json({ success: false, message: 'Email, password e verifica reCAPTCHA sono richiesti' });
   }
   
-  // Verifica reCAPTCHA inviando il token a Google
+  // Verifica reCAPTCHA
   try {
     const verificationURL = `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_SECRET}&response=${recaptchaResponse}`;
     const recaptchaRes = await axios.post(verificationURL);
@@ -72,78 +91,53 @@ app.post('/api/register', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Verifica reCAPTCHA fallita' });
     }
   } catch (err) {
-    console.error('Errore nella verifica reCAPTCHA:', err);
+    console.error('Errore reCAPTCHA:', err);
     return res.status(500).json({ success: false, message: 'Errore nella verifica reCAPTCHA' });
   }
   
-  // Controlla se l'email esiste già
+  // Controlla se l'email è già registrata
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     return res.status(400).json({ success: false, message: 'Email già registrata' });
   }
   
   const hashedPassword = bcrypt.hashSync(password, 10);
-  
   const newUser = new User({
     email,
     password: hashedPassword,
-    // Settiamo subito verified=true perché usiamo reCAPTCHA per verificare che l'utente non sia robot
     verified: true
   });
-  
   try {
     await newUser.save();
-    // Dopo la registrazione, reindirizza l'utente alla pagina del sondaggio dinamico
-    return res.json({ success: true, message: 'Registrazione avvenuta con successo. Completa il sondaggio.', redirect: '/survey.html' });
+    // Genera un token per tenere l'utente loggato e salva i dati lato client
+    const token = createToken(newUser);
+    return res.json({ success: true, message: 'Registrazione avvenuta con successo', token, redirect: '/survey.html' });
   } catch (err) {
     return res.status(500).json({ success: false, message: 'Errore durante la registrazione' });
   }
 });
 
-// API per il login
+// API per il login (usa JWT)
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) {
+  if (!email || !password)
     return res.status(400).json({ success: false, message: 'Email e password sono richiesti' });
-  }
   try {
     const user = await User.findOne({ email });
-    if (!user) {
+    if (!user || !bcrypt.compareSync(password, user.password))
       return res.status(401).json({ success: false, message: 'Credenziali non valide' });
-    }
-    if (!bcrypt.compareSync(password, user.password)) {
-      return res.status(401).json({ success: false, message: 'Credenziali non valide' });
-    }
-    req.session.user = user.email;
-    return res.json({ success: true, message: 'Login effettuato con successo' });
+    const token = createToken(user);
+    return res.json({ success: true, message: 'Login effettuato con successo', token });
   } catch (err) {
     return res.status(500).json({ success: false, message: 'Errore durante il login' });
   }
 });
 
-// Middleware per proteggere le route private
-function isAuthenticated(req, res, next) {
-  if (req.session.user) {
-    return next();
-  }
-  return res.status(401).json({ success: false, message: 'Non autorizzato' });
-}
-
-// Route protetta per l'area personale
-app.get('/area', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'area.html'));
-});
-
-// API per ottenere il profilo dell'utente
-app.get('/api/profile', async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ success: false, message: 'Non autorizzato' });
-  }
+// API per ottenere i dati del profilo (usando JWT)
+app.get('/api/profile', authenticateToken, async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.session.user });
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'Utente non trovato' });
-    }
+    const user = await User.findOne({ email: req.user.email });
+    if (!user) return res.status(404).json({ success: false, message: 'Utente non trovato' });
     const { email, name, surname, nationality, region, municipality, profilePicture } = user;
     res.json({ success: true, profile: { email, name, surname, nationality, region, municipality, profilePicture } });
   } catch (err) {
@@ -152,16 +146,11 @@ app.get('/api/profile', async (req, res) => {
 });
 
 // API per aggiornare il profilo
-app.post('/api/profile', async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ success: false, message: 'Non autorizzato' });
-  }
+app.post('/api/profile', authenticateToken, async (req, res) => {
   const { name, surname, nationality, region, municipality, profilePicture } = req.body;
   try {
-    const user = await User.findOne({ email: req.session.user });
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'Utente non trovato' });
-    }
+    const user = await User.findOne({ email: req.user.email });
+    if (!user) return res.status(404).json({ success: false, message: 'Utente non trovato' });
     user.name = name || user.name;
     user.surname = surname || user.surname;
     user.nationality = nationality || user.nationality;
@@ -175,29 +164,36 @@ app.post('/api/profile', async (req, res) => {
   }
 });
 
-// API per ottenere materiali esclusivi (solo se loggato)
-app.get('/api/exclusive', async (req, res) => {
-  if (!req.session.user) {
-    return res.json({ success: false, materials: [] });
+// API per ottenere i materiali (tutti); a livello demo
+app.get('/api/materials', async (req, res) => {
+  try {
+    const materials = await Material.find();
+    res.json({ success: true, materials });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Errore nel recupero dei materiali' });
   }
-  // Demo: restituisce alcuni materiali esclusivi
-  const exclusiveMaterials = [
-    "Materiale esclusivo 1",
-    "Materiale esclusivo 2",
-    "Materiale esclusivo 3"
-  ];
-  res.json({ success: true, materials: exclusiveMaterials });
 });
 
-// API per il logout
+// API per ottenere i dettagli di un materiale
+app.get('/api/material/:id', async (req, res) => {
+  try {
+    const material = await Material.findById(req.params.id);
+    if (!material) return res.status(404).json({ success: false, message: 'Materiale non trovato' });
+    res.json({ success: true, material });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Errore nel recupero del materiale' });
+  }
+});
+
+// API per il logout (su client, elimina il token)
 app.post('/api/logout', (req, res) => {
-  req.session.destroy(err => {
-    if (err) {
-      return res.status(500).json({ success: false, message: 'Errore durante il logout' });
-    }
-    res.clearCookie('connect.sid');
-    return res.json({ success: true, message: 'Logout effettuato con successo' });
-  });
+  // Poiché usiamo JWT (stateless), il client deve semplicemente eliminare il token.
+  return res.json({ success: true, message: 'Logout effettuato con successo' });
+});
+
+// Route protetta per l'area personale
+app.get('/area', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'area.html'));
 });
 
 app.listen(port, () => {

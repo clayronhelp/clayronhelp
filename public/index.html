@@ -4,15 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ClayRon S.P.A. | Home</title>
-  <!-- Google Fonts: Montserrat -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
-  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Animate.css -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <!-- Stili personalizzati -->
   <link rel="stylesheet" href="assets/css/style.css">
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 </head>
 <body>
@@ -25,18 +19,22 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome" aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+      <!-- La navbar con link comuni -->
       <div class="collapse navbar-collapse" id="navbarNavHome">
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ml-auto" id="nav-links">
           <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
           <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
         </ul>
-        <a href="login.html" class="btn btn-outline-light ml-2">Accedi/Registrati</a>
+        <!-- L'area di autenticazione verrà aggiornata dinamicamente -->
+        <div id="auth-area">
+          <a href="login.html" class="btn btn-outline-light ml-2">Accedi/Registrati</a>
+        </div>
       </div>
     </div>
   </nav>
   
-  <!-- Hero Section con immagine di background (definita nel CSS) -->
+  <!-- Hero Section (l'immagine di background è impostata nel CSS) -->
   <section class="hero d-flex align-items-center">
     <div class="overlay"></div>
     <div class="container text-center hero-content">
@@ -84,6 +82,10 @@
         <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
       </div>
       <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
+      <small>
+        <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
+        <a href="cookie.html" class="text-white">Cookie Policy</a>
+      </small>
     </div>
   </footer>
   
@@ -92,35 +94,40 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="assets/js/script.js"></script>
-
+  <!-- Aggiorna la navbar a seconda dello stato di autenticazione -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const authArea = document.getElementById('auth-area');
-      const user = JSON.parse(localStorage.getItem('user'));
-  
-      if (user) {
-        authArea.innerHTML = `
-          <div class="dropdown">
-            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-              <img src="${user.profileImage || '/img/default-avatar.png'}" class="rounded-circle me-2" style="width: 30px; height: 30px;" />
-              Area Personale
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/profilo.html">Modifica Profilo</a></li>
-              <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
-            </ul>
-          </div>
-        `;
-      } else {
-        authArea.innerHTML = `<a class="nav-link" href="/login.html">Registrati / Accedi</a>`;
+    $(document).ready(function(){
+      // Prova a leggere il token salvato in localStorage
+      const token = localStorage.getItem('token');
+      if(token) {
+        // Se esiste un token, chiama l'API per ottenere il profilo
+        $.ajax({
+          url: '/api/profile',
+          method: 'GET',
+          headers: { "Authorization": token },
+          success: function(data) {
+            if(data.success && data.profile) {
+              $('#auth-area').html(`
+                <div class="dropdown">
+                  <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                    <img src="${data.profile.profilePicture}" alt="Avatar" class="rounded-circle me-2" style="width:30px; height:30px;">
+                    Area Personale
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="profilo.html">Modifica Profilo</a></li>
+                    <li><a class="dropdown-item" href="logout.html">Logout</a></li>
+                  </ul>
+                </div>
+              `);
+            }
+          },
+          error: function() {
+            // Se l'API restituisce errore, mostra il link di login
+            $('#auth-area').html(`<a href="login.html" class="btn btn-outline-light ml-2">Accedi/Registrati</a>`);
+          }
+        });
       }
     });
-  
-    function logout() {
-      localStorage.removeItem('user');
-      window.location.href = '/';
-    }
   </script>
-  
 </body>
 </html>

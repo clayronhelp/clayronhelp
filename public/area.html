@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <!-- Navbar Protetta -->
+  <!-- Navbar con menù a tendina per Area Personale -->
   <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
     <div class="container">
       <a class="navbar-brand" href="index.html">
@@ -19,65 +19,57 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavArea">
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ml-auto" id="nav-links">
           <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
           <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
-          <li class="nav-item"><a class="nav-link" href="area.html">Area Personale</a></li>
-          <li class="nav-item"><a class="nav-link" href="logout.html">Logout</a></li>
         </ul>
+        <div id="auth-area">
+          <!-- Se l'utente è loggato, qui comparirà il menù a tendina; il bottone Logout verrà gestito nel menù a tendina -->
+        </div>
       </div>
     </div>
   </nav>
   
   <div class="container mt-5">
-    <h2 id="welcomeMessage">Benvenuto, <!-- L'API inserirà l'email qui --></h2>
-    <p>Qui vedrai i materiali esclusivi e altre funzionalità riservate.</p>
+    <h2 id="welcomeMessage">Benvenuto, <!-- verrà inserita l'email --></h2>
+    <p>Qui vedrai materiali esclusivi e altre funzionalità riservate.</p>
   </div>
   
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
-    $.ajax({
-      url: '/api/profile',
-      method: 'GET',
-      success: function(data) {
-        if (data.success && data.profile) {
-          $('#welcomeMessage').text('Benvenuto, ' + data.profile.email);
+    // Carica il profilo usando il token JWT salvato in localStorage
+    const token = localStorage.getItem('token');
+    if(token) {
+      $.ajax({
+        url: '/api/profile',
+        method: 'GET',
+        headers: { "Authorization": token },
+        success: function(data) {
+          if(data.success && data.profile) {
+            $('#welcomeMessage').text('Benvenuto, ' + data.profile.email);
+            // Aggiorna l'area di autenticazione nella navbar
+            $('#auth-area').html(`
+              <div class="dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                  <img src="${data.profile.profilePicture}" alt="Avatar" class="rounded-circle me-2" style="width:30px; height:30px;">
+                  Area Personale
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="profilo.html">Modifica Profilo</a></li>
+                  <li><a class="dropdown-item" href="logout.html">Logout</a></li>
+                </ul>
+              </div>
+            `);
+          }
+        },
+        error: function() {
+          $('#auth-area').html(`<a href="login.html" class="btn btn-outline-light ml-2">Accedi/Registrati</a>`);
         }
-      }
-    });
-  </script>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const authArea = document.getElementById('auth-area');
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    if (user) {
-      authArea.innerHTML = `
-        <div class="dropdown">
-          <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-            <img src="${user.profileImage || '/img/default-avatar.png'}" class="rounded-circle me-2" style="width: 30px; height: 30px;" />
-            Area Personale
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/profilo.html">Modifica Profilo</a></li>
-            <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
-          </ul>
-        </div>
-      `;
-    } else {
-      authArea.innerHTML = `<a class="nav-link" href="/login.html">Registrati / Accedi</a>`;
+      });
     }
-  });
-
-  function logout() {
-    localStorage.removeItem('user');
-    window.location.href = '/';
-  }
-</script>
-
+  </script>
 </body>
 </html>
