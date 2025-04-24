@@ -10,15 +10,12 @@
   <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    /* FORZA BOTTONI VERTICALI */
-    .card-body {
-      display: flex;
-      flex-direction: column;
-    }
+    /* Verticalizza i bottoni */
+    .card-body { display: flex; flex-direction: column; }
     .material-btn {
-      display: block;     /* ora blocco, non inline */
-      margin: 6px 0;      /* margine sopra e sotto */
-      width: fit-content; /* si adatta al contenuto */
+      display: block;
+      margin: 6px 0;
+      width: fit-content;
       padding: 10px 16px;
       border: 2px solid #0055aa;
       border-radius: 8px;
@@ -28,11 +25,7 @@
       transition: background 0.3s, color 0.3s;
       text-decoration: none;
     }
-    .material-btn:hover {
-      background: #0055aa;
-      color: #fff;
-    }
-    /* Badge prezzo accanto al testo */
+    .material-btn:hover { background: #0055aa; color: #fff; }
     .material-btn .price-badge {
       margin-left: 8px;
       padding: 2px 6px;
@@ -43,6 +36,7 @@
     }
     .price-badge.free { background: #28a745; }
     .price-badge.paid { background: #ffc107; color: #000; }
+    .no-material { color: #666; font-style: italic; }
   </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -86,14 +80,7 @@
         </div>
         <div id="collapseItaliano" class="collapse" aria-labelledby="headingItaliano" data-parent="#accordionMaterials">
           <div class="card-body">
-            <a href="subjects/italiano.html" class="material-btn">
-              Appunti di Italiano
-              <span class="price-badge free">Gratis</span>
-            </a>
-            <a href="subjects/italiano-avanzato.html" class="material-btn">
-              Analisi Testi Letterari
-              <span class="price-badge paid">€4.99</span>
-            </a>
+            <p class="no-material">Nessun materiale disponibile</p>
           </div>
         </div>
       </div>
@@ -111,14 +98,7 @@
         </div>
         <div id="collapseMatematica" class="collapse" aria-labelledby="headingMatematica" data-parent="#accordionMaterials">
           <div class="card-body">
-            <a href="subjects/matematica.html" class="material-btn">
-              Matematica Base
-              <span class="price-badge free">Gratis</span>
-            </a>
-            <a href="subjects/matematica-avanzata.html" class="material-btn">
-              Teoremi e Dimostrazioni
-              <span class="price-badge paid">€3.50</span>
-            </a>
+            <p class="no-material">Nessun materiale disponibile</p>
           </div>
         </div>
       </div>
@@ -127,14 +107,14 @@
       <div class="card">
         <div class="card-header" id="headingStoria">
           <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed" 
+            <button class="btn btn-link btn-block text-left" 
                     type="button" data-toggle="collapse" data-target="#collapseStoria"
-                    aria-expanded="false" aria-controls="collapseStoria">
+                    aria-expanded="true" aria-controls="collapseStoria">
               Storia, Cittadinanza e Costituzione <i class="fas fa-chevron-down float-right"></i>
             </button>
           </h2>
         </div>
-        <div id="collapseStoria" class="collapse" aria-labelledby="headingStoria" data-parent="#accordionMaterials">
+        <div id="collapseStoria" class="collapse show" aria-labelledby="headingStoria" data-parent="#accordionMaterials">
           <div class="card-body">
             <a href="subjects/storia.html" class="material-btn">
               Appunti di Storia
@@ -157,10 +137,7 @@
         </div>
         <div id="collapseDiritto" class="collapse" aria-labelledby="headingDiritto" data-parent="#accordionMaterials">
           <div class="card-body">
-            <a href="material-detail.html?id=DIRITTO1" class="material-btn">
-              Appunti di Diritto
-              <span class="price-badge free">Gratis</span>
-            </a>
+            <p class="no-material">Nessun materiale disponibile</p>
           </div>
         </div>
       </div>
@@ -178,10 +155,7 @@
         </div>
         <div id="collapseEconPolitica" class="collapse" aria-labelledby="headingEconPolitica" data-parent="#accordionMaterials">
           <div class="card-body">
-            <a href="material-detail.html?id=ECONPOL1" class="material-btn">
-              Appunti di Economia Politica
-              <span class="price-badge free">Gratis</span>
-            </a>
+            <p class="no-material">Nessun materiale disponibile</p>
           </div>
         </div>
       </div>
@@ -199,10 +173,7 @@
         </div>
         <div id="collapseEconAziendale" class="collapse" aria-labelledby="headingEconAziendale" data-parent="#accordionMaterials">
           <div class="card-body">
-            <a href="material-detail.html?id=ECONAZ1" class="material-btn">
-              Appunti di Economia Aziendale
-              <span class="price-badge free">Gratis</span>
-            </a>
+            <p class="no-material">Nessun materiale disponibile</p>
           </div>
         </div>
       </div>
@@ -220,10 +191,7 @@
         </div>
         <div id="collapseInformatica" class="collapse" aria-labelledby="headingInformatica" data-parent="#accordionMaterials">
           <div class="card-body">
-            <a href="material-detail.html?id=INFO1" class="material-btn">
-              Appunti di Informatica
-              <span class="price-badge free">Gratis</span>
-            </a>
+            <p class="no-material">Nessun materiale disponibile</p>
           </div>
         </div>
       </div>
@@ -241,10 +209,7 @@
         </div>
         <div id="collapseInglese" class="collapse" aria-labelledby="headingInglese" data-parent="#accordionMaterials">
           <div class="card-body">
-            <a href="material-detail.html?id=ING1" class="material-btn">
-              Appunti di Inglese
-              <span class="price-badge free">Gratis</span>
-            </a>
+            <p class="no-material">Nessun materiale disponibile</p>
           </div>
         </div>
       </div>
@@ -262,10 +227,7 @@
         </div>
         <div id="collapseSpagnolo" class="collapse" aria-labelledby="headingSpagnolo" data-parent="#accordionMaterials">
           <div class="card-body">
-            <a href="material-detail.html?id=SPA1" class="material-btn">
-              Appunti di Spagnolo
-              <span class="price-badge free">Gratis</span>
-            </a>
+            <p class="no-material">Nessun materiale disponibile</p>
           </div>
         </div>
       </div>
@@ -283,13 +245,75 @@
         </div>
         <div id="collapseFrancese" class="collapse" aria-labelledby="headingFrancese" data-parent="#accordionMaterials">
           <div class="card-body">
-            <a href="material-detail.html?id=FRA1" class="material-btn">
-              Appunti di Francese
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nuove categorie -->
+      <!-- Scienze della Terra -->
+      <div class="card">
+        <div class="card-header" id="headingTerra">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseTerra"
+                    aria-expanded="false" aria-controls="collapseTerra">
+              Scienze della Terra <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseTerra" class="collapse" aria-labelledby="headingTerra" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <a href="subjects/terra.html" class="material-btn">
+              Appunti di Scienze della Terra
               <span class="price-badge free">Gratis</span>
             </a>
           </div>
         </div>
       </div>
+
+      <!-- Chimica -->
+      <div class="card">
+        <div class="card-header" id="headingChimica">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseChimica"
+                    aria-expanded="false" aria-controls="collapseChimica">
+              Chimica <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseChimica" class="collapse" aria-labelledby="headingChimica" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <a href="subjects/chimica.html" class="material-btn">
+              Appunti di Chimica
+              <span class="price-badge free">Gratis</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Geografia -->
+      <div class="card">
+        <div class="card-header" id="headingGeografia">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseGeografia"
+                    aria-expanded="false" aria-controls="collapseGeografia">
+              Geografia <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseGeografia" class="collapse" aria-labelledby="headingGeografia" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <a href="subjects/geografia.html" class="material-btn">
+              Appunti di Geografia
+              <span class="price-badge free">Gratis</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 
