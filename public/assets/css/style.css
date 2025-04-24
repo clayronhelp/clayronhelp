@@ -141,3 +141,27 @@ a:hover {
     font-size: 1rem;
   }
 }
+
+/* Scrollbar personalizzata */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f4f6f8;
+}
+::-webkit-scrollbar-thumb {
+  background: #003366;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0055aa;
+}
+
+/* Cursor personalizzato leggero */
+body {
+  cursor: default;
+}
+a, button {
+  cursor: pointer;
+}
+
