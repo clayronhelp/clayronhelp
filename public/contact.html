@@ -4,21 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Contatti - ClayRon S.P.A.</title>
-  <!-- Font + Bootstrap + style.css -->
+  <!-- favicon -->
+  <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
+  <!-- Font & CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
   <link rel="stylesheet" href="assets/css/style.css">
+  <!-- reCAPTCHA -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <style>
     body { display: flex; flex-direction: column; min-height: 100vh; }
     main { flex: 1; }
-    .contact-info i { font-size: 1.2rem; width: 30px; }
-    .contact-info p { margin-bottom: 1rem; }
     .form-control, .btn { border-radius: 4px; }
   </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
-  <!-- Navbar (identica alle altre) -->
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
       <a class="navbar-brand" href="index.html">
@@ -43,31 +44,27 @@
   <main class="container py-5">
     <h2 class="mb-4">Contattaci</h2>
     <div class="row">
-        <div class="col-md-5 mb-4">
-            <h5 class="mb-3">Social & Contatti</h5>
-            <div class="social-btns">
-              <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="social-btn instagram">
-                <i class="fab fa-instagram icon"></i><span>Instagram</span>
-              </a>
-              <a href="#" target="_blank" class="social-btn facebook">
-                <i class="fab fa-facebook-f icon"></i><span>Facebook</span>
-              </a>
-              <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="social-btn tiktok">
-                <i class="fab fa-tiktok icon"></i><span>TikTok</span>
-              </a>
-              <a href="mailto:clayronhelp@gmail.com" class="social-btn envelope">
-                <i class="fas fa-envelope icon"></i><span>Email</span>
-              </a>
-              <a href="https://clayronhelp.vercel.app" target="_blank" class="social-btn globe">
-                <i class="fas fa-globe icon"></i><span>Sito Web</span>
-              </a>
-            </div>
-          </div>
-          
-          
-      <!-- Form di contatto -->
+      <!-- Colonna Social -->
+      <div class="col-md-5 mb-4">
+        <h5 class="mb-3">Social &amp; Contatti</h5>
+        <div class="social-btns">
+          <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="social-btn instagram">
+            <i class="fab fa-instagram icon"></i><span>Instagram</span>
+          </a>
+          <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="social-btn facebook">
+            <i class="fab fa-facebook-f icon"></i><span>Facebook</span>
+          </a>
+          <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="social-btn tiktok">
+            <i class="fab fa-tiktok icon"></i><span>TikTok</span>
+          </a>
+          <a href="mailto:clayronhelp@gmail.com" class="social-btn envelope">
+            <i class="fas fa-envelope icon"></i><span>Email</span>
+          </a>
+        </div>
+      </div>
+      <!-- Colonna Form -->
       <div class="col-md-7">
-        <h5>Invia un messaggio</h5>
+        <h5 class="mb-3">Invia un messaggio</h5>
         <form id="contactForm">
           <div class="form-row">
             <div class="form-group col-md-6">
@@ -85,11 +82,14 @@
           </div>
           <div class="form-group">
             <label for="subject">Oggetto</label>
-            <input type="text" class="form-control" id="subject" placeholder="Oggetto del messaggio" required>
+            <input type="text" class="form-control" id="subject" placeholder="Oggetto del messaggio" required minlength="5">
           </div>
           <div class="form-group">
             <label for="message">Messaggio</label>
-            <textarea class="form-control" id="message" rows="5" placeholder="Scrivi qui..." required></textarea>
+            <textarea class="form-control" id="message" rows="5" placeholder="Scrivi qui..." required minlength="10"></textarea>
+          </div>
+          <div class="form-group">
+            <div class="g-recaptcha" data-sitekey="TUO_RECAPTCHA_SITE_KEY"></div>
           </div>
           <button type="submit" class="btn btn-primary">Invia</button>
           <div id="contactAlert" class="mt-3"></div>
@@ -101,14 +101,9 @@
   <!-- Footer -->
   <footer class="bg-primary text-white py-4 mt-auto">
     <div class="container text-center">
-      <div class="social-icons mb-2">
-        <a href="https://www.instagram.com/clayronhelp/" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-        <a href="#" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.tiktok.com/@clayronhelp" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
-      </div>
-      <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
       <small>
-        <a href="terms.html" class="text-white">Termini &amp; Condizioni</a> –
+        &copy; 2025 ClayRon S.P.A. • 
+        <a href="terms.html" class="text-white">Termini &amp; Condizioni</a> • 
         <a href="cookie.html" class="text-white">Cookie Policy</a>
       </small>
     </div>
@@ -120,40 +115,44 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
   <script>
-    // Navbar dinamica
-    $(function(){
-      const token = localStorage.getItem('token');
-      $('#auth-area').html(
-        token
-          ? `<a href="area.html" class="btn btn-light">Area Personale</a>`
-          : `<a href="login.html" class="btn btn-light">Accedi/Registrati</a>`
-      );
-    });
+    // Slowdown anti-spam: un invio ogni 5 minuti
+    function canSend() {
+      const last = localStorage.getItem('contactLastSent');
+      if (!last) return true;
+      return (Date.now() - parseInt(last,10)) >= 5*60*1000;
+    }
 
-        $('#contactForm').submit(function(e){
-    e.preventDefault();
-    const data = {
+    $('#contactForm').submit(function(e){
+      e.preventDefault();
+      if (!canSend()) {
+        $('#contactAlert').html('<div class="alert alert-warning">Attendi 5 minuti prima di inviare un altro messaggio.</div>');
+        return;
+      }
+      const data = {
         firstName: $('#firstName').val(),
         lastName:  $('#lastName').val(),
         email:     $('#emailContact').val(),
         subject:   $('#subject').val(),
-        message:   $('#message').val()
-    };
-    $.ajax({
-        url: '/api/contact',     // ← qui
+        message:   $('#message').val(),
+        'g-recaptcha-response': grecaptcha.getResponse()
+      };
+      $.ajax({
+        url: '/api/contact',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(data),
         success: function(){
-        $('#contactAlert').html('<div class="alert alert-success">Messaggio inviato!</div>');
-        $('#contactForm')[0].reset();
+          localStorage.setItem('contactLastSent', Date.now().toString());
+          $('#contactAlert').html('<div class="alert alert-success">Messaggio inviato!</div>');
+          $('#contactForm')[0].reset();
+          grecaptcha.reset();
         },
         error: function(){
-        $('#contactAlert').html('<div class="alert alert-danger">Errore invio. Riprova.</div>');
+          $('#contactAlert').html('<div class="alert alert-danger">Errore invio. Riprova.</div>');
+          grecaptcha.reset();
         }
+      });
     });
-    });
-
   </script>
 </body>
 </html>
