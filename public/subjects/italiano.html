@@ -9,44 +9,19 @@
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
-    /* Stile specifico per le card materiali */
-    .card-material {
-      margin-bottom: 2rem;
-      border: none;
-    }
-    .card-material .row {
-      align-items: center;
-    }
-    .card-material img {
-      width: 100%;
-      border-radius: 8px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-    .card-material h3 {
-      color: #003366;
-      margin-bottom: .5rem;
-    }
-    .card-material p {
-      color: #444;
-      line-height: 1.6;
-    }
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      margin-bottom: 1rem;
-      color: #0055aa;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .back-link i {
-      margin-right: 6px;
-    }
-    main {
-      flex: 1;
-    }
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+    main { flex: 1; }
+    .back-link { display: inline-flex; align-items: center; margin-bottom: 1rem; color: #0055aa; text-decoration: none; font-weight: 500; }
+    .back-link i { margin-right: 6px; }
+    .card-material { margin-bottom: 2rem; border: none; }
+    .card-material .row { align-items: center; }
+    .card-material img { width: 100%; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+    .card-material h3 { color: #003366; margin-bottom: .5rem; }
+    .card-material p { color: #444; line-height: 1.6; }
+    footer.bg-primary { background-color: #003366 !important; }
   </style>
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body>
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
@@ -73,7 +48,27 @@
       <i class="fas fa-arrow-left"></i> Torna ai Materiali
     </a>
     <h2 class="mb-4">Appunti di Italiano</h2>
-    <div id="materialsList"></div>
+
+    <div id="materialsList">
+      <!-- ESEMPIO HARD-CODED: vedrai subito questa card -->
+      <div class="card card-material">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img src="../assets/img/default-material.jpg" alt="Introduzione alla Letteratura Italiana">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h3>Introduzione alla Letteratura Italiana</h3>
+              <p>Un compendio di testi e analisi delle opere principali dal Medioevo al Novecento, studiato per fornirti un quadro completo e chiaro.</p>
+              <a href="../assets/uploads/introduzione_letteratura.pdf" class="btn btn-success">
+                <i class="fas fa-download mr-2"></i>Scarica
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FINE ESEMPIO -->
+    </div>
   </main>
 
   <!-- Footer (sticky bottom) -->
@@ -114,17 +109,10 @@
       );
     });
 
-    // Carica e filtra per "Italiano"
+    // AJAX: appena il DB è popolato, aggiunge le card reali
     $.getJSON('/api/materials', data => {
-      if (!data.success) {
-        $('#materialsList').html('<p class="text-danger">Errore nel caricamento dei materiali.</p>');
-        return;
-      }
+      if (!data.success) return;
       const list = data.materials.filter(m => m.subject === 'Italiano');
-      if (!list.length) {
-        $('#materialsList').html('<p>Nessun materiale trovato.</p>');
-        return;
-      }
       list.forEach(m => {
         $('#materialsList').append(`
           <div class="card card-material">
