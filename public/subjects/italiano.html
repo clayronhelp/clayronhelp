@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Appunti Italiano - ClayRon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .back-link { display:inline-flex; align-items:center; margin-bottom:1rem; color:#0055aa; text-decoration:none; }
+    .back-link i { margin-right:6px; }
+    .card-material { margin-bottom:2rem; }
+    .card-material img { width:100%; border-radius:8px; box-shadow:0 0 15px rgba(0,0,0,0.1); }
+    .card-material h3 { color:#003366; margin-bottom:.5rem; }
+    .card-material p { color:#444; line-height:1.6; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html">
+        <img src="../assets/img/logo.png" class="logo" alt="Logo"> ClayRon S.P.A.
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navCatIt">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navCatIt">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="../materials.html">Materiali</a></li>
+          <li class="nav-item"><a class="nav-link" href="../about.html">Chi Siamo</a></li>
+        </ul>
+        <div id="auth-area" class="ml-3"></div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-5">
+    <a href="../materials.html" class="back-link"><i class="fas fa-arrow-left"></i> Torna ai Materiali</a>
+    <h2 class="mb-4">Appunti di Italiano</h2>
+    <div id="materialsList"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container text-center">
+      <div class="social-icons mb-2">
+        <a href="https://www.instagram.com/clayronhelp/"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.tiktok.com/@clayronhelp"><i class="fab fa-tiktok"></i></a>
+      </div>
+      <small>
+        &copy; 2025 ClayRon S.P.A.
+        <a href="../terms.html">Termini &amp; Condizioni</a>
+        <a href="../cookie.html">Cookie Policy</a>
+      </small>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
+  <script>
+    // Navbar dinamica
+    $(function(){
+      const token = localStorage.getItem('token');
+      $('#auth-area').html(
+        token
+          ? `<a href="../area.html" class="btn btn-light">Area Personale</a>`
+          : `<a href="../login.html" class="btn btn-light">Accedi/Registrati</a>`
+      );
+    });
+
+    // Carica e filtra per "Italiano"
+    $.getJSON('/api/materials', data => {
+      if (!data.success) return;
+      const list = data.materials.filter(m => m.subject === 'Italiano');
+      if (!list.length) {
+        $('#materialsList').html('<p>Nessun materiale trovato.</p>');
+        return;
+      }
+      list.forEach(m => {
+        $('#materialsList').append(`
+          <div class="card card-material">
+            <div class="row no-gutters">
+              <div class="col-md-4">
+                <img src="${m.image}" alt="${m.title}">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h3>${m.title}</h3>
+                  <p>${m.description}</p>
+                  <a href="../material-detail.html?id=${m._id}" class="btn btn-primary">
+                    <i class="fas fa-arrow-right mr-2"></i>Dettaglio
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        `);
+      });
+    });
+  </script>
+</body>
+</html>
