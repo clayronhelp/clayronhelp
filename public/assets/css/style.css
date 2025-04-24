@@ -109,7 +109,7 @@ body {
 
 /* Footer con Social Icons */
 footer {
-  background-color: #003366;
+  background-color: #003366 !important;
   padding: 15px 0;
 }
 footer .social-icons a {
