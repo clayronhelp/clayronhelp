@@ -10,7 +10,7 @@
   <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    /* Verticalizza i bottoni */
+    /* Verticalizza i bottoni e stili badge */
     .card-body { display: flex; flex-direction: column; }
     .material-btn {
       display: block;
@@ -67,7 +67,8 @@
     <p>Esplora i materiali divisi per materia:</p>
   
     <div class="accordion" id="accordionMaterials">
-      <!-- Italiano -->
+
+      <!-- Lingua e Letteratura Italiana -->
       <div class="card">
         <div class="card-header" id="headingItaliano">
           <h2 class="mb-0">
@@ -85,11 +86,65 @@
         </div>
       </div>
 
+      <!-- Lingua Inglese -->
+      <div class="card">
+        <div class="card-header" id="headingInglese">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseInglese"
+                    aria-expanded="false" aria-controls="collapseInglese">
+              Lingua Inglese <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseInglese" class="collapse" aria-labelledby="headingInglese" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lingua Spagnola -->
+      <div class="card">
+        <div class="card-header" id="headingSpagnolo">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseSpagnolo"
+                    aria-expanded="false" aria-controls="collapseSpagnolo">
+              Lingua Spagnola <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseSpagnolo" class="collapse" aria-labelledby="headingSpagnolo" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lingua Francese -->
+      <div class="card">
+        <div class="card-header" id="headingFrancese">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseFrancese"
+                    aria-expanded="false" aria-controls="collapseFrancese">
+              Lingua Francese <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseFrancese" class="collapse" aria-labelledby="headingFrancese" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Matematica -->
       <div class="card">
         <div class="card-header" id="headingMatematica">
           <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed" 
+            <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseMatematica"
                     aria-expanded="false" aria-controls="collapseMatematica">
               Matematica <i class="fas fa-chevron-down float-right"></i>
@@ -97,6 +152,78 @@
           </h2>
         </div>
         <div id="collapseMatematica" class="collapse" aria-labelledby="headingMatematica" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tecnologie Informatiche -->
+      <div class="card">
+        <div class="card-header" id="headingInformatica">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseInformatica"
+                    aria-expanded="false" aria-controls="collapseInformatica">
+              Tecnologie Informatiche <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseInformatica" class="collapse" aria-labelledby="headingInformatica" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scienze della Terra -->
+      <div class="card">
+        <div class="card-header" id="headingTerra">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseTerra"
+                    aria-expanded="false" aria-controls="collapseTerra">
+              Scienze della Terra <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseTerra" class="collapse" aria-labelledby="headingTerra" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chimica -->
+      <div class="card">
+        <div class="card-header" id="headingChimica">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseChimica"
+                    aria-expanded="false" aria-controls="collapseChimica">
+              Chimica <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseChimica" class="collapse" aria-labelledby="headingChimica" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Geografia -->
+      <div class="card">
+        <div class="card-header" id="headingGeografia">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseGeografia"
+                    aria-expanded="false" aria-controls="collapseGeografia">
+              Geografia <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseGeografia" class="collapse" aria-labelledby="headingGeografia" data-parent="#accordionMaterials">
           <div class="card-body">
             <p class="no-material">Nessun materiale disponibile</p>
           </div>
@@ -128,7 +255,7 @@
       <div class="card">
         <div class="card-header" id="headingDiritto">
           <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed" 
+            <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseDiritto"
                     aria-expanded="false" aria-controls="collapseDiritto">
               Diritto <i class="fas fa-chevron-down float-right"></i>
@@ -146,7 +273,7 @@
       <div class="card">
         <div class="card-header" id="headingEconPolitica">
           <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed" 
+            <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseEconPolitica"
                     aria-expanded="false" aria-controls="collapseEconPolitica">
               Economia Politica <i class="fas fa-chevron-down float-right"></i>
@@ -164,7 +291,7 @@
       <div class="card">
         <div class="card-header" id="headingEconAziendale">
           <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed" 
+            <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseEconAziendale"
                     aria-expanded="false" aria-controls="collapseEconAziendale">
               Economia Aziendale <i class="fas fa-chevron-down float-right"></i>
@@ -174,142 +301,6 @@
         <div id="collapseEconAziendale" class="collapse" aria-labelledby="headingEconAziendale" data-parent="#accordionMaterials">
           <div class="card-body">
             <p class="no-material">Nessun materiale disponibile</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tecnologie Informatiche -->
-      <div class="card">
-        <div class="card-header" id="headingInformatica">
-          <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed" 
-                    type="button" data-toggle="collapse" data-target="#collapseInformatica"
-                    aria-expanded="false" aria-controls="collapseInformatica">
-              Tecnologie Informatiche <i class="fas fa-chevron-down float-right"></i>
-            </button>
-          </h2>
-        </div>
-        <div id="collapseInformatica" class="collapse" aria-labelledby="headingInformatica" data-parent="#accordionMaterials">
-          <div class="card-body">
-            <p class="no-material">Nessun materiale disponibile</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Lingua Inglese -->
-      <div class="card">
-        <div class="card-header" id="headingInglese">
-          <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed" 
-                    type="button" data-toggle="collapse" data-target="#collapseInglese"
-                    aria-expanded="false" aria-controls="collapseInglese">
-              Lingua Inglese <i class="fas fa-chevron-down float-right"></i>
-            </button>
-          </h2>
-        </div>
-        <div id="collapseInglese" class="collapse" aria-labelledby="headingInglese" data-parent="#accordionMaterials">
-          <div class="card-body">
-            <p class="no-material">Nessun materiale disponibile</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Lingua Spagnola -->
-      <div class="card">
-        <div class="card-header" id="headingSpagnolo">
-          <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed" 
-                    type="button" data-toggle="collapse" data-target="#collapseSpagnolo"
-                    aria-expanded="false" aria-controls="collapseSpagnolo">
-              Lingua Spagnola <i class="fas fa-chevron-down float-right"></i>
-            </button>
-          </h2>
-        </div>
-        <div id="collapseSpagnolo" class="collapse" aria-labelledby="headingSpagnolo" data-parent="#accordionMaterials">
-          <div class="card-body">
-            <p class="no-material">Nessun materiale disponibile</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Lingua Francese -->
-      <div class="card">
-        <div class="card-header" id="headingFrancese">
-          <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed" 
-                    type="button" data-toggle="collapse" data-target="#collapseFrancese"
-                    aria-expanded="false" aria-controls="collapseFrancese">
-              Lingua Francese <i class="fas fa-chevron-down float-right"></i>
-            </button>
-          </h2>
-        </div>
-        <div id="collapseFrancese" class="collapse" aria-labelledby="headingFrancese" data-parent="#accordionMaterials">
-          <div class="card-body">
-            <p class="no-material">Nessun materiale disponibile</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Nuove categorie -->
-      <!-- Scienze della Terra -->
-      <div class="card">
-        <div class="card-header" id="headingTerra">
-          <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed"
-                    type="button" data-toggle="collapse" data-target="#collapseTerra"
-                    aria-expanded="false" aria-controls="collapseTerra">
-              Scienze della Terra <i class="fas fa-chevron-down float-right"></i>
-            </button>
-          </h2>
-        </div>
-        <div id="collapseTerra" class="collapse" aria-labelledby="headingTerra" data-parent="#accordionMaterials">
-          <div class="card-body">
-            <a href="subjects/terra.html" class="material-btn">
-              Appunti di Scienze della Terra
-              <span class="price-badge free">Gratis</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Chimica -->
-      <div class="card">
-        <div class="card-header" id="headingChimica">
-          <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed"
-                    type="button" data-toggle="collapse" data-target="#collapseChimica"
-                    aria-expanded="false" aria-controls="collapseChimica">
-              Chimica <i class="fas fa-chevron-down float-right"></i>
-            </button>
-          </h2>
-        </div>
-        <div id="collapseChimica" class="collapse" aria-labelledby="headingChimica" data-parent="#accordionMaterials">
-          <div class="card-body">
-            <a href="subjects/chimica.html" class="material-btn">
-              Appunti di Chimica
-              <span class="price-badge free">Gratis</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Geografia -->
-      <div class="card">
-        <div class="card-header" id="headingGeografia">
-          <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed"
-                    type="button" data-toggle="collapse" data-target="#collapseGeografia"
-                    aria-expanded="false" aria-controls="collapseGeografia">
-              Geografia <i class="fas fa-chevron-down float-right"></i>
-            </button>
-          </h2>
-        </div>
-        <div id="collapseGeografia" class="collapse" aria-labelledby="headingGeografia" data-parent="#accordionMaterials">
-          <div class="card-body">
-            <a href="subjects/geografia.html" class="material-btn">
-              Appunti di Geografia
-              <span class="price-badge free">Gratis</span>
-            </a>
           </div>
         </div>
       </div>
