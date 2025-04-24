@@ -19,6 +19,17 @@ const JWT_SECRET       = process.env.JWT_SECRET;
 const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET || '6LdO1BQrAAAAALIopx8_pYdIROzgrH0lWE1vfg3o';
 const EMAIL_USER       = process.env.EMAIL_USER || 'clayronhelp@gmail.com';
 const EMAIL_PASS       = process.env.EMAIL_PASS || 'xwtvukattljrwvgh';
+const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
+const PAYPAL_SECRET    = process.env.PAYPAL_SECRET;
+const PAYPAL_MODE      = process.env.PAYPAL_MODE || 'sandbox';
+
+// PayPal environment
+function environment() {
+  return PAYPAL_MODE === 'live'
+    ? new paypal.core.LiveEnvironment(PAYPAL_CLIENT_ID, PAYPAL_SECRET)
+    : new paypal.core.SandboxEnvironment(PAYPAL_CLIENT_ID, PAYPAL_SECRET);
+}
+const payPalClient = new paypal.core.PayPalHttpClient(environment());
 
 // Nodemailer transporter
 const transporter = nodemailer.createTransport({
