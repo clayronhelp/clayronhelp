@@ -139,30 +139,30 @@
       );
     });
 
-    // Handle form submit (richiede /api/contact sul server)
-    $('#contactForm').submit(function(e){
-      e.preventDefault();
-      const data = {
+        $('#contactForm').submit(function(e){
+    e.preventDefault();
+    const data = {
         firstName: $('#firstName').val(),
         lastName:  $('#lastName').val(),
         email:     $('#emailContact').val(),
         subject:   $('#subject').val(),
         message:   $('#message').val()
-      };
-      $.ajax({
-        url: '/api/contact',
+    };
+    $.ajax({
+        url: '/api/contact',     // ← qui
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(data),
         success: function(){
-          $('#contactAlert').html('<div class="alert alert-success">Messaggio inviato correttamente!</div>');
-          $('#contactForm')[0].reset();
+        $('#contactAlert').html('<div class="alert alert-success">Messaggio inviato!</div>');
+        $('#contactForm')[0].reset();
         },
         error: function(){
-          $('#contactAlert').html('<div class="alert alert-danger">Si è verificato un errore. Riprova più tardi.</div>');
+        $('#contactAlert').html('<div class="alert alert-danger">Errore invio. Riprova.</div>');
         }
-      });
     });
+    });
+
   </script>
 </body>
 </html>
