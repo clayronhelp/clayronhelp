@@ -53,85 +53,179 @@
   <main class="container flex-fill mt-5 mb-5">
     <h2>Materiali Didattici</h2>
     <p>Esplora i materiali divisi per materia:</p>
-
-    <div class="accordion" id="accordionMaterials">
-
-      <!-- Italiano -->
-      <div class="card">
-        <div class="card-header" id="headingItaliano">
-          <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#collapseItaliano"
-                    aria-expanded="false"
-                    aria-controls="collapseItaliano">
-              Lingua e Letteratura Italiana
-              <i class="fas fa-chevron-down float-right"></i>
-            </button>
-          </h2>
+  
+      <div class="accordion" id="accordionMaterials">
+        <!-- Italiano -->
+        <div class="card">
+          <div class="card-header" id="headingItaliano">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-left collapsed" 
+                      type="button" data-toggle="collapse" data-target="#collapseItaliano"
+                      aria-expanded="false" aria-controls="collapseItaliano">
+                Lingua e Letteratura Italiana <i class="fas fa-chevron-down float-right"></i>
+              </button>
+            </h2>
+          </div>
+          <div id="collapseItaliano" class="collapse" aria-labelledby="headingItaliano" data-parent="#accordionMaterials">
+            <div class="card-body">
+              <a href="subjects/italiano.html" class="material-btn">Appunti di Italiano</a>
+            </div>
+          </div>
         </div>
-        <div id="collapseItaliano" class="collapse"
-             aria-labelledby="headingItaliano"
-             data-parent="#accordionMaterials">
-          <div class="card-body">
-            <a href="subjects/italiano.html" class="material-btn">Appunti di Italiano</a>
+        <!-- Matematica -->
+        <div class="card">
+          <div class="card-header" id="headingMatematica">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-left collapsed" 
+                      type="button" data-toggle="collapse" data-target="#collapseMatematica"
+                      aria-expanded="false" aria-controls="collapseMatematica">
+                Matematica <i class="fas fa-chevron-down float-right"></i>
+              </button>
+            </h2>
+          </div>
+          <div id="collapseMatematica" class="collapse" aria-labelledby="headingMatematica" data-parent="#accordionMaterials">
+            <div class="card-body">
+              <a href="material-detail.html?id=MATEMATICA1" class="material-btn">Appunti di Matematica</a>
+            </div>
+          </div>
+        </div>
+        <!-- Storia -->
+        <div class="card">
+          <div class="card-header" id="headingStoria">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-left collapsed" 
+                      type="button" data-toggle="collapse" data-target="#collapseStoria"
+                      aria-expanded="false" aria-controls="collapseStoria">
+                Storia, Cittadinanza e Costituzione <i class="fas fa-chevron-down float-right"></i>
+              </button>
+            </h2>
+          </div>
+          <div id="collapseStoria" class="collapse" aria-labelledby="headingStoria" data-parent="#accordionMaterials">
+            <div class="card-body">
+              <a href="subjects/storia.html" class="material-btn">Appunti di Storia</a>
+            </div>
+          </div>
+        </div>
+        <!-- Diritto -->
+        <div class="card">
+          <div class="card-header" id="headingDiritto">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-left collapsed" 
+                      type="button" data-toggle="collapse" data-target="#collapseDiritto"
+                      aria-expanded="false" aria-controls="collapseDiritto">
+                Diritto <i class="fas fa-chevron-down float-right"></i>
+              </button>
+            </h2>
+          </div>
+          <div id="collapseDiritto" class="collapse" aria-labelledby="headingDiritto" data-parent="#accordionMaterials">
+            <div class="card-body">
+              <a href="material-detail.html?id=DIRITTO1" class="material-btn">Appunti di Diritto</a>
+            </div>
+          </div>
+        </div>
+        <!-- Economia Politica -->
+        <div class="card">
+          <div class="card-header" id="headingEconPolitica">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-left collapsed" 
+                      type="button" data-toggle="collapse" data-target="#collapseEconPolitica"
+                      aria-expanded="false" aria-controls="collapseEconPolitica">
+                Economia Politica <i class="fas fa-chevron-down float-right"></i>
+              </button>
+            </h2>
+          </div>
+          <div id="collapseEconPolitica" class="collapse" aria-labelledby="headingEconPolitica" data-parent="#accordionMaterials">
+            <div class="card-body">
+              <a href="material-detail.html?id=ECONPOL1" class="material-btn">Appunti di Economia Politica</a>
+            </div>
+          </div>
+        </div>
+        <!-- Economia Aziendale -->
+        <div class="card">
+          <div class="card-header" id="headingEconAziendale">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-left collapsed" 
+                      type="button" data-toggle="collapse" data-target="#collapseEconAziendale"
+                      aria-expanded="false" aria-controls="collapseEconAziendale">
+                Economia Aziendale <i class="fas fa-chevron-down float-right"></i>
+              </button>
+            </h2>
+          </div>
+          <div id="collapseEconAziendale" class="collapse" aria-labelledby="headingEconAziendale" data-parent="#accordionMaterials">
+            <div class="card-body">
+              <a href="material-detail.html?id=ECONAZ1" class="material-btn">Appunti di Economia Aziendale</a>
+            </div>
+          </div>
+        </div>
+        <!-- Informatica -->
+        <div class="card">
+          <div class="card-header" id="headingInformatica">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-left collapsed" 
+                      type="button" data-toggle="collapse" data-target="#collapseInformatica"
+                      aria-expanded="false" aria-controls="collapseInformatica">
+                Tecnologie Informatiche <i class="fas fa-chevron-down float-right"></i>
+              </button>
+            </h2>
+          </div>
+          <div id="collapseInformatica" class="collapse" aria-labelledby="headingInformatica" data-parent="#accordionMaterials">
+            <div class="card-body">
+              <a href="material-detail.html?id=INFO1" class="material-btn">Appunti di Informatica</a>
+            </div>
+          </div>
+        </div>
+        <!-- Inglese -->
+        <div class="card">
+          <div class="card-header" id="headingInglese">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-left collapsed" 
+                      type="button" data-toggle="collapse" data-target="#collapseInglese"
+                      aria-expanded="false" aria-controls="collapseInglese">
+                Lingua Inglese <i class="fas fa-chevron-down float-right"></i>
+              </button>
+            </h2>
+          </div>
+          <div id="collapseInglese" class="collapse" aria-labelledby="headingInglese" data-parent="#accordionMaterials">
+            <div class="card-body">
+              <a href="material-detail.html?id=ING1" class="material-btn">Appunti di Inglese</a>
+            </div>
+          </div>
+        </div>
+        <!-- Spagnolo -->
+        <div class="card">
+          <div class="card-header" id="headingSpagnolo">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-left collapsed" 
+                      type="button" data-toggle="collapse" data-target="#collapseSpagnolo"
+                      aria-expanded="false" aria-controls="collapseSpagnolo">
+                Lingua Spagnola <i class="fas fa-chevron-down float-right"></i>
+              </button>
+            </h2>
+          </div>
+          <div id="collapseSpagnolo" class="collapse" aria-labelledby="headingSpagnolo" data-parent="#accordionMaterials">
+            <div class="card-body">
+              <a href="material-detail.html?id=SPA1" class="material-btn">Appunti di Spagnolo</a>
+            </div>
+          </div>
+        </div>
+        <!-- Francese -->
+        <div class="card">
+          <div class="card-header" id="headingFrancese">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-left collapsed" 
+                      type="button" data-toggle="collapse" data-target="#collapseFrancese"
+                      aria-expanded="false" aria-controls="collapseFrancese">
+                Lingua Francese <i class="fas fa-chevron-down float-right"></i>
+              </button>
+            </h2>
+          </div>
+          <div id="collapseFrancese" class="collapse" aria-labelledby="headingFrancese" data-parent="#accordionMaterials">
+            <div class="card-body">
+              <a href="material-detail.html?id=FRA1" class="material-btn">Appunti di Francese</a>
+            </div>
           </div>
         </div>
       </div>
-
-      <!-- Matematica -->
-      <div class="card">
-        <div class="card-header" id="headingMatematica">
-          <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#collapseMatematica"
-                    aria-expanded="false"
-                    aria-controls="collapseMatematica">
-              Matematica
-              <i class="fas fa-chevron-down float-right"></i>
-            </button>
-          </h2>
-        </div>
-        <div id="collapseMatematica" class="collapse"
-             aria-labelledby="headingMatematica"
-             data-parent="#accordionMaterials">
-          <div class="card-body">
-            <a href="subjects/matematica.html" class="material-btn">Appunti di Matematica</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Storia -->
-      <div class="card">
-        <div class="card-header" id="headingStoria">
-          <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#collapseStoria"
-                    aria-expanded="false"
-                    aria-controls="collapseStoria">
-              Storia, Cittadinanza e Costituzione
-              <i class="fas fa-chevron-down float-right"></i>
-            </button>
-          </h2>
-        </div>
-        <div id="collapseStoria" class="collapse"
-             aria-labelledby="headingStoria"
-             data-parent="#accordionMaterials">
-          <div class="card-body">
-            <a href="subjects/storia.html" class="material-btn">Appunti di Storia</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Aggiungi qui tutte le altre categorie con lo stesso schema -->
-      <!-- Diritto, Economia Politica, Economia Aziendale, Informatica, Inglese, Spagnolo, Francese... -->
-
-    </div>
 
     <!-- Sezione esclusivi (opzionale) -->
     <div id="exclusiveMaterials" class="mt-5" style="display:none;">
