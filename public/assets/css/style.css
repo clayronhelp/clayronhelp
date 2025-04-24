@@ -7,6 +7,10 @@ body {
   background-color: #f4f6f8;
   margin: 0;
   padding: 0;
+  cursor: default;
+}
+a, button {
+  cursor: pointer;
 }
 
 /* Navbar con gradiente e logo */
@@ -27,7 +31,8 @@ body {
   color: #ffffff !important;
   white-space: nowrap;
 }
-.navbar .nav-link:hover, .navbar .nav-link.active {
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
   color: #ffcc00 !important;
 }
 .navbar-toggler {
@@ -38,7 +43,7 @@ body {
 .hero {
   position: relative;
   height: 100vh;
-  background: url('../img/Progetto\ senza\ titolo.png') no-repeat center center;
+  background: url('../img/Progetto senza titolo.png') no-repeat center center;
   background-size: cover;
   display: flex;
   align-items: center;
@@ -100,10 +105,12 @@ body {
 }
 
 /* Cards e blocchi */
-.card, .bg-light.rounded {
+.card,
+.bg-light.rounded {
   transition: box-shadow 0.3s;
 }
-.card:hover, .bg-light.rounded:hover {
+.card:hover,
+.bg-light.rounded:hover {
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
 }
 
@@ -129,19 +136,6 @@ a:hover {
   color: #0055aa;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .hero h1 {
-    font-size: 2.5rem;
-  }
-  .hero p.lead {
-    font-size: 1.1rem;
-  }
-  footer .social-icons a {
-    font-size: 1rem;
-  }
-}
-
 /* Scrollbar personalizzata */
 ::-webkit-scrollbar {
   width: 8px;
@@ -158,10 +152,58 @@ a:hover {
 }
 
 /* Cursor personalizzato leggero */
-body {
-  cursor: default;
+/* (definito con body, a, button sopra) */
+
+/* Social buttons su pagina contatti */
+.social-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 1.5rem;
 }
-a, button {
-  cursor: pointer;
+.social-btn {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.social-btn:hover {
+  transform: translateX(6px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.social-btn .icon {
+  font-size: 1.4rem;
+  margin-right: 10px;
+}
+/* Brand colors */
+.social-btn.instagram { background: #E1306C; }
+.social-btn.facebook  { background: #1877F2; }
+.social-btn.tiktok    { background: #000000; }
+.social-btn.envelope  { background: #DD4B39; }
+.social-btn.globe     { background: #28A745; }
+
+/* Center carousel controls on mobile */
+@media (max-width: 767px) {
+  .carousel-control-prev,
+  .carousel-control-next {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
 }
 
+/* Responsive */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  .hero p.lead {
+    font-size: 1.1rem;
+  }
+  footer .social-icons a {
+    font-size: 1rem;
+  }
+}
