@@ -94,8 +94,8 @@
 
   <script>
     // **CONFIGURA QUI** – prezzo e link file
-    const price = 0;                      // €0 = GRATUITO
-    const fileUrl = "public/assets/uploads/LA PRIMA GUERRA MONDIALE - DALLE ALLEANZE AL PRIMO GRANDE CONFLITTO.pptx";
+   const price = 0;    // imposta 0 per gratuito, >0 per pagato
+   const fileUrl = "../assets/uploads/mappa.pptx";
 
     // Quando jQuery è pronto
     $(function(){
@@ -110,8 +110,10 @@
       // Render PayPal o Download diretto
       const container = document.getElementById('payment-button-container');
       if (price === 0) {
+       // gratuito: indirizza alla pagina di conferma + recap
+        const target = 'purchase-confirm.html?status=success&file=' + encodeURIComponent(fileUrl);
         container.innerHTML = `
-          <a href="${fileUrl}" class="btn btn-success">
+          <a href="${target}" class="btn btn-success">
             <i class="fas fa-download mr-2"></i> Scarica
           </a>`;
       } else {
@@ -128,8 +130,9 @@
           onApprove: (data, actions) => {
             return actions.order.capture().then(details => {
               if (details.status === 'COMPLETED') {
-                // pagamento OK → scarica
-                window.location = fileUrl;
+               // pagamento OK → vai a pagina di conferma + recap
+                const target = 'purchase-confirm.html?status=success&file=' + encodeURIComponent(fileUrl);
+                window.location = target;
               } else {
                 alert('Pagamento non completato');
               }

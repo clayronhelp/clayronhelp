@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Conferma Acquisto - ClayRon</title>
+  <link href="../assets/css/style.css" rel="stylesheet">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { display:flex; flex-direction:column; min-height:100vh; }
+    main { flex:1; }
+  </style>
+</head>
+<body>
+  <!-- copia la tua navbar qui -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html">
+        <img src="../assets/img/logo.png" class="logo" alt="Logo"> ClayRon S.P.A.
+      </a>
+      <!-- … resto navbar … -->
+    </div>
+  </nav>
+
+  <main class="container text-center py-5">
+    <h2 id="statusTitle">Grazie per l’acquisto!</h2>
+    <p id="statusMsg">Il tuo download sarà disponibile a breve.</p>
+    <a id="downloadBtn" class="btn btn-success mt-3" href="#" download>
+      <i class="fas fa-download mr-2"></i>Scarica il materiale
+    </a>
+  </main>
+
+  <!-- copia il tuo footer qui -->
+
+  <script>
+    // Prendi i parametri dalla query string
+    const params = new URLSearchParams(window.location.search);
+    const fileUrl = params.get('file') || '';
+    const status  = params.get('status') || 'success';
+
+    // Aggiorna titolo e messaggio a seconda dello status
+    if (status === 'success') {
+      document.getElementById('statusTitle').innerText = 'Grazie per l’acquisto!';
+      document.getElementById('statusMsg').innerText = 'Clicca sotto per scaricare il materiale.';
+    } else {
+      document.getElementById('statusTitle').innerText = 'Pagamento fallito';
+      document.getElementById('statusMsg').innerText = 'Si è verificato un errore. Riprova.';
+      document.getElementById('downloadBtn').style.display = 'none';
+    }
+
+    // Imposta il link di download
+    const btn = document.getElementById('downloadBtn');
+    if (fileUrl) {
+      btn.href = decodeURIComponent(fileUrl);
+    } else {
+      btn.style.display = 'none';
+    }
+  </script>
+</body>
+</html>
