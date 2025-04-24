@@ -4,147 +4,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Materiali - ClayRon S.P.A.</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-      <a class="navbar-brand" href="index.html">
-        <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavMaterials" aria-controls="navbarNavMaterials" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavMaterials">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
-          <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
-        </ul>
-        <a href="login.html" class="btn btn-outline-light ml-2">Accedi/Registrati</a>
-      </div>
+      <a class="navbar-brand" href="index.html">ClayRon S.P.A.</a>
+      <div id="auth-area" class="ml-auto"></div>
     </div>
   </nav>
-  
-  <div class="container mt-5">
-    <h2>Materiali Didattici</h2>
-    <p>Esplora i materiali divisi per materia:</p>
-    
-    <!-- Accordion per le categorie -->
-    <div class="accordion" id="accordionMaterials">
-      <!-- Categoria Fisica -->
-      <div class="card">
-        <div class="card-header" id="headingFisica">
-          <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed accordion-toggle" type="button" data-toggle="collapse" data-target="#collapseFisica" aria-expanded="false" aria-controls="collapseFisica">
-              Fisica <i class="fas fa-chevron-down float-right"></i>
-            </button>
-          </h2>
-        </div>
-        <div id="collapseFisica" class="collapse" aria-labelledby="headingFisica" data-parent="#accordionMaterials">
-          <div class="card-body">
-            <ul>
-              <li><a href="material-detail.html">Appunti di Fisica</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <!-- Categoria Matematica -->
-      <div class="card">
-        <div class="card-header" id="headingMatematica">
-          <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed accordion-toggle" type="button" data-toggle="collapse" data-target="#collapseMatematica" aria-expanded="false" aria-controls="collapseMatematica">
-              Matematica <i class="fas fa-chevron-down float-right"></i>
-            </button>
-          </h2>
-        </div>
-        <div id="collapseMatematica" class="collapse" aria-labelledby="headingMatematica" data-parent="#accordionMaterials">
-          <div class="card-body">
-            <ul>
-              <li><a href="#">Appunti di Matematica</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <!-- Categoria Italiano -->
-      <div class="card">
-        <div class="card-header" id="headingItaliano">
-          <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed accordion-toggle" type="button" data-toggle="collapse" data-target="#collapseItaliano" aria-expanded="false" aria-controls="collapseItaliano">
-              Italiano <i class="fas fa-chevron-down float-right"></i>
-            </button>
-          </h2>
-        </div>
-        <div id="collapseItaliano" class="collapse" aria-labelledby="headingItaliano" data-parent="#accordionMaterials">
-          <div class="card-body">
-            <ul>
-              <li><a href="#">Guide di Studio in Italiano</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
+
+  <main class="container py-5">
+    <h2 class="mb-4">Materiali Didattici</h2>
+
+    <div class="category-card">
+      <h5>Lingua e Letteratura Italiana</h5>
+      <div id="listItaliano"></div>
     </div>
-    
-    <!-- Sezione esclusiva: sarà mostrata solo se sei loggato -->
-    <div id="exclusiveMaterials" class="mt-5" style="display:none;">
-      <h3>Materiali Esclusivi</h3>
-      <ul id="exclusiveList"></ul>
+    <div class="category-card">
+      <h5>Matematica</h5>
+      <div id="listMatematica"></div>
     </div>
-  </div>
-  
+    <!-- Aggiungere altre categorie qui -->
+
+  </main>
+
+  <footer>
+    <div class="container text-center">
+      <div class="social-icons mb-2">
+        <a href="https://www.instagram.com/clayronhelp/"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.tiktok.com/@clayronhelp"><i class="fab fa-tiktok"></i></a>
+      </div>
+      <small>
+        &copy; 2025 ClayRon S.P.A.
+        <a href="terms.html">Termini &amp; Condizioni</a>
+        <a href="cookie.html">Cookie Policy</a>
+      </small>
+    </div>
+  </footer>
+
   <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script src="assets/js/script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
   <script>
-    // Se l'utente è loggato, carica i materiali esclusivi
-    $.ajax({
-      url: '/api/exclusive',
-      method: 'GET',
-      success: function(data) {
-        if (data.success && data.materials.length > 0) {
-          $('#exclusiveMaterials').show();
-          data.materials.forEach(function(item) {
-            $('#exclusiveList').append('<li>' + item + '</li>');
-          });
+    const categories = {
+      Italiano: 'listItaliano',
+      Matematica: 'listMatematica'
+    };
+
+    $.getJSON('/api/materials', data => {
+      if (!data.success) return;
+      data.materials.forEach(m => {
+        const id = categories[m.subject];
+        if (id) {
+          $('#' + id).append(`
+            <a href="material-detail.html?id=${m._id}" class="material-btn">${m.title}</a>
+          `);
         }
-      }
+      });
+    });
+
+    // Navbar dinamica
+    $(function(){
+      const token = localStorage.getItem('token');
+      $('#auth-area').html(
+        token
+          ? `<a href="area.html" class="btn btn-light">Area Personale</a>`
+          : `<a href="login.html" class="btn btn-light">Accedi/Registrati</a>`
+      );
     });
   </script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const authArea = document.getElementById('auth-area');
-      const user = JSON.parse(localStorage.getItem('user'));
-  
-      if (user) {
-        authArea.innerHTML = `
-          <div class="dropdown">
-            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-              <img src="${user.profileImage || '/img/default-avatar.png'}" class="rounded-circle me-2" style="width: 30px; height: 30px;" />
-              Area Personale
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/profilo.html">Modifica Profilo</a></li>
-              <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
-            </ul>
-          </div>
-        `;
-      } else {
-        authArea.innerHTML = `<a class="nav-link" href="/login.html">Registrati / Accedi</a>`;
-      }
-    });
-  
-    function logout() {
-      localStorage.removeItem('user');
-      window.location.href = '/';
-    }
-  </script>
-  
 </body>
 </html>
-
-
