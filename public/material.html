@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dettaglio Materiale - ClayRon S.P.A.</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="index.html">ClayRon S.P.A.</a>
+    <div class="ml-auto" id="auth-area"></div>
+  </nav>
+
+  <div class="container my-5">
+    <div id="materialCard" class="card mx-auto" style="max-width:600px; display:none;">
+      <img id="matImage" src="" class="card-img-top" alt="">
+      <div class="card-body">
+        <h3 id="matTitle"></h3>
+        <p id="matDesc"></p>
+        <button id="downloadBtn" class="btn btn-success">Scarica Materiale</button>
+      </div>
+    </div>
+    <div id="loading" class="text-center">
+      <p>Caricamento...</p>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    // Navbar dinamica
+    $(function(){
+      const token = localStorage.getItem('token');
+      if (token) {
+        $('#auth-area').html(`<a href="area.html" class="btn btn-light">Area Personale</a>`);
+      } else {
+        $('#auth-area').html(`<a href="login.html" class="btn btn-light">Accedi/Registrati</a>`);
+      }
+    });
+
+    // Leggi id dalla query
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    if (!id) {
+      $('#loading').text('Materiale non trovato.');
+    } else {
+      // Chiedi i dati
+      $.getJSON(`/api/material/${id}`, data => {
+        if (data.success) {
+          const m = data.material;
+          $('#matImage').attr('src', m.image);
+          $('#matTitle').text(m.title);
+          $('#matDesc').text(m.description);
+          $('#downloadBtn').click(() => {
+            if (m.price === 0) {
+              // scarica il file
+              window.location.href = m.file;
+            } else {
+              alert('Questo materiale è a pagamento: €' + m.price);
+            }
+          });
+          $('#loading').hide();
+          $('#materialCard').show();
+        } else {
+          $('#loading').text('Errore nel caricamento del materiale.');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

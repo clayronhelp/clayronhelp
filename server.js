@@ -43,8 +43,8 @@ const materialSchema = new mongoose.Schema({
   description: String,
   subject: String,
   price: { type: Number, default: 0 },
-  image: { type: String, default: 'assets/img/default-material.jpg' },
-  file: { type: String, default: '' },
+  image: { type: String, default: '/assets/img/default-material.jpg' }, // path statico
+  file: { type: String, default: '/uploads/default.pdf' },              // file scaricabile
   createdAt: { type: Date, default: Date.now }
 });
 const Material = mongoose.model('Material', materialSchema);
@@ -53,6 +53,7 @@ const Material = mongoose.model('Material', materialSchema);
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 // Funzione per creare un token JWT
 function createToken(user) {
