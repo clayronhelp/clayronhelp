@@ -4,21 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Materiali - ClayRon S.P.A.</title>
-  <!-- Google Font, Bootstrap, favicon, style.css -->
+  <!-- Font + Bootstrap + style.css + favicon -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
     /* Verticalizza i bottoni e stili badge */
-    /* tutte le icone freccia */
-    .accordion .btn .fas {
-      transition: transform 0.3s;
-    }
-    /* classe che ruota di 90° */
-    .accordion .btn .fas.rotated {
-      transform: rotate(90deg);
-    }
     .card-body { display: flex; flex-direction: column; }
     .material-btn {
       display: block;
@@ -45,15 +37,6 @@
     .price-badge.free { background: #28a745; }
     .price-badge.paid { background: #ffc107; color: #000; }
     .no-material { color: #666; font-style: italic; }
-
-    /* FRECCETTE: default right, quando aperto (aria-expanded="true") ruota verso il basso */
-    .accordion .btn .fas {
-      transition: transform 0.3s;
-      transform: rotate(0deg);
-    }
-    .accordion .btn[aria-expanded="true"] .fas {
-      transform: rotate(90deg);
-    }
   </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -85,22 +68,18 @@
   
     <div class="accordion" id="accordionMaterials">
 
+      <!-- Lingua e Letteratura Italiana -->
       <div class="card">
         <div class="card-header" id="headingItaliano">
           <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed"
-                    type="button" data-toggle="collapse"
-                    data-target="#collapseItaliano"
-                    aria-expanded="false"
-                    aria-controls="collapseItaliano">
-              Lingua e Letteratura Italiana
-              <i class="fas fa-chevron-right float-right"></i>
+            <button class="btn btn-link btn-block text-left collapsed" 
+                    type="button" data-toggle="collapse" data-target="#collapseItaliano"
+                    aria-expanded="false" aria-controls="collapseItaliano">
+              Lingua e Letteratura Italiana <i class="fas fa-chevron-down float-right"></i>
             </button>
           </h2>
         </div>
-        <div id="collapseItaliano" class="collapse"
-             aria-labelledby="headingItaliano"
-             data-parent="#accordionMaterials">
+        <div id="collapseItaliano" class="collapse" aria-labelledby="headingItaliano" data-parent="#accordionMaterials">
           <div class="card-body">
             <p class="no-material">Nessun materiale disponibile</p>
           </div>
@@ -114,8 +93,7 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseInglese"
                     aria-expanded="false" aria-controls="collapseInglese">
-              Lingua Inglese
-              <i class="fas fa-chevron-right float-right"></i>
+              Lingua Inglese <i class="fas fa-chevron-down float-right"></i>
             </button>
           </h2>
         </div>
@@ -133,8 +111,7 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseSpagnolo"
                     aria-expanded="false" aria-controls="collapseSpagnolo">
-              Lingua Spagnola
-              <i class="fas fa-chevron-right float-right"></i>
+              Lingua Spagnola <i class="fas fa-chevron-down float-right"></i>
             </button>
           </h2>
         </div>
@@ -152,8 +129,7 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseFrancese"
                     aria-expanded="false" aria-controls="collapseFrancese">
-              Lingua Francese
-              <i class="fas fa-chevron-right float-right"></i>
+              Lingua Francese <i class="fas fa-chevron-down float-right"></i>
             </button>
           </h2>
         </div>
@@ -171,8 +147,7 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseMatematica"
                     aria-expanded="false" aria-controls="collapseMatematica">
-              Matematica
-              <i class="fas fa-chevron-right float-right"></i>
+              Matematica <i class="fas fa-chevron-down float-right"></i>
             </button>
           </h2>
         </div>
@@ -190,8 +165,7 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseInformatica"
                     aria-expanded="false" aria-controls="collapseInformatica">
-              Tecnologie Informatiche
-              <i class="fas fa-chevron-right float-right"></i>
+              Tecnologie Informatiche <i class="fas fa-chevron-down float-right"></i>
             </button>
           </h2>
         </div>
@@ -209,8 +183,7 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseTerra"
                     aria-expanded="false" aria-controls="collapseTerra">
-              Scienze della Terra
-              <i class="fas fa-chevron-right float-right"></i>
+              Scienze della Terra <i class="fas fa-chevron-down float-right"></i>
             </button>
           </h2>
         </div>
@@ -228,8 +201,7 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseChimica"
                     aria-expanded="false" aria-controls="collapseChimica">
-              Chimica
-              <i class="fas fa-chevron-right float-right"></i>
+              Chimica <i class="fas fa-chevron-down float-right"></i>
             </button>
           </h2>
         </div>
@@ -247,8 +219,7 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseGeografia"
                     aria-expanded="false" aria-controls="collapseGeografia">
-              Geografia
-              <i class="fas fa-chevron-right float-right"></i>
+              Geografia <i class="fas fa-chevron-down float-right"></i>
             </button>
           </h2>
         </div>
@@ -263,15 +234,14 @@
       <div class="card">
         <div class="card-header" id="headingStoria">
           <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed"
+            <button class="btn btn-link btn-block text-left" 
                     type="button" data-toggle="collapse" data-target="#collapseStoria"
-                    aria-expanded="false" aria-controls="collapseStoria">
-              Storia, Cittadinanza e Costituzione
-              <i class="fas fa-chevron-right float-right"></i>
+                    aria-expanded="true" aria-controls="collapseStoria">
+              Storia, Cittadinanza e Costituzione <i class="fas fa-chevron-down float-right"></i>
             </button>
           </h2>
         </div>
-        <div id="collapseStoria" class="collapse" aria-labelledby="headingStoria" data-parent="#accordionMaterials">
+        <div id="collapseStoria" class="collapse show" aria-labelledby="headingStoria" data-parent="#accordionMaterials">
           <div class="card-body">
             <a href="subjects/storia.html" class="material-btn">
               LA PRIMA GUERRA MONDIALE - DALLE ALLEANZE AL PRIMO GRANDE CONFLITTO
@@ -288,8 +258,7 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseDiritto"
                     aria-expanded="false" aria-controls="collapseDiritto">
-              Diritto
-              <i class="fas fa-chevron-right float-right"></i>
+              Diritto <i class="fas fa-chevron-down float-right"></i>
             </button>
           </h2>
         </div>
@@ -300,32 +269,68 @@
         </div>
       </div>
 
+      <!-- Economia Politica -->
+      <div class="card">
+        <div class="card-header" id="headingEconPolitica">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseEconPolitica"
+                    aria-expanded="false" aria-controls="collapseEconPolitica">
+              Economia Politica <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseEconPolitica" class="collapse" aria-labelledby="headingEconPolitica" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Economia Aziendale -->
+      <div class="card">
+        <div class="card-header" id="headingEconAziendale">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseEconAziendale"
+                    aria-expanded="false" aria-controls="collapseEconAziendale">
+              Economia Aziendale <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseEconAziendale" class="collapse" aria-labelledby="headingEconAziendale" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 
   <!-- Footer -->
-  <footer class="py-4 text-white text-center bg-primary mt-auto">
+  <footer class="py-4 text-white text-center">
     <div class="container">
       <div class="social-icons mb-3">
-        <a href="https://www.instagram.com/clayronhelp/" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.facebook.com/profile.php?id=61575494257613" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.tiktok.com/@clayronhelp" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+        <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
       </div>
       <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
       <small>
-        <a href="terms.html" class="text-white">Termini &amp; Condizioni</a> – 
+        <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
         <a href="cookie.html" class="text-white">Cookie Policy</a>
       </small>
     </div>
   </footer>
-
+  
   <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
   <script>
-    // Navbar dinamica (rimane identico)
+    // Navbar dinamica
     $(function(){
       const token = localStorage.getItem('token');
       $('#auth-area').html(
@@ -334,24 +339,6 @@
           : `<a href="login.html" class="btn btn-light">Accedi/Registrati</a>`
       );
     });
-  
-    // Quando un pannello si apre, aggiungi 'rotated' all'icona;
-    // quando si chiude, la rimuovi.
-    $('#accordionMaterials')
-      .on('shown.bs.collapse', function(e){
-        // e.target è il div.collapse aperto
-        $(e.target)
-          .prev('.card-header')
-          .find('i.fas')
-          .addClass('rotated');
-      })
-      .on('hidden.bs.collapse', function(e){
-        $(e.target)
-          .prev('.card-header')
-          .find('i.fas')
-          .removeClass('rotated');
-      });
   </script>
-  
 </body>
 </html>
