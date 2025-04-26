@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Materiali - ClayRon S.P.A.</title>
-  <!-- Montserrat + Bootstrap + style.css + favicon -->
+  <!-- Font + Bootstrap + style.css + favicon -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
@@ -37,14 +37,6 @@
     .price-badge.free { background: #28a745; }
     .price-badge.paid { background: #ffc107; color: #000; }
     .no-material { color: #666; font-style: italic; }
-
-    /* Icon toggle */
-    .accordion .btn .fas {
-      transition: transform 0.3s ease;
-    }
-    .accordion .btn .fas.rotate {
-      transform: rotate(90deg);
-    }
   </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -75,6 +67,7 @@
     <p>Esplora i materiali divisi per materia:</p>
   
     <div class="accordion" id="accordionMaterials">
+
       <!-- Lingua e Letteratura Italiana -->
       <div class="card">
         <div class="card-header" id="headingItaliano">
@@ -82,8 +75,7 @@
             <button class="btn btn-link btn-block text-left collapsed" 
                     type="button" data-toggle="collapse" data-target="#collapseItaliano"
                     aria-expanded="false" aria-controls="collapseItaliano">
-              Lingua e Letteratura Italiana
-              <i class="fas fa-chevron-right float-right"></i>
+              Lingua e Letteratura Italiana <i class="fas fa-chevron-down float-right"></i>
             </button>
           </h2>
         </div>
@@ -101,8 +93,7 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseInglese"
                     aria-expanded="false" aria-controls="collapseInglese">
-              Lingua Inglese
-              <i class="fas fa-chevron-right float-right"></i>
+              Lingua Inglese <i class="fas fa-chevron-down float-right"></i>
             </button>
           </h2>
         </div>
@@ -113,16 +104,140 @@
         </div>
       </div>
 
-      <!-- ... tutte le altre materie ... -->
-      <!-- Storia (visibile) -->
+      <!-- Lingua Spagnola -->
+      <div class="card">
+        <div class="card-header" id="headingSpagnolo">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseSpagnolo"
+                    aria-expanded="false" aria-controls="collapseSpagnolo">
+              Lingua Spagnola <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseSpagnolo" class="collapse" aria-labelledby="headingSpagnolo" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lingua Francese -->
+      <div class="card">
+        <div class="card-header" id="headingFrancese">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseFrancese"
+                    aria-expanded="false" aria-controls="collapseFrancese">
+              Lingua Francese <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseFrancese" class="collapse" aria-labelledby="headingFrancese" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matematica -->
+      <div class="card">
+        <div class="card-header" id="headingMatematica">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseMatematica"
+                    aria-expanded="false" aria-controls="collapseMatematica">
+              Matematica <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseMatematica" class="collapse" aria-labelledby="headingMatematica" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tecnologie Informatiche -->
+      <div class="card">
+        <div class="card-header" id="headingInformatica">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseInformatica"
+                    aria-expanded="false" aria-controls="collapseInformatica">
+              Tecnologie Informatiche <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseInformatica" class="collapse" aria-labelledby="headingInformatica" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scienze della Terra -->
+      <div class="card">
+        <div class="card-header" id="headingTerra">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseTerra"
+                    aria-expanded="false" aria-controls="collapseTerra">
+              Scienze della Terra <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseTerra" class="collapse" aria-labelledby="headingTerra" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chimica -->
+      <div class="card">
+        <div class="card-header" id="headingChimica">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseChimica"
+                    aria-expanded="false" aria-controls="collapseChimica">
+              Chimica <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseChimica" class="collapse" aria-labelledby="headingChimica" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Geografia -->
+      <div class="card">
+        <div class="card-header" id="headingGeografia">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseGeografia"
+                    aria-expanded="false" aria-controls="collapseGeografia">
+              Geografia <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseGeografia" class="collapse" aria-labelledby="headingGeografia" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Storia -->
       <div class="card">
         <div class="card-header" id="headingStoria">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left" 
                     type="button" data-toggle="collapse" data-target="#collapseStoria"
-                    aria-expanded="true" aria-controls="collapseStoria">
-              Storia, Cittadinanza e Costituzione
-              <i class="fas fa-chevron-right float-right rotate"></i>
+                    aria-expanded="false" aria-controls="collapseStoria">
+              Storia, Cittadinanza e Costituzione <i class="fas fa-chevron-down float-right"></i>
             </button>
           </h2>
         </div>
@@ -136,12 +251,65 @@
         </div>
       </div>
 
-      <!-- Altre materie come nel tuo file ... -->
+      <!-- Diritto -->
+      <div class="card">
+        <div class="card-header" id="headingDiritto">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseDiritto"
+                    aria-expanded="false" aria-controls="collapseDiritto">
+              Diritto <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseDiritto" class="collapse" aria-labelledby="headingDiritto" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Economia Politica -->
+      <div class="card">
+        <div class="card-header" id="headingEconPolitica">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseEconPolitica"
+                    aria-expanded="false" aria-controls="collapseEconPolitica">
+              Economia Politica <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseEconPolitica" class="collapse" aria-labelledby="headingEconPolitica" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Economia Aziendale -->
+      <div class="card">
+        <div class="card-header" id="headingEconAziendale">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed"
+                    type="button" data-toggle="collapse" data-target="#collapseEconAziendale"
+                    aria-expanded="false" aria-controls="collapseEconAziendale">
+              Economia Aziendale <i class="fas fa-chevron-down float-right"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseEconAziendale" class="collapse" aria-labelledby="headingEconAziendale" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 
   <!-- Footer -->
-  <footer class="py-4 text-white text-center bg-primary mt-auto">
+  <footer class="py-4 text-white text-center">
     <div class="container">
       <div class="social-icons mb-3">
         <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
@@ -150,7 +318,7 @@
       </div>
       <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
       <small>
-        <a href="terms.html" class="text-white">Termini &amp; Condizioni</a> – 
+        <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
         <a href="cookie.html" class="text-white">Cookie Policy</a>
       </small>
     </div>
@@ -171,21 +339,6 @@
           : `<a href="login.html" class="btn btn-light">Accedi/Registrati</a>`
       );
     });
-
-    // Gestione rotazione icone
-    $('#accordionMaterials')
-      .on('show.bs.collapse', function(e) {
-        $(e.target)
-          .prev('.card-header')
-          .find('i.fas')
-          .addClass('rotate');
-      })
-      .on('hide.bs.collapse', function(e) {
-        $(e.target)
-          .prev('.card-header')
-          .find('i.fas')
-          .removeClass('rotate');
-      });
   </script>
 </body>
 </html>
