@@ -11,6 +11,14 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
     /* Verticalizza i bottoni e stili badge */
+    /* tutte le icone freccia */
+    .accordion .btn .fas {
+      transition: transform 0.3s;
+    }
+    /* classe che ruota di 90° */
+    .accordion .btn .fas.rotated {
+      transform: rotate(90deg);
+    }
     .card-body { display: flex; flex-direction: column; }
     .material-btn {
       display: block;
@@ -77,19 +85,22 @@
   
     <div class="accordion" id="accordionMaterials">
 
-      <!-- Lingua e Letteratura Italiana -->
       <div class="card">
         <div class="card-header" id="headingItaliano">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left collapsed"
-                    type="button" data-toggle="collapse" data-target="#collapseItaliano"
-                    aria-expanded="false" aria-controls="collapseItaliano">
+                    type="button" data-toggle="collapse"
+                    data-target="#collapseItaliano"
+                    aria-expanded="false"
+                    aria-controls="collapseItaliano">
               Lingua e Letteratura Italiana
               <i class="fas fa-chevron-right float-right"></i>
             </button>
           </h2>
         </div>
-        <div id="collapseItaliano" class="collapse" aria-labelledby="headingItaliano" data-parent="#accordionMaterials">
+        <div id="collapseItaliano" class="collapse"
+             aria-labelledby="headingItaliano"
+             data-parent="#accordionMaterials">
           <div class="card-body">
             <p class="no-material">Nessun materiale disponibile</p>
           </div>
@@ -314,7 +325,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
   <script>
-    // Navbar dinamica
+    // Navbar dinamica (rimane identico)
     $(function(){
       const token = localStorage.getItem('token');
       $('#auth-area').html(
@@ -323,6 +334,24 @@
           : `<a href="login.html" class="btn btn-light">Accedi/Registrati</a>`
       );
     });
+  
+    // Quando un pannello si apre, aggiungi 'rotated' all'icona;
+    // quando si chiude, la rimuovi.
+    $('#accordionMaterials')
+      .on('shown.bs.collapse', function(e){
+        // e.target è il div.collapse aperto
+        $(e.target)
+          .prev('.card-header')
+          .find('i.fas')
+          .addClass('rotated');
+      })
+      .on('hidden.bs.collapse', function(e){
+        $(e.target)
+          .prev('.card-header')
+          .find('i.fas')
+          .removeClass('rotated');
+      });
   </script>
+  
 </body>
 </html>
