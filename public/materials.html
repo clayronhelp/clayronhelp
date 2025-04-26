@@ -38,13 +38,10 @@
     .price-badge.paid { background: #ffc107; color: #000; }
     .no-material { color: #666; font-style: italic; }
 
-    /* Icon rotation: right when collapsed, down when open */
+    /* Imposta la freccia a destra di default */
     .accordion .btn .fas {
       transition: transform 0.3s;
       transform: rotate(0deg);
-    }
-    .accordion .btn:not(.collapsed) .fas {
-      transform: rotate(90deg);
     }
   </style>
 </head>
@@ -77,7 +74,7 @@
   
     <div class="accordion" id="accordionMaterials">
 
-      <!-- Italiano -->
+      <!-- Lingua e Letteratura Italiana -->
       <div class="card">
         <div class="card-header" id="headingItaliano">
           <h2 class="mb-0">
@@ -96,7 +93,7 @@
         </div>
       </div>
 
-      <!-- Inglese -->
+      <!-- Lingua Inglese -->
       <div class="card">
         <div class="card-header" id="headingInglese">
           <h2 class="mb-0">
@@ -115,7 +112,7 @@
         </div>
       </div>
 
-      <!-- Spagnolo -->
+      <!-- Lingua Spagnola -->
       <div class="card">
         <div class="card-header" id="headingSpagnolo">
           <h2 class="mb-0">
@@ -134,7 +131,7 @@
         </div>
       </div>
 
-      <!-- Francese -->
+      <!-- Lingua Francese -->
       <div class="card">
         <div class="card-header" id="headingFrancese">
           <h2 class="mb-0">
@@ -172,7 +169,7 @@
         </div>
       </div>
 
-      <!-- Informatica -->
+      <!-- Tecnologie Informatiche -->
       <div class="card">
         <div class="card-header" id="headingInformatica">
           <h2 class="mb-0">
@@ -302,7 +299,7 @@
       </div>
       <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
       <small>
-        <a href="terms.html" class="text-white">Termini &amp; Condizioni</a> – 
+        <a href="terms.html" class="text-white">Termini &amp; Condizioni</a> –
         <a href="cookie.html" class="text-white">Cookie Policy</a>
       </small>
     </div>
@@ -313,8 +310,22 @@
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
+
   <script>
-    // Navbar dinamica
+    // ruota le icone al show/hide
+    $('#accordionMaterials')
+      .on('show.bs.collapse', e => {
+        $(e.target).prev('.card-header')
+                  .find('i.fas')
+                  .css('transform','rotate(90deg)');
+      })
+      .on('hide.bs.collapse', e => {
+        $(e.target).prev('.card-header')
+                  .find('i.fas')
+                  .css('transform','rotate(0deg)');
+      });
+
+    // navbar dinamica
     $(function(){
       const token = localStorage.getItem('token');
       $('#auth-area').html(
