@@ -38,17 +38,11 @@
     .price-badge.paid { background: #ffc107; color: #000; }
     .no-material { color: #666; font-style: italic; }
 
-    /* Icona di default (collapsed) punta a destra */
+    /* Icon rotation: right when collapsed, down when open */
     .accordion .btn .fas {
       transition: transform 0.3s;
       transform: rotate(0deg);
     }
-
-    /* Quando la sezione è aperta (btn NON collapsed), ruota di 90° → punta in giù */
-    .accordion .btn:not(.collapsed) .fas {
-      transform: rotate(90deg);
-    }
-
     .accordion .btn:not(.collapsed) .fas {
       transform: rotate(90deg);
     }
@@ -83,20 +77,22 @@
   
     <div class="accordion" id="accordionMaterials">
 
-       <!-- Lingua e Letteratura Italiana -->
+      <!-- Lingua e Letteratura Italiana -->
       <div class="card">
         <div class="card-header" id="headingItaliano">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left collapsed"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#collapseItaliano"
-                    aria-expanded="false"
-                    aria-controls="collapseItaliano">
+                    type="button" data-toggle="collapse" data-target="#collapseItaliano"
+                    aria-expanded="false" aria-controls="collapseItaliano">
               Lingua e Letteratura Italiana
               <i class="fas fa-chevron-right float-right"></i>
             </button>
           </h2>
+        </div>
+        <div id="collapseItaliano" class="collapse" aria-labelledby="headingItaliano" data-parent="#accordionMaterials">
+          <div class="card-body">
+            <p class="no-material">Nessun materiale disponibile</p>
+          </div>
         </div>
       </div>
 
@@ -107,7 +103,8 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseInglese"
                     aria-expanded="false" aria-controls="collapseInglese">
-              Lingua Inglese <i class="fas fa-chevron-right float-right"></i>
+              Lingua Inglese
+              <i class="fas fa-chevron-right float-right"></i>
             </button>
           </h2>
         </div>
@@ -125,7 +122,8 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseSpagnolo"
                     aria-expanded="false" aria-controls="collapseSpagnolo">
-              Lingua Spagnola <i class="fas fa-chevron-down float-right"></i>
+              Lingua Spagnola
+              <i class="fas fa-chevron-right float-right"></i>
             </button>
           </h2>
         </div>
@@ -143,7 +141,8 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseFrancese"
                     aria-expanded="false" aria-controls="collapseFrancese">
-              Lingua Francese <i class="fas fa-chevron-down float-right"></i>
+              Lingua Francese
+              <i class="fas fa-chevron-right float-right"></i>
             </button>
           </h2>
         </div>
@@ -161,7 +160,8 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseMatematica"
                     aria-expanded="false" aria-controls="collapseMatematica">
-              Matematica <i class="fas fa-chevron-down float-right"></i>
+              Matematica
+              <i class="fas fa-chevron-right float-right"></i>
             </button>
           </h2>
         </div>
@@ -179,7 +179,8 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseInformatica"
                     aria-expanded="false" aria-controls="collapseInformatica">
-              Tecnologie Informatiche <i class="fas fa-chevron-down float-right"></i>
+              Tecnologie Informatiche
+              <i class="fas fa-chevron-right float-right"></i>
             </button>
           </h2>
         </div>
@@ -197,7 +198,8 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseTerra"
                     aria-expanded="false" aria-controls="collapseTerra">
-              Scienze della Terra <i class="fas fa-chevron-down float-right"></i>
+              Scienze della Terra
+              <i class="fas fa-chevron-right float-right"></i>
             </button>
           </h2>
         </div>
@@ -215,7 +217,8 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseChimica"
                     aria-expanded="false" aria-controls="collapseChimica">
-              Chimica <i class="fas fa-chevron-down float-right"></i>
+              Chimica
+              <i class="fas fa-chevron-right float-right"></i>
             </button>
           </h2>
         </div>
@@ -233,7 +236,8 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseGeografia"
                     aria-expanded="false" aria-controls="collapseGeografia">
-              Geografia <i class="fas fa-chevron-down float-right"></i>
+              Geografia
+              <i class="fas fa-chevron-right float-right"></i>
             </button>
           </h2>
         </div>
@@ -248,14 +252,15 @@
       <div class="card">
         <div class="card-header" id="headingStoria">
           <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left" 
+            <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseStoria"
                     aria-expanded="false" aria-controls="collapseStoria">
-              Storia, Cittadinanza e Costituzione <i class="fas fa-chevron-down float-right"></i>
+              Storia, Cittadinanza e Costituzione
+              <i class="fas fa-chevron-right float-right"></i>
             </button>
           </h2>
         </div>
-        <div id="collapseStoria" class="collapse show" aria-labelledby="headingStoria" data-parent="#accordionMaterials">
+        <div id="collapseStoria" class="collapse" aria-labelledby="headingStoria" data-parent="#accordionMaterials">
           <div class="card-body">
             <a href="subjects/storia.html" class="material-btn">
               LA PRIMA GUERRA MONDIALE - DALLE ALLEANZE AL PRIMO GRANDE CONFLITTO
@@ -272,47 +277,12 @@
             <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseDiritto"
                     aria-expanded="false" aria-controls="collapseDiritto">
-              Diritto <i class="fas fa-chevron-down float-right"></i>
+              Diritto
+              <i class="fas fa-chevron-right float-right"></i>
             </button>
           </h2>
         </div>
         <div id="collapseDiritto" class="collapse" aria-labelledby="headingDiritto" data-parent="#accordionMaterials">
-          <div class="card-body">
-            <p class="no-material">Nessun materiale disponibile</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Economia Politica -->
-      <div class="card">
-        <div class="card-header" id="headingEconPolitica">
-          <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed"
-                    type="button" data-toggle="collapse" data-target="#collapseEconPolitica"
-                    aria-expanded="false" aria-controls="collapseEconPolitica">
-              Economia Politica <i class="fas fa-chevron-down float-right"></i>
-            </button>
-          </h2>
-        </div>
-        <div id="collapseEconPolitica" class="collapse" aria-labelledby="headingEconPolitica" data-parent="#accordionMaterials">
-          <div class="card-body">
-            <p class="no-material">Nessun materiale disponibile</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Economia Aziendale -->
-      <div class="card">
-        <div class="card-header" id="headingEconAziendale">
-          <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed"
-                    type="button" data-toggle="collapse" data-target="#collapseEconAziendale"
-                    aria-expanded="false" aria-controls="collapseEconAziendale">
-              Economia Aziendale <i class="fas fa-chevron-down float-right"></i>
-            </button>
-          </h2>
-        </div>
-        <div id="collapseEconAziendale" class="collapse" aria-labelledby="headingEconAziendale" data-parent="#accordionMaterials">
           <div class="card-body">
             <p class="no-material">Nessun materiale disponibile</p>
           </div>
