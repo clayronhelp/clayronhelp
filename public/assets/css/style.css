@@ -188,6 +188,7 @@ a:hover {
 .social-btn.facebook  { background: #1877F2; }
 .social-btn.tiktok    { background: #000000; }
 .social-btn.envelope  { background: #DD4B39; }
+.social-btn.paypal  { background: #000972; }
 
 /* Center carousel controls on mobile */
 @media (max-width: 767px) {
