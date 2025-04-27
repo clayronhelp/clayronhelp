@@ -16,45 +16,6 @@
     body { display: flex; flex-direction: column; min-height: 100vh; }
     main { flex: 1; }
     .form-control, .btn { border-radius: 4px; }
-
-    /* Social buttons */
-    .social-btns {
-      display: flex;
-      flex-direction: column;
-    }
-    .social-btn {
-      display: inline-flex;
-      align-items: center;
-      margin-bottom: .75rem;
-      padding: .5rem 1rem;
-      font-weight: 500;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 4px;
-      transition: background 0.2s;
-    }
-    .social-btn .icon {
-      margin-right: .5rem;
-      font-size: 1.2rem;
-    }
-    .social-btn.instagram { background: #E4405F; }
-    .social-btn.instagram:hover { background: #d02852; }
-    .social-btn.facebook  { background: #1877F2; }
-    .social-btn.facebook:hover { background: #145dbf; }
-    .social-btn.tiktok    { background: #000; }
-    .social-btn.tiktok:hover { background: #222; }
-    .social-btn.envelope  { background: #6c757d; }
-    .social-btn.envelope:hover { background: #5a6268; }
-
-    /* Nuovo: PayPal donation button */
-    .social-btn.paypal {
-      background: #FFC439;
-      color: #003087;
-    }
-    .social-btn.paypal:hover {
-      background: #FFB200;
-      color: #002659;
-    }
   </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -99,13 +60,10 @@
           <a href="mailto:clayronhelp@gmail.com" class="social-btn envelope">
             <i class="fas fa-envelope icon"></i><span>Email</span>
           </a>
-
-          <!-- NUOVO BOTTONE DONAZIONI -->
-          <a href="https://www.paypal.com/donate/?hosted_button_id=3ZHUUC5FYRHA8"
-             target="_blank"
-             class="social-btn paypal">
+          <a href="https://www.paypal.com/donate/?hosted_button_id=3ZHUUC5FYRHA8" target="_blank" class="social-btn paypal">
             <i class="fab fa-paypal icon"></i><span>Dona con PayPal</span>
           </a>
+          
         </div>
       </div>
       <!-- Colonna Form -->
@@ -145,7 +103,7 @@
   </main>
 
   <!-- Footer -->
-  <footer class="py-4 text-white text-center bg-primary mt-auto">
+  <footer class="py-4 text-white text-center">
     <div class="container">
       <div class="social-icons mb-3">
         <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
@@ -154,7 +112,7 @@
       </div>
       <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
       <small>
-        <a href="terms.html" class="text-white">Termini &amp; Condizioni</a> – 
+        <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
         <a href="cookie.html" class="text-white">Cookie Policy</a>
       </small>
     </div>
