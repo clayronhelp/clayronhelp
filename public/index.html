@@ -17,6 +17,19 @@
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
   </script>
   <script src="assets/js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      const btn = document.getElementById('hero-cta')
+      if (session) {
+        btn.textContent = 'Area Personale'
+        btn.href        = 'area.html'
+      } else {
+        btn.textContent = 'Accedi/Registrati'
+        btn.href        = 'login.html'
+      }
+    })
+  </script>  
 </head>
 
 <script
@@ -57,7 +70,7 @@
       <p class="lead animate__animated animate__fadeInUp animate__delay-1s">Supporto personalizzato per studenti con DSA
         e PDP.</p>
       <a href="login.html"
-        class="btn btn-primary btn-lg mt-3 animate__animated animate__fadeInUp animate__delay-2s">Accedi o
+        class="btn btn-primary btn-lg mt-3 animate__animated animate__fadeInUp animate__delay-2s" id="hero-cta">Accedi o
         Registrati</a>
     </div>
   </section>
