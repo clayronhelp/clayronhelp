@@ -3,59 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Registrazione - ClayRon S.P.A.</title>
-  <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
+  <title>Registrazione - ClayRon</title>
+  <link rel="icon" href="assets/img/logo.png">
+  <!-- CSS e reCAPTCHA -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/module/supabase.js"></script>
+  <style>
+    .requirement { font-size: .9rem; color: red; }
+    .requirement.valid { color: green; }
+  </style>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <!-- Supabase UMD -->
+  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
-    const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+    const SUPABASE_URL = 'https://<TUO-PROJECT>.supabase.co';
+    const SUPABASE_ANON = '<LA_TUA_ANON_KEY>';
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
   </script>
 </head>
-<body>
-  <div class="container mt-5">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h2 class="text-center mb-4">Registrazione</h2>
-        <form id="registerForm">
-          <div class="form-group">
-            <label for="regEmail">Email</label>
-            <input type="email" id="regEmail" class="form-control" placeholder="Inserisci la tua email" required>
-          </div>
-          <div class="form-group">
-            <label for="regPassword">Password</label>
-            <input type="password" id="regPassword" class="form-control" placeholder="Inserisci una password" required>
-          </div>
-          <button type="submit" class="btn btn-primary btn-block">Registrati</button>
-        </form>
-        <div id="registerMessage" class="mt-3"></div>
-        <p class="mt-3 text-center"><small>Hai già un account? <a href="login.html">Accedi qui</a>.</small></p>
+<body class="d-flex justify-content-center align-items-center vh-100">
+  <div class="card p-4" style="width: 100%; max-width: 400px;">
+    <h2 class="text-center mb-3">Registrazione</h2>
+    <form id="registerForm">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="regEmail" class="form-control" required>
       </div>
-    </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="regPassword" class="form-control" required>
+        <small class="form-text">Almeno 5 caratteri, 1 maiuscola, 1 simbolo</small>
+        <ul class="pl-3">
+          <li id="reqLength" class="requirement">Almeno 5 caratteri</li>
+          <li id="reqUpper" class="requirement">Almeno 1 maiuscola</li>
+          <li id="reqSpecial" class="requirement">Almeno 1 simbolo</li>
+        </ul>
+      </div>
+      <div class="g-recaptcha mb-3" data-sitekey="TUO_SITE_KEY"></div>
+      <button class="btn btn-primary btn-block">Registrati</button>
+      <div id="registerMessage" class="mt-3"></div>
+      <p class="text-center small mt-2">Hai già un account? <a href="login.html">Accedi</a></p>
+    </form>
   </div>
 
-  <!-- jQuery, Popper, Bootstrap JS -->
+  <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    // validazione in tempo reale
+    $('#regPassword').on('input', function(){
+      const v = this.value;
+      $('#reqLength').toggleClass('valid', v.length >= 5);
+      $('#reqUpper').toggleClass('valid', /[A-Z]/.test(v));
+      $('#reqSpecial').toggleClass('valid', /[^A-Za-z0-9]/.test(v));
+    });
+    // submit
+    $('#registerForm').on('submit', async e => {
       e.preventDefault();
-      const email = document.getElementById('regEmail').value;
-      const password = document.getElementById('regPassword').value;
-      const { data, error } = await supabase.auth.signUp({ email, password });
+      const rec = grecaptcha.getResponse();
+      if (!rec) {
+        $('#registerMessage').html('<div class="alert alert-danger">Verifica reCAPTCHA</div>');
+        return;
+      }
+      const email = $('#regEmail').val(), pwd = $('#regPassword').val();
+      const { data, error } = await supabase.auth.signUp({ email, password: pwd });
       if (error) {
-        document.getElementById('registerMessage').innerHTML =
-          `<div class="alert alert-danger">${error.message}</div>`;
+        $('#registerMessage').html(`<div class="alert alert-danger">${error.message}</div>`);
       } else {
-        document.getElementById('registerMessage').innerHTML =
-          `<div class="alert alert-success">
-             Registrazione riuscita!<br>
-             Controlla la tua email per confermare l’iscrizione.
-           </div>`;
+        $('#registerMessage').html('<div class="alert alert-success">Controlla la tua email!</div>');
+        setTimeout(()=> location.href='login.html', 2000);
       }
     });
   </script>
