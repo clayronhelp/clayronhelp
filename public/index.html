@@ -5,23 +5,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ClayRon S.P.A. | Home</title>
+  <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
+  <!-- Montserrat + Bootstrap + FontAwesome + style.css -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
-  <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-</head>
-  <!-- head delle tue pagine … -->
-<!-- 1. Supabase client da CDN -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/module/supabase.js"></script>
-<script>
-  // 2. Configura URL e KEY
-  const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';       // ← sostituisci con il tuo URL
-  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';                            // ← la tua anon key
+  <link rel="stylesheet" href="assets/css/style.css">
 
-  // 3. Inizializza client
-  window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-</script>
+  <!-- 1) Supabase client da CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/module/supabase.js"></script>
+  <script>
+    // 2) Configura URL e ANON KEY
+    const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+    // 3) Inizializza client
+    window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  </script>
 <!-- poi i tuoi link a style.css, font, favicon… -->
 <script
   type="text/javascript">window.$crisp = []; window.CRISP_WEBSITE_ID = "45cfc21b-d192-474e-ab1c-7761a87b9a31"; (function () { d = document; s = d.createElement("script"); s.src = "https://client.crisp.chat/l.js"; s.async = 1; d.getElementsByTagName("head")[0].appendChild(s); })();</script>
