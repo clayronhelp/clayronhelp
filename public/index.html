@@ -5,6 +5,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ClayRon S.P.A. | Home</title>
+  <!-- head delle tue pagine … -->
+<!-- 1. Supabase client da CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/module/supabase.js"></script>
+<script>
+  // 2. Configura URL e KEY
+  const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';       // ← sostituisci con il tuo URL
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';                            // ← la tua anon key
+
+  // 3. Inizializza client
+  window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+</script>
+<!-- poi i tuoi link a style.css, font, favicon… -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
