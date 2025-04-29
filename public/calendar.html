@@ -1,145 +1,116 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Area Personale - ClayRon</title>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calendario - ClayRon</title>
   <link rel="icon" href="assets/img/logo.png">
-  <!-- Bootstrap, Animate.css, FontAwesome -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
   <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet'/>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <!-- Supabase + auth -->
+  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
+  <script>
+    const SUPABASE_URL='https://nptawehzfamaghytkmbk.supabase.co'; 
+    const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+    window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  </script>
+  <script src="assets/js/auth.js"></script>
   <style>
-    #calendar {
-      max-width:900px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      padding: 1rem;
-    }
-    /* toolbar */
-    .fc .fc-toolbar-chunk, .fc .fc-col-header-cell-cushion {
-      background: #003366;
-      color: #fff;
-      border-radius: 4px;
-      padding: 0.5rem;
-    }
-    .fc-button {
-      background: #0055aa;
-      border: none;
-      color: #fff;
-      border-radius: 4px;
-      margin: 0 0.2rem;
-    }
-    .fc-button:hover {
-      background: #004080;
-    }
-    /* numeri giorni */
-    .fc-daygrid-day-number {
-      color: #0055aa;
-      font-weight: 500;
-    }
-    /* eventi */
-    .fc-event {
-      background-color: #28a745 !important;
-      border: none !important;
-      border-radius: 4px;
-      color: #fff !important;
-      padding: 2px 4px;
-    }
+    #calendar { max-width: 900px; margin: 0 auto; }
   </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
-        <div class="container">
-          <a class="navbar-brand" href="index.html">
-            <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
-          </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
-            aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <!-- La navbar con link comuni -->
-          <div class="collapse navbar-collapse" id="navbarNavHome">
-            <ul class="navbar-nav ml-auto" id="nav-links">
-              <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-              <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
-              <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
-              <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
-            </ul>
-            <!-- L'area di autenticazione verrà aggiornata dinamicamente -->
-            <div id="auth-area">
-              <a href="login.html" class="btn btn-outline-light ml-2">Accedi/Registrati</a>
-            </div>
-          </div>
+    <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
+        aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- La navbar con link comuni -->
+      <div class="collapse navbar-collapse" id="navbarNavHome">
+        <ul class="navbar-nav ml-auto" id="nav-links">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
+        </ul>
+        <!-- L'area di autenticazione verrà aggiornata dinamicamente -->
+        <div id="auth-area">
+          <a href="login.html" class="btn btn-outline-light ml-2">Accedi/Registrati</a>
         </div>
-      </nav>
+      </div>
+    </div>
+  </nav>
 
   <main class="container flex-fill py-5">
-    <h2 class="mb-4 text-center">Calendario</h2>
-    <div id="calendar"></div>
+    <h2>Calendario</h2>
+    <div id="calendar" class="mt-4"></div>
   </main>
 
     <!-- Footer -->
-  <footer class="py-4 text-white text-center">
-    <div class="container">
-      <div class="social-icons mb-3">
-        <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
-      </div>
-      <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
-      <small>
-        <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
-        <a href="cookie.html" class="text-white">Cookie Policy</a>
-      </small>
-    </div>
-  </footer>
+    <footer class="py-4 text-white text-center">
+        <div class="container">
+          <div class="social-icons mb-3">
+            <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+          </div>
+          <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
+          <small>
+            <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
+            <a href="cookie.html" class="text-white">Cookie Policy</a>
+          </small>
+        </div>
+      </footer>
 
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      const { data:{session} } = await supabase.auth.getSession();
-      if (!session) return location.href='login.html';
+  document.addEventListener('DOMContentLoaded', async ()=>{
+    // session check
+    const { data:{session} } = await supabase.auth.getSession();
+    if(!session) return location.href='login.html';
 
-      const calendarEl = document.getElementById('calendar');
-      const calendar = new FullCalendar.Calendar(calendarEl, {
-        locale: 'it',
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        selectable: true,
-        select: info => {
-          const titolo = prompt('Titolo (es: Verifica Italiano):');
-          if (titolo) {
-            calendar.addEvent({ title: titolo, start: info.startStr, allDay: true });
-            let ev = JSON.parse(localStorage.getItem('myEvents')||'[]');
-            ev.push({ title: titolo, start: info.startStr, allDay: true });
-            localStorage.setItem('myEvents', JSON.stringify(ev));
-          }
-          calendar.unselect();
-        },
-        events: JSON.parse(localStorage.getItem('myEvents')||'[]'),
-        eventClick: info => {
-          if (confirm(`Eliminare "${info.event.title}"?`)) {
-            info.event.remove();
-            let ev = JSON.parse(localStorage.getItem('myEvents')||'[]')
-                      .filter(e=>!(e.title===info.event.title && e.start===info.event.startStr));
-            localStorage.setItem('myEvents', JSON.stringify(ev));
-          }
+    // init FullCalendar in italiano
+    FullCalendar.globalLocales.push(
+      FullCalendar.globalLocales.find(loc=>loc.code==='it')
+    );
+    const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+      locale: 'it',
+      initialView: 'dayGridMonth',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      selectable: true,
+      select: info => {
+        const titolo = prompt('Titolo (es: Verifica Matematica):');
+        if(titolo){
+          calendar.addEvent({ title: titolo, start: info.startStr, allDay: info.allDay });
+          let ev = JSON.parse(localStorage.getItem('myEvents')||'[]');
+          ev.push({ title: titolo, start: info.startStr, allDay: info.allDay });
+          localStorage.setItem('myEvents', JSON.stringify(ev));
         }
-      });
-      calendar.render();
+        calendar.unselect();
+      },
+      events: JSON.parse(localStorage.getItem('myEvents')||'[]'),
+      eventClick: info => {
+        if(confirm(`Eliminare "${info.event.title}"?`)){
+          info.event.remove();
+          let ev = JSON.parse(localStorage.getItem('myEvents')||'[]')
+                    .filter(e=>!(e.title===info.event.title && e.start===info.event.startStr));
+          localStorage.setItem('myEvents', JSON.stringify(ev));
+        }
+      }
     });
+    calendar.render();
+  });
   </script>
 </body>
 </html>
