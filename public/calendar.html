@@ -8,7 +8,35 @@
   <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet'/>
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    #calendar { max-width:900px; margin: 0 auto; }
+    .card-custom {
+      /* altezza aumentata */
+      min-height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      transition: transform .3s, box-shadow .3s;
+      background: linear-gradient(135deg, #0055aa 0%, #003366 100%);
+      color: #fff;
+    }
+    .card-custom:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    }
+    .card-body i {
+      font-size: 3.5rem;  /* leggermente più grande */
+      margin-bottom: .5rem;
+    }
+    .card-body h4 {
+      margin-bottom: .5rem;
+    }
+    .card-body p {
+      font-size: .95rem;
+      opacity: .85;
+    }
   </style>
   <!-- Supabase + auth.js -->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
