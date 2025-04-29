@@ -7,29 +7,28 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
-  <!-- Supabase + auth.js -->
+  <!-- Supabase -->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
-    const SUPABASE_URL='https://nptawehzfamaghytkmbk.supabase.co',
-          SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
-    window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    window.supabase = supabase.createClient(
+      'https://nptawehzfamaghytkmbk.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8'
+    );
   </script>
-  <script src="assets/js/auth.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background:#0055aa;">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
       <a class="navbar-brand" href="index.html">
-        <img src="assets/img/logo.png" alt="Logo" class="logo" style="height:32px;"> ClayRon S.P.A.
+        <img src="assets/img/logo.png" alt="Logo" class="logo" style="height:32px"> ClayRon S.P.A.
       </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
-        aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavHome">
-        <ul class="navbar-nav ml-auto" id="nav-links">
+        <ul class="navbar-nav ml-auto">
           <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
           <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
@@ -49,68 +48,49 @@
   </main>
 
   <!-- Footer -->
-  <footer class="py-4 text-white text-center" style="background:#003366;">
+  <footer class="py-4 text-white text-center bg-dark mt-auto">
     <div class="container">
       <div class="social-icons mb-3">
-        <a href="https://www.instagram.com/clayronhelp/" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.facebook.com/profile.php?id=61575494257613" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.tiktok.com/@clayronhelp" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+        <a href="#" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
       </div>
-      <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
-      <small>
-        <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
-        <a href="cookie.html" class="text-white">Cookie Policy</a>
-      </small>
+      <p>&copy; 2025 ClayRon S.P.A.</p>
     </div>
   </footer>
 
-  <!-- JS: jQuery, Popper, Bootstrap -->
+  <!-- Scripts -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      // proteggi
-      const { data:{session} } = await supabase.auth.getSession();
+      // 1) Protezione pagina
+      const { data:{ session } } = await supabase.auth.getSession();
       if (!session) return location.href='login.html';
 
-      // dropdown uguale all'index
-      $.ajax({
-        url:'/api/profile',
-        method:'GET',
-        headers:{ "Authorization": localStorage.getItem('token')||'' },
-        success(data){
-          if(!data.success) return;
-          const avatar = data.profile.profilePicture.match(/^https?:\/\//)
-            ? data.profile.profilePicture
-            : '/'+data.profile.profilePicture.replace(/^\/+/, '');
-          $('#auth-area').html(`
-            <div class="dropdown">
-              <button class="btn btn-outline-light dropdown-toggle d-flex align-items-center" 
-                      type="button" id="userMenuBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="${avatar}" alt="Avatar" class="rounded-circle mr-2" style="width:24px;height:24px;">
-                ${data.profile.email}
-              </button>
-              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenuBtn">
-                <a class="dropdown-item" href="profile.html">Modifica Profilo</a>
-                <div class="dropdown-divider"></div>
-                <button class="dropdown-item" id="logoutBtn">Esci</button>
-              </div>
-            </div>
-          `);
-          $('#logoutBtn').click(()=>{ localStorage.removeItem('token'); location.href='index.html'; });
-        },
-        error(){
-          $('#auth-area').html(`<a href="login.html" class="btn btn-outline-light">Accedi/Registrati</a>`);
-        }
-      });
+      // 2) Dropdown via Supabase
+      document.getElementById('auth-area').innerHTML = `
+        <div class="dropdown">
+          <button class="btn btn-outline-light dropdown-toggle" type="button" id="userMenuBtn" data-toggle="dropdown">
+            ${session.user.email}
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenuBtn">
+            <a class="dropdown-item" href="profile.html">Modifica Profilo</a>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" id="logoutBtn">Esci</button>
+          </div>
+        </div>`;
+      document.getElementById('logoutBtn').onclick = async () => {
+        await supabase.auth.signOut();
+        location.href = 'index.html';
+      };
 
-      // carica e mostra materiali senza duplicati
+      // 3) Materiali salvati senza duplicati
       const ul = $('#myMaterials');
       const stored = JSON.parse(localStorage.getItem('myMaterials')||'[]');
       const unique = Array.from(new Map(stored.map(i=>[i.id,i])).values());
-      if(!unique.length){
+      if (!unique.length) {
         ul.append('<li class="list-group-item text-muted">Nessun materiale scaricato</li>');
       } else {
         unique.forEach(item=>{
@@ -122,8 +102,7 @@
                 <a href="${page}" class="btn btn-sm btn-outline-primary mr-1">Visualizza</a>
                 <a href="${item.link}" download class="btn btn-sm btn-success">Scarica</a>
               </div>
-            </li>
-          `);
+            </li>`);
         });
       }
     });
