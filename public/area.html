@@ -9,11 +9,6 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <!-- FullCalendar CSS -->
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
-  <style>
-    .nav-pills .nav-link { cursor: pointer; }
-    #calendar { max-width: 800px; margin: auto; }
-  </style>
-  <!-- Supabase + Crisp + Auth -->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
     const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
@@ -21,6 +16,11 @@
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
   </script>
   <script src="assets/js/auth.js"></script>
+  <style>
+    .nav-pills .nav-link { cursor: pointer; }
+    #calendar { max-width: 800px; margin: auto; }
+  </style>
+  <!-- Supabase + Crisp + Auth -->
 </head>
 <body class="d-flex flex-column min-vh-100">
 
