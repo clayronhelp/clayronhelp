@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calendario - ClayRon</title>
+  <link rel="icon" href="assets/img/logo.png">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet'/>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <!-- Supabase + auth -->
+  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
+  <script>
+    const SUPABASE_URL='https://nptawehzfamaghytkmbk.supabase.co'; 
+    const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+    window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  </script>
+  <script src="assets/js/auth.js"></script>
+  <style>
+    #calendar { max-width: 900px; margin: 0 auto; }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <nav>… stessa navbar …</nav>
+
+  <main class="container flex-fill py-5">
+    <h2>Calendario</h2>
+    <div id="calendar" class="mt-4"></div>
+  </main>
+
+  <footer>… stesso footer …</footer>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', async ()=>{
+    // session check
+    const { data:{session} } = await supabase.auth.getSession();
+    if(!session) return location.href='login.html';
+
+    // init FullCalendar in italiano
+    FullCalendar.globalLocales.push(
+      FullCalendar.globalLocales.find(loc=>loc.code==='it')
+    );
+    const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+      locale: 'it',
+      initialView: 'dayGridMonth',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      selectable: true,
+      select: info => {
+        const titolo = prompt('Titolo (es: Verifica Matematica):');
+        if(titolo){
+          calendar.addEvent({ title: titolo, start: info.startStr, allDay: info.allDay });
+          let ev = JSON.parse(localStorage.getItem('myEvents')||'[]');
+          ev.push({ title: titolo, start: info.startStr, allDay: info.allDay });
+          localStorage.setItem('myEvents', JSON.stringify(ev));
+        }
+        calendar.unselect();
+      },
+      events: JSON.parse(localStorage.getItem('myEvents')||'[]'),
+      eventClick: info => {
+        if(confirm(`Eliminare "${info.event.title}"?`)){
+          info.event.remove();
+          let ev = JSON.parse(localStorage.getItem('myEvents')||'[]')
+                    .filter(e=>!(e.title===info.event.title && e.start===info.event.startStr));
+          localStorage.setItem('myEvents', JSON.stringify(ev));
+        }
+      }
+    });
+    calendar.render();
+  });
+  </script>
+</body>
+</html>
