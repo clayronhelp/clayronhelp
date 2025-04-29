@@ -20,6 +20,7 @@
       transition: transform .3s, box-shadow .3s;
       background: linear-gradient(135deg, #0055aa 0%, #003366 100%);
       color: #fff;
+      height: 100%;
     }
     .card-custom:hover {
       transform: translateY(-8px) scale(1.02);
@@ -43,7 +44,6 @@
     const SUPABASE_URL='https://nptawehzfamaghytkmbk.supabase.co';
     const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.…';
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-    // proteggi
     (async()=>{
       const { data:{session} }=await supabase.auth.getSession();
       if(!session) location.href='login.html';
@@ -77,9 +77,10 @@
   </nav>
 
   <main class="container flex-fill py-5">
-    <h2 class="mb-4">Benvenuto nell’Area Personale</h2>
+    <h2 class="mb-4 text-center">Benvenuto nell’Area Personale</h2>
+    
+    <!-- prima riga di card -->
     <div class="row">
-
       <div class="col-md-4 mb-4 animate__animated animate__fadeInUp">
         <a href="profile.html" class="text-white text-center d-block">
           <div class="card card-custom h-100">
@@ -91,7 +92,6 @@
           </div>
         </a>
       </div>
-
       <div class="col-md-4 mb-4 animate__animated animate__fadeInUp animate__delay-1s">
         <a href="my-materials.html" class="text-white text-center d-block">
           <div class="card card-custom h-100">
@@ -103,7 +103,6 @@
           </div>
         </a>
       </div>
-
       <div class="col-md-4 mb-4 animate__animated animate__fadeInUp animate__delay-2s">
         <a href="calendar.html" class="text-white text-center d-block">
           <div class="card card-custom h-100">
@@ -115,7 +114,43 @@
           </div>
         </a>
       </div>
+    </div>
 
+    <!-- seconda riga di card aggiuntive -->
+    <div class="row">
+      <div class="col-md-4 mb-4 animate__animated animate__fadeInUp">
+        <a href="#" class="text-white text-center d-block">
+          <div class="card card-custom h-100">
+            <div class="card-body">
+              <i class="fas fa-adjust"></i>
+              <h4>Tema Chiaro/Scuro</h4>
+              <p>Attiva la modalità notte o giorno</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 mb-4 animate__animated animate__fadeInUp animate__delay-1s">
+        <a href="#" class="text-white text-center d-block">
+          <div class="card card-custom h-100">
+            <div class="card-body">
+              <i class="fas fa-gamepad"></i>
+              <h4>Minigiochi</h4>
+              <p>Rilassati con alcuni giochi educativi</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4 mb-4 animate__animated animate__fadeInUp animate__delay-2s">
+        <a href="#" class="text-white text-center d-block">
+          <div class="card card-custom h-100">
+            <div class="card-body">
+              <i class="fas fa-clock"></i>
+              <h4>Coming Soon</h4>
+              <p>Nuove funzionalità in arrivo!</p>
+            </div>
+          </div>
+        </a>
+      </div>
     </div>
   </main>
 
