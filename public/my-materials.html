@@ -65,29 +65,33 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      // Proteggi pagina
-      const { data:{ session } } = await supabase.auth.getSession();
-      if (!session) return location.href='login.html';
+    const { data:{ session } } = await supabase.auth.getSession();
+    if (!session) return location.href='login.html';
 
-      // Lista materiali scaricati (unici)
-      const ul = $('#myMaterials');
-      const stored = JSON.parse(localStorage.getItem('myMaterials')||'[]');
-      const unique = Array.from(new Map(stored.map(i=>[i.id,i])).values());
-      if (!unique.length) {
+    // prendi tutti i materiali di questo utente
+    let { data: mats } = await supabase
+        .from('user_materials')
+        .select('*')
+        .eq('user_id', session.user.id);
+
+    const ul = $('#myMaterials');
+    if (!mats.length) {
         ul.append('<li class="list-group-item text-muted">Nessun materiale scaricato</li>');
-      } else {
-        unique.forEach(item=>{
-          const page = item.page || `material-detail.html?id=${encodeURIComponent(item.id)}`;
-          ul.append(`
+    } else {
+        mats.forEach(item => {
+        const page = item.page || `material-detail.html?id=${encodeURIComponent(item.material_id)}`;
+        ul.append(`
             <li class="list-group-item d-flex justify-content-between align-items-center">
-              ${item.title}
-              <div>
-                <a href="${page}" class="btn btn-sm btn-outline-primary mr-1">Visualizza</a>
-                <a href="${item.link}" download class="btn btn-sm btn-success">Scarica</a>
-              </div>
+            ${item.title}
+            <div>
+                <a href="${page}"
+                class="btn btn-sm btn-outline-primary mr-1">Visualizza</a>
+                <a href="${item.link}" download
+                class="btn btn-sm btn-success">Scarica</a>
+            </div>
             </li>`);
         });
-      }
+    }
     });
   </script>
 </body>
