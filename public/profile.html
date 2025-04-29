@@ -3,70 +3,159 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Profilo - ClayRon</title>
-  <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
+  <title>Modifica Profilo - ClayRon S.P.A.</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
     const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
-    const SUPABASE_ANON = '<YOUR_ANON_KEY>';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
   </script>
 </head>
-<body class="d-flex flex-column min-vh-100">
-  <!-- Navbar dinamica -->
-
-  <main class="container py-5 flex-fill">
+<body>
+  <!-- Navbar Protetta -->
+  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
+        aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavProfile">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
+          <li class="nav-item"><a class="nav-link" href="area.html">Area Personale</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
+          <li class="nav-item"><a class="nav-link" href="logout.html">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+  <div class="container mt-5">
     <h2>Modifica Profilo</h2>
     <form id="profileForm">
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="name">Nome</label>
-          <input type="text" id="name" class="form-control">
-        </div>
-        <div class="form-group col-md-6">
-          <label for="surname">Cognome</label>
-          <input type="text" id="surname" class="form-control">
-        </div>
+      <div class="form-group">
+        <label for="profileName">Nome</label>
+        <input type="text" class="form-control" id="profileName" placeholder="Inserisci il tuo nome">
       </div>
       <div class="form-group">
-        <label for="profilePicture">Foto Profilo</label>
-        <input type="file" id="profilePicture" class="form-control-file">
+        <label for="profileSurname">Cognome</label>
+        <input type="text" class="form-control" id="profileSurname" placeholder="Inserisci il tuo cognome">
+      </div>
+      <div class="form-group">
+        <label for="profileNationality">Nazionalità</label>
+        <select id="profileNationality" class="form-control">
+          <option value="">Seleziona la tua nazione</option>
+          <!-- Aggiungi qui le opzioni per i paesi; per esempio: -->
+          <option value="Italy">Italia</option>
+          <option value="USA">USA</option>
+          <!-- Puoi usare una lista completa in produzione -->
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="profileRegion">Regione di Residenza</label>
+        <select id="profileRegion" class="form-control">
+          <option value="">Seleziona la tua regione</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="profileMunicipality">Comune di Residenza</label>
+        <select id="profileMunicipality" class="form-control">
+          <option value="">Seleziona il tuo comune</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="profilePicture">Immagine Profilo</label>
+        <input type="text" class="form-control" id="profilePicture" placeholder="Inserisci URL dell'immagine">
+        <!-- In produzione potresti usare un file uploader -->
       </div>
       <button type="submit" class="btn btn-primary">Salva Modifiche</button>
     </form>
-    <div id="profileAlert" class="mt-3"></div>
-  </main>
-
-  <footer class="bg-primary text-white text-center py-4 mt-auto">
-    <div class="container">&copy; 2025 ClayRon S.P.A.</div>
-  </footer>
-
+    <div id="profileMessage" class="mt-3"></div>
+  </div>
+  
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
-    $(async ()=>{
-      const { data:{ session } } = await supabase.auth.getSession();
-      const user = session.user;
-      $('#name').val(user.user_metadata.name||'');
-      $('#surname').val(user.user_metadata.surname||'');
-    });
-    $('#profileForm').submit(async e=>{
-      e.preventDefault();
-      const name = $('#name').val(), surname = $('#surname').val();
-      let updates = { name, surname };
-      const file = $('#profilePicture')[0].files[0];
-      if(file) {
-        const { data, error } = await supabase.storage
-          .from('avatars').upload(`${Date.now()}_${file.name}`, file);
-        if(error) return $('#profileAlert').html('<div class="alert alert-danger">Errore upload</div>');
-        updates.avatar_url = data.path;
+    // Quando la pagina si carica, carica il profilo dell'utente dall'API
+    $.ajax({
+      url: '/api/profile',
+      method: 'GET',
+      success: function(data) {
+        if (data.success && data.profile) {
+          $('#profileName').val(data.profile.name);
+          $('#profileSurname').val(data.profile.surname);
+          $('#profileNationality').val(data.profile.nationality);
+          $('#profileRegion').val(data.profile.region);
+          $('#profileMunicipality').val(data.profile.municipality);
+          $('#profilePicture').val(data.profile.profilePicture);
+        }
       }
-      const { error:updateErr } = await supabase.auth.updateUser({ data: updates });
-      if(updateErr) return $('#profileAlert').html('<div class="alert alert-danger">'+updateErr.message+'</div>');
-      $('#profileAlert').html('<div class="alert alert-success">Profilo aggiornato!</div>');
     });
+    
+    // Gestisci il salvataggio del profilo
+    $('#profileForm').submit(function(e) {
+      e.preventDefault();
+      $.ajax({
+        type: 'POST',
+        url: '/api/profile',
+        data: JSON.stringify({
+          name: $('#profileName').val(),
+          surname: $('#profileSurname').val(),
+          nationality: $('#profileNationality').val(),
+          region: $('#profileRegion').val(),
+          municipality: $('#profileMunicipality').val(),
+          profilePicture: $('#profilePicture').val()
+        }),
+        contentType: 'application/json',
+        success: function(response) {
+          $('#profileMessage').html('<div class="alert alert-success">' + response.message + '</div>');
+        },
+        error: function(xhr) {
+          $('#profileMessage').html('<div class="alert alert-danger">' + xhr.responseJSON.message + '</div>');
+        }
+      });
+    });
+    
+    // (Opzionale) Aggiungi qui la logica per popolare i menu a tendina "Regione" e "Comune" in base alla nazione selezionata.
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const authArea = document.getElementById('auth-area');
+      const user = JSON.parse(localStorage.getItem('user'));
+  
+      if (user) {
+        authArea.innerHTML = `
+          <div class="dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+              <img src="${user.profileImage || '/img/default-avatar.png'}" class="rounded-circle me-2" style="width: 30px; height: 30px;" />
+              Area Personale
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/profilo.html">Modifica Profilo</a></li>
+              <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+            </ul>
+          </div>
+        `;
+      } else {
+        authArea.innerHTML = `<a class="nav-link" href="/login.html">Registrati / Accedi</a>`;
+      }
+    });
+  
+    function logout() {
+      localStorage.removeItem('user');
+      window.location.href = '/';
+    }
+  </script>
+  
 </body>
 </html>
