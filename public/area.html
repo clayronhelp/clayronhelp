@@ -4,179 +4,127 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Area Personale - ClayRon</title>
-  <link rel="icon" href="assets/img/logo.png">
-  <!-- Bootstrap CSS -->
+  <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
+  <!-- Font & CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- FullCalendar CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
-  <style>
-    .nav-pills .nav-link { cursor: pointer; }
-    #calendarContainer { max-width: 800px; margin: auto; }
-  </style>
+  <link rel="stylesheet" href="assets/css/style.css">
+
   <!-- Supabase UMD -->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
     const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8'; // la tua anon key
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // la tua anon key
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  </script>
+  <script>
+    // Proteggi la pagina: se non loggato, rimanda al login
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) window.location.href = 'login.html';
+    })();
   </script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
-      <a class="navbar-brand" href="index.html">ClayRon S.P.A.</a>
-      <button class="navbar-toggler" data-toggle="collapse" data-target="#navArea">
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/img/logo.png" class="logo" alt="Logo"> ClayRon S.P.A.
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavArea">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navArea">
+      <div class="collapse navbar-collapse" id="navbarNavArea">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
           <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
           <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
           <li class="nav-item">
-            <button id="logoutBtn" class="btn btn-outline-light ml-2">Logout</button>
+            <button id="signOutBtn" class="btn btn-outline-light ml-2">Logout</button>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- Main -->
-  <main class="container flex-fill py-5">
+  <!-- Main content -->
+  <main class="container py-5 flex-fill">
     <h2 class="mb-4">Area Personale</h2>
+    <div id="welcomeMessage"></div>
 
-    <!-- Nav pills -->
-    <ul class="nav nav-pills mb-4" id="areaTabs">
-      <li class="nav-item">
-        <a class="nav-link active" data-tab="profile">Profilo</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-tab="materials">I miei materiali</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-tab="calendar">Calendario</a>
-      </li>
-    </ul>
+    <h3 class="mt-5">I tuoi materiali</h3>
+    <ul id="myMaterials" class="list-group"></ul>
 
-    <!-- Profilo -->
-    <div id="profile" class="tab-pane">
-      <div id="welcomeMsg" class="alert alert-success"></div>
-      <button id="editProfileBtn" class="btn btn-primary">Modifica Profilo</button>
-    </div>
-
-    <!-- Materiali -->
-    <div id="materials" class="tab-pane d-none">
-      <h4>I tuoi materiali</h4>
-      <ul id="myMaterials" class="list-group"></ul>
-    </div>
-
-    <!-- Calendario -->
-    <div id="calendar" class="tab-pane d-none">
-      <div id="calendarContainer"></div>
-      <button id="addEventBtn" class="btn btn-success mt-3">Aggiungi Interrogazione/Verifica</button>
-    </div>
+    <button id="editProfileBtn" class="btn btn-primary mt-4">Modifica Profilo</button>
   </main>
 
   <!-- Footer -->
-  <footer class="bg-primary text-white text-center py-3 mt-auto">
-    &copy; 2025 ClayRon S.P.A.
+  <footer class="py-4 text-white text-center bg-primary mt-auto">
+    <div class="container">
+      <div class="social-icons mb-3">
+        <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+      </div>
+      <p>&copy; 2025 ClayRon S.P.A.</p>
+      <small>
+        <a href="terms.html" class="text-white">Termini &amp; Condizioni</a> – 
+        <a href="cookie.html" class="text-white">Cookie Policy</a>
+      </small>
+    </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- jQuery & Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
-  <script>
-    (async () => {
-      // 1) Protezione pagina
-      const { data: { session }} = await supabase.auth.getSession();
-      if (!session) return window.location.href = 'login.html';
 
-      // 2) Logout
-      document.getElementById('logoutBtn').onclick = async () => {
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Recupera sessione e mostra benvenuto
+      const { data: { session } } = await supabase.auth.getSession();
+      document.getElementById('welcomeMessage').innerHTML = `
+        <div class="alert alert-success">
+          Benvenuto, <strong>${session.user.email}</strong>!
+        </div>`;
+
+      // Logout
+      document.getElementById('signOutBtn').addEventListener('click', async () => {
         await supabase.auth.signOut();
         window.location.href = 'index.html';
-      };
-
-      // 3) Benvenuto
-      document.getElementById('welcomeMsg').textContent =
-        `Benvenuto, ${session.user.email}!`;
-
-      // 4) Tab navigation
-      $('#areaTabs .nav-link').click(function(){
-        $('#areaTabs .nav-link').removeClass('active');
-        $(this).addClass('active');
-        $('.tab-pane').addClass('d-none');
-        $('#' + $(this).data('tab')).removeClass('d-none');
       });
 
-      // 5) Carica materiali senza duplicati
-      let materials = JSON.parse(localStorage.getItem('myMaterials')||'[]');
-      // elimino duplicati per title+link
-      materials = Array.from(new Map(materials.map(m=>[m.title+'|'+m.link,m])).values());
+      // Modifica profilo
+      document.getElementById('editProfileBtn').addEventListener('click', () => {
+        window.location.href = 'profile.html';
+      });
+
+      // Lista materiali (localStorage)
+      const stored = JSON.parse(localStorage.getItem('myMaterials') || '[]');
+      // Rimuovo duplicati basati su `id`
+      const unique = Array.from(new Map(stored.map(i => [i.id, i])).values());
 
       const ul = $('#myMaterials').empty();
-      if (!materials.length) {
+      if (!unique.length) {
         ul.append('<li class="list-group-item text-muted">Nessun materiale scaricato</li>');
       } else {
-        materials.forEach(m => {
+        unique.forEach(item => {
+          // `item.page` deve essere il path alla pagina dettaglio (es. "subjects/storia.html")
           ul.append(`
             <li class="list-group-item d-flex justify-content-between align-items-center">
-              ${m.title}
+              ${item.title}
               <div>
-                <a href="${m.link}" class="btn btn-sm btn-info">Visualizza</a>
-                <a href="${m.link}" download class="btn btn-sm btn-success">Scarica</a>
+                <a href="${item.page}" class="btn btn-sm btn-outline-primary mr-1">Visualizza</a>
+                <a href="${item.link}" download class="btn btn-sm btn-success">Scarica</a>
               </div>
             </li>
           `);
         });
       }
-
-      // 6) FullCalendar setup
-      const stored = JSON.parse(localStorage.getItem('myEvents')||'[]');
-      const calendar = new FullCalendar.Calendar(
-        document.getElementById('calendarContainer'),
-        {
-          initialView: 'dayGridMonth',
-          selectable: true,
-          events: stored,
-          eventClick: info => {
-            if (confirm('Eliminare questo evento?')) {
-              info.event.remove();
-              saveEvents();
-            }
-          }
-        }
-      );
-      calendar.render();
-
-      // 7) Aggiungi evento
-      document.getElementById('addEventBtn').onclick = () => {
-        const title = prompt('Titolo evento (es. Verifica):');
-        const date  = prompt('Data (YYYY-MM-DD):');
-        if (title && date) {
-          calendar.addEvent({ title, start: date });
-          saveEvents();
-        }
-      };
-
-      function saveEvents(){
-        const data = calendar.getEvents().map(e=>({
-          title: e.title,
-          start: e.startStr
-        }));
-        localStorage.setItem('myEvents', JSON.stringify(data));
-      }
-
-      // 8) Modifica Profilo
-      document.getElementById('editProfileBtn').onclick = () => {
-        window.location.href = 'profilo.html';
-      };
-    })();
+    });
   </script>
 </body>
 </html>
