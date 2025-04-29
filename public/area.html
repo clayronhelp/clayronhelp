@@ -13,6 +13,14 @@
     .nav-pills .nav-link { cursor: pointer; }
     #calendar { max-width: 800px; margin: auto; }
   </style>
+  <!-- Supabase + Crisp + Auth -->
+  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
+  <script>
+    const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+    window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  </script>
+  <script src="assets/js/auth.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
