@@ -5,10 +5,9 @@
   <title>Calendario - ClayRon</title>
   <link rel="icon" href="assets/img/logo.png">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet'/>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/css/style.css">
   <style>#calendar { max-width:900px; margin: 0 auto; }</style>
-  <!-- Supabase -->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
     window.supabase = supabase.createClient(
@@ -16,6 +15,7 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8'
     );
   </script>
+  <script src="assets/js/auth.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
@@ -36,7 +36,7 @@
           <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
         </ul>
         <div id="auth-area" class="ml-2">
-          <a href="login.html" class="btn btn-outline-light">Accedi/Registrati</a>
+          <!-- auth.js popolerà qui -->
         </div>
       </div>
     </div>
@@ -67,29 +67,11 @@
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      // 1) Protezione pagina
+      // Proteggi pagina
       const { data:{ session } } = await supabase.auth.getSession();
       if (!session) return location.href = 'login.html';
 
-      // 2) Dropdown supabase
-      const authArea = document.getElementById('auth-area');
-      authArea.innerHTML = `
-        <div class="dropdown">
-          <button class="btn btn-outline-light dropdown-toggle" type="button" id="userMenuBtn" data-toggle="dropdown">
-            ${session.user.email}
-          </button>
-          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenuBtn">
-            <a class="dropdown-item" href="profile.html">Modifica Profilo</a>
-            <div class="dropdown-divider"></div>
-            <button class="dropdown-item" id="logoutBtn">Esci</button>
-          </div>
-        </div>`;
-      document.getElementById('logoutBtn').onclick = async () => {
-        await supabase.auth.signOut();
-        location.href = 'index.html';
-      };
-
-      // 3) Inizializza FullCalendar con prima giornata = lunedì
+      // Inizializza FullCalendar con settimana da lunedì
       const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
         locale: 'it',
         firstDay: 1,

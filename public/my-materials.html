@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
-  <!-- Supabase -->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
     window.supabase = supabase.createClient(
@@ -15,6 +14,7 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8'
     );
   </script>
+  <script src="assets/js/auth.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
@@ -35,7 +35,7 @@
           <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
         </ul>
         <div id="auth-area" class="ml-2">
-          <a href="login.html" class="btn btn-outline-light">Accedi/Registrati</a>
+          <!-- auth.js popolerà qui -->
         </div>
       </div>
     </div>
@@ -65,28 +65,11 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      // 1) Protezione pagina
+      // Proteggi pagina
       const { data:{ session } } = await supabase.auth.getSession();
       if (!session) return location.href='login.html';
 
-      // 2) Dropdown via Supabase
-      document.getElementById('auth-area').innerHTML = `
-        <div class="dropdown">
-          <button class="btn btn-outline-light dropdown-toggle" type="button" id="userMenuBtn" data-toggle="dropdown">
-            ${session.user.email}
-          </button>
-          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenuBtn">
-            <a class="dropdown-item" href="profile.html">Modifica Profilo</a>
-            <div class="dropdown-divider"></div>
-            <button class="dropdown-item" id="logoutBtn">Esci</button>
-          </div>
-        </div>`;
-      document.getElementById('logoutBtn').onclick = async () => {
-        await supabase.auth.signOut();
-        location.href = 'index.html';
-      };
-
-      // 3) Materiali salvati senza duplicati
+      // Lista materiali scaricati (unici)
       const ul = $('#myMaterials');
       const stored = JSON.parse(localStorage.getItem('myMaterials')||'[]');
       const unique = Array.from(new Map(stored.map(i=>[i.id,i])).values());
@@ -94,7 +77,7 @@
         ul.append('<li class="list-group-item text-muted">Nessun materiale scaricato</li>');
       } else {
         unique.forEach(item=>{
-          const page = item.page||`material-detail.html?id=${encodeURIComponent(item.id)}`;
+          const page = item.page || `material-detail.html?id=${encodeURIComponent(item.id)}`;
           ul.append(`
             <li class="list-group-item d-flex justify-content-between align-items-center">
               ${item.title}
