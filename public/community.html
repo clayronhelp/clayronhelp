@@ -2,34 +2,33 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Community – ClayRon</title>
+  <title>Community Chat – ClayRon</title>
   <link rel="icon" href="assets/img/logo.png">
-  <!-- Bootstrap & FontAwesome -->
+  <!-- Bootstrap + FontAwesome + style.css -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    #messages { max-height: 60vh; overflow-y: auto; border:1px solid #ddd; padding:1rem; background:#f9f9f9; }
-    .message { margin-bottom:.75rem; }
-    .message .author { font-weight:600; }
-    .message .time { font-size:.8rem; color:#666; }
+    #messages { max-height: 60vh; overflow-y: auto; }
+    .message { margin-bottom: .5rem; }
+    .message .user { font-weight: bold; margin-right: .5rem; }
+    .message .time { font-size: .75rem; color: #666; }
   </style>
-  <!-- Supabase -->
+  <!-- Supabase JS -->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
-    const SUPABASE_URL='https://nptawehzfamaghytkmbk.supabase.co';
-    const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';  // la tua anon key
+    const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8'; // la tua anon key
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
   </script>
-  <script src="assets/js/auth.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-  <!-- Navbar -->
+  <!-- Navbar (ricollega il tuo auth.js) -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
       <a class="navbar-brand" href="index.html">
-        <img src="assets/img/logo.png" class="logo" alt="Logo"> ClayRon S.P.A.
+        <img src="assets/img/logo.png" class="logo" alt="Logo"> ClayRon
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome">
         <span class="navbar-toggler-icon"></span>
@@ -47,71 +46,54 @@
   </nav>
 
   <main class="container flex-fill py-4">
-    <h2 class="mb-4">Community Chat</h2>
-
-    <!-- Chat window -->
-    <div id="messages"></div>
-
-    <!-- Send form -->
-    <form id="chatForm" class="d-flex mt-3">
-      <input id="chatInput" class="form-control mr-2" placeholder="Scrivi un messaggio..." autocomplete="off" required>
+    <h2 class="mb-3">Chat della Community</h2>
+    <div id="messages" class="border rounded p-3 mb-3"></div>
+    <form id="chatForm" class="d-flex">
+      <input id="chatInput" class="form-control mr-2" placeholder="Scrivi un messaggio..." autocomplete="off">
       <button class="btn btn-primary">Invia</button>
     </form>
   </main>
 
-  <!-- Footer -->
-  <footer class="py-4 text-white text-center">
+  <footer class="py-4 text-white text-center bg-primary mt-auto">
     <div class="container">
-      <div class="social-icons mb-3">
-        <a href="https://www.instagram.com/clayronhelp/" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.facebook.com/profile.php?id=61575494257613" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.tiktok.com/@clayronhelp" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
-      </div>
-      <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
-      <small>
-        <a href="terms.html" class="text-white">Termini &amp; Condizioni</a> – 
-        <a href="cookie.html" class="text-white">Cookie Policy</a>
-      </small>
+      <p>&copy; 2025 ClayRon S.P.A.</p>
     </div>
   </footer>
 
-  <!-- JS -->
+  <!-- JS: jQuery + Bootstrap -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
   <script>
   document.addEventListener('DOMContentLoaded', async () => {
-    // 1) aggiorna navbar
-    await updateNavbar();
+    // aggiorna navbar (chiama qui updateNavbar se lo usi)
+    // await updateNavbar();
 
-    // 2) sessione
     const { data:{ session } } = await supabase.auth.getSession();
-    if (!session) return window.location.href='login.html';
+    if (!session) return window.location.href = 'login.html';
 
-    // 3) nome utente
-    const md = session.user.user_metadata || {};
-    const userName = (md.firstName && md.lastName)
-      ? `${md.firstName} ${md.lastName}`
-      : session.user.email;
-
+    const userEmail = session.user.email;
     const room = 'global';
+
     const messagesDiv = document.getElementById('messages');
     const chatForm    = document.getElementById('chatForm');
     const chatInput   = document.getElementById('chatInput');
 
-    // render
     function renderMessage(msg) {
       const when = new Date(msg.inserted_at)
         .toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-      messagesDiv.innerHTML += `
-        <div class="message">
-          <span class="author">${msg.user_name}:</span>
-          <span>${msg.content}</span>
-          <span class="time">[${when}]</span>
-        </div>`;
+      const div = document.createElement('div');
+      div.className = 'message';
+      div.innerHTML = `
+        <span class="user">${msg.user_email}</span>
+        <span class="text">${msg.content}</span>
+        <span class="time">[${when}]</span>
+      `;
+      messagesDiv.appendChild(div);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
-    // carica storia
+    // carica ultimi 100
     let { data: history } = await supabase
       .from('messages')
       .select('*')
@@ -123,9 +105,10 @@
     // realtime
     supabase
       .channel('public:messages')
-      .on('postgres_changes', {
-        event: 'INSERT', schema: 'public', table: 'messages', filter: `room=eq.${room}`
-      }, ({ new: m }) => renderMessage(m))
+      .on('postgres_changes',
+          { event:'INSERT', schema:'public', table:'messages', filter:`room=eq.${room}` },
+          ({ new: m }) => renderMessage(m)
+      )
       .subscribe();
 
     // invio
@@ -133,12 +116,7 @@
       e.preventDefault();
       const content = chatInput.value.trim();
       if (!content) return;
-      await supabase.from('messages').insert({
-        room,
-        user_email: session.user.email,
-        user_name:  userName,
-        content
-      });
+      await supabase.from('messages').insert({ room, user_email: userEmail, content });
       chatInput.value = '';
     });
   });
