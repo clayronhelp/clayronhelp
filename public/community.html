@@ -82,62 +82,74 @@
   <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script>
-  $(async () => {
-    // 1) Aggiorna navbar e proteggi pagina
-    await updateNavbar();
-    const { data:{ session } } = await supabase.auth.getSession();
-    if (!session) return window.location.href='login.html';
-
-    // prendi il nome utente (puoi usare user_metadata.full_name)
-    const userName = session.user.user_metadata?.full_name || session.user.email;
-    const $messages = $('#messages');
-    let sub = null;
-
-    function renderMessage(m) {
-      const t = new Date(m.inserted_at)
-                  .toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-      $messages.append(`
-        <div class="message">
-          <div class="author">${m.user_name}</div>
-          <div>${m.content}</div>
-          <div class="time">${t}</div>
-        </div>
-      `);
-      $messages.scrollTop($messages.prop('scrollHeight'));
-    }
-
-    // fetch iniziale
-    let { data:msgs, error } = await supabase
-      .from('messages')
-      .select('*')
-      .order('inserted_at', { ascending: true })
-      .limit(200);
-    if (error) {
-      console.error(error);
-      $messages.append('<div class="text-danger">Impossibile caricare i messaggi.</div>');
-    } else {
-      msgs.forEach(renderMessage);
-    }
-
-    // realtime subscription (tutti gli INSERT)
-    sub = supabase
-      .channel('public:messages')
-      .on('postgres_changes',
-          { event:'INSERT', schema:'public', table:'messages' },
-          ({ new: m }) => renderMessage(m)
-      )
-      .subscribe();
-
-    // invio nuovo messaggio
-    $('#chat-form').submit(async e => {
-      e.preventDefault();
-      const txt = $('#chat-input').val();
-      $('#chat-input').val('');
-      await supabase
+    $(async () => {
+      // 1) Aggiorna navbar e proteggi pagina
+      await updateNavbar();
+      const { data:{ session } } = await supabase.auth.getSession();
+      if (!session) return window.location.href='login.html';
+    
+      const userName = session.user.user_metadata?.full_name || session.user.email;
+      const $messages = $('#messages');
+    
+      // 2) Carico la cronologia
+      let { data: msgs, error } = await supabase
         .from('messages')
-        .insert({ user_name: userName, content: txt });
+        .select('*')
+        .order('inserted_at', { ascending: true })
+        .limit(200);
+      if (error) {
+        console.error(error);
+        $messages.append('<div class="text-danger">Impossibile caricare i messaggi.</div>');
+      } else {
+        msgs.forEach(m => {
+          const t = new Date(m.inserted_at)
+                      .toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+          $messages.append(`
+            <div class="message">
+              <div class="author">${m.user_name}</div>
+              <div>${m.content}</div>
+              <div class="time">${t}</div>
+            </div>
+          `);
+        });
+        $messages.scrollTop($messages.prop('scrollHeight'));
+      }
+    
+      // 3) Sottoscrizione realtime (ogni INSERT su tutta la tabella)
+      supabase
+        .channel('public:messages')
+        .on('postgres_changes',
+            { event:'INSERT', schema:'public', table:'messages' },
+            ({ new: m }) => {
+              const t = new Date(m.inserted_at)
+                          .toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+              $messages.append(`
+                <div class="message">
+                  <div class="author">${m.user_name}</div>
+                  <div>${m.content}</div>
+                  <div class="time">${t}</div>
+                </div>
+              `);
+              $messages.scrollTop($messages.prop('scrollHeight'));
+            }
+        )
+        .subscribe();
+    
+      // 4) Invia nuovo messaggio **includendo `room`**
+      $('#chat-form').submit(async e => {
+        e.preventDefault();
+        const txt = $('#chat-input').val();
+        $('#chat-input').val('');
+        await supabase
+          .from('messages')
+          .insert({
+            room:        'generale',      // qui mettiamo il valore obbligatorio
+            user_name:   userName,
+            content:     txt
+          });
+      });
     });
-  });
-  </script>
+    </script>
+    
 </body>
 </html>
