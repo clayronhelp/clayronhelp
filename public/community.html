@@ -89,21 +89,24 @@
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script>
   $(async () => {
-    // 1) Proteggi / aggiorna navbar
+    // 1) aggiorna navbar
     await updateNavbar();
     const { data:{ session } } = await supabase.auth.getSession();
     if (!session) return window.location.href='login.html';
 
-    // prendi nome utente da metadata (verrà aggiunto in register)
-    const userName = session.user.user_metadata?.full_name || session.user.email;
+    // 2) prendi il *nome* utente, non l’email
+    const md = session.user.user_metadata || {};
+    const userName = (md.firstName && md.lastName)
+      ? `${md.firstName} ${md.lastName}`
+      : session.user.email;
 
     let currentRoom = 'generale';
     const $tabs = $('#chat-tabs .nav-link');
     const $messages = $('#messages');
 
-    // helper per mostrare messaggi
     function renderMessage(msg) {
-      const time = new Date(msg.inserted_at).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+      const time = new Date(msg.inserted_at)
+        .toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
       $messages.append(`
         <div class="message">
           <div class="author">${msg.user_name}</div>
@@ -114,12 +117,11 @@
       $messages.scrollTop($messages.prop('scrollHeight'));
     }
 
-    // 2) Sottoscrivi Realtime per la stanza corrente
+    // 3) sottoscrivi e carica la stanza
     let sub = null;
     async function subscribe(room) {
-      if (sub) sub.unsubscribe();
+      if (sub) supabase.removeSubscription(sub);
       $messages.empty();
-      // fetch ultimi 100 messaggi
       let { data: msgs } = await supabase
         .from('messages')
         .select('*')
@@ -127,17 +129,14 @@
         .order('inserted_at', { ascending: true })
         .limit(100);
       msgs.forEach(renderMessage);
-      // realtime
       sub = supabase
         .from(`messages:room=eq.${room}`)
         .on('INSERT', ({ new: m }) => renderMessage(m))
         .subscribe();
     }
-
-    // initial
     subscribe(currentRoom);
 
-    // 3) cambio stanza
+    // 4) cambio stanza
     $tabs.click(function(){
       $tabs.removeClass('active');
       $(this).addClass('active');
@@ -145,7 +144,7 @@
       subscribe(currentRoom);
     });
 
-    // 4) invio nuovo messaggio
+    // 5) invio
     $('#chat-form').submit(async e=>{
       e.preventDefault();
       const content = $('#chat-input').val();
