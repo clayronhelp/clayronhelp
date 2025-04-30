@@ -131,7 +131,7 @@
         if (error) {
           console.error('Errore fetching history:', error);
         } else if (history && history.length) {
-         
+          history.forEach(renderMessage);
         }
     
         // realtime
