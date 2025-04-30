@@ -1,36 +1,35 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Community – ClayRon</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Community Chat – ClayRon</title>
   <link rel="icon" href="assets/img/logo.png">
-  <!-- Bootstrap & FontAwesome -->
+  <!-- Bootstrap + FontAwesome + style.css -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    #messages { height: 60vh; overflow-y: auto; border: 1px solid #ddd;
-                padding: 1rem; background: #f9f9f9; }
-    .message { margin-bottom: .75rem; }
-    .message .author { font-weight: 600; }
-    .message .time   { font-size: .8rem; color: #666; }
+    #messages { max-height: 60vh; overflow-y: auto; }
+    .message { margin-bottom: .5rem; }
+    .message .user { font-weight: bold; margin-right: .5rem; }
+    .message .time { font-size: .75rem; color: #666; }
   </style>
-  <!-- Supabase -->
+  <!-- Supabase JS -->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
     const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8'; // la tua anon key completa
+    const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
   </script>
-  <script src="assets/js/auth.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-  <!-- Navbar -->
+  <!-- Navbar (puoi riutilizzare la tua auth.js per l’area-login) -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
       <a class="navbar-brand" href="index.html">
-        <img src="assets/img/logo.png" class="logo" alt="Logo"> ClayRon S.P.A.
+        <img src="assets/img/logo.png" class="logo" alt="Logo"> ClayRon
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome">
         <span class="navbar-toggler-icon"></span>
@@ -40,116 +39,88 @@
           <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
           <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
-          <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
+          <li class="nav-item active"><a class="nav-link" href="community.html">Community</a></li>
         </ul>
-        <div id="auth-area"></div>
+        <div id="auth-area" class="ml-3"></div>
       </div>
     </div>
   </nav>
 
   <main class="container flex-fill py-4">
-    <h2 class="mb-4">Community Chat</h2>
-
-    <!-- Chat window -->
-    <div id="messages"></div>
-
-    <!-- Send form -->
-    <form id="chat-form" class="form-inline mt-2">
-      <input type="text" id="chat-input" class="form-control flex-fill mr-2"
-             placeholder="Scrivi un messaggio..." required>
-      <button type="submit" class="btn btn-primary">Invia</button>
+    <h2 class="mb-3">Chat della Community</h2>
+    <div id="messages" class="border rounded p-3 mb-3"></div>
+    <form id="chatForm" class="d-flex">
+      <input id="chatInput" class="form-control mr-2" placeholder="Scrivi un messaggio..." autocomplete="off">
+      <button class="btn btn-primary">Invia</button>
     </form>
   </main>
 
   <!-- Footer -->
-  <footer class="py-4 text-white text-center">
+  <footer class="py-4 text-white text-center bg-primary mt-auto">
     <div class="container">
-      <div class="social-icons mb-3">
-        <a href="https://www.instagram.com/clayronhelp/" class="text-white mx-2">
-          <i class="fab fa-instagram"></i>
-        </a>
-        <a href="https://www.facebook.com/profile.php?id=61575494257613" class="text-white mx-2">
-          <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="https://www.tiktok.com/@clayronhelp" class="text-white mx-2">
-          <i class="fab fa-tiktok"></i>
-        </a>
-      </div>
       <p>&copy; 2025 ClayRon S.P.A.</p>
     </div>
   </footer>
 
-  <!-- JS -->
+  <!-- JS: jQuery + Bootstrap -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
   <script>
-    $(async () => {
-      // 1) Aggiorna navbar e proteggi pagina
-      await updateNavbar();
-      const { data:{ session } } = await supabase.auth.getSession();
-      if (!session) return window.location.href='login.html';
-    
-      const userName = session.user.user_metadata?.full_name || session.user.email;
-      const $messages = $('#messages');
-    
-      // 2) Carico la cronologia
-      let { data: msgs, error } = await supabase
-        .from('messages')
-        .select('*')
-        .order('inserted_at', { ascending: true })
-        .limit(200);
-      if (error) {
-        console.error(error);
-        $messages.append('<div class="text-danger">Impossibile caricare i messaggi.</div>');
-      } else {
-        msgs.forEach(m => {
-          const t = new Date(m.inserted_at)
-                      .toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-          $messages.append(`
-            <div class="message">
-              <div class="author">${m.user_name}</div>
-              <div>${m.content}</div>
-              <div class="time">${t}</div>
-            </div>
-          `);
-        });
-        $messages.scrollTop($messages.prop('scrollHeight'));
-      }
-    
-      // 3) Sottoscrizione realtime (ogni INSERT su tutta la tabella)
-      supabase
-        .channel('public:messages')
-        .on('postgres_changes',
-            { event:'INSERT', schema:'public', table:'messages' },
-            ({ new: m }) => {
-              const t = new Date(m.inserted_at)
-                          .toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-              $messages.append(`
-                <div class="message">
-                  <div class="author">${m.user_name}</div>
-                  <div>${m.content}</div>
-                  <div class="time">${t}</div>
-                </div>
-              `);
-              $messages.scrollTop($messages.prop('scrollHeight'));
-            }
-        )
-        .subscribe();
-    
-      // 4) Invia nuovo messaggio **includendo `room`**
-      $('#chat-form').submit(async e => {
-        e.preventDefault();
-        const txt = $('#chat-input').val();
-        $('#chat-input').val('');
-        await supabase
-          .from('messages')
-          .insert({
-            room:        'generale',      // qui mettiamo il valore obbligatorio
-            user_name:   userName,
-            content:     txt
-          });
-      });
+  document.addEventListener('DOMContentLoaded', async () => {
+    // 1) recupera sessione
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return window.location.href = 'login.html';
+
+    // 2) update navbar (puoi richiamare updateNavbar())
+    // …
+
+    const userEmail = session.user.email;
+    const room = 'global'; // puoi avere stanze diverse per materia
+
+    const messagesDiv = document.getElementById('messages');
+    const chatForm    = document.getElementById('chatForm');
+    const chatInput   = document.getElementById('chatInput');
+
+    // funzione di render
+    function renderMessage(msg) {
+      const when = new Date(msg.inserted_at).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+      const div = document.createElement('div');
+      div.className = 'message';
+      div.innerHTML = `<span class="user">${msg.user_email}:</span>
+                       <span class="text">${msg.content}</span>
+                       <span class="time">[${when}]</span>`;
+      messagesDiv.appendChild(div);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    // 3) carica cronologia ultimi 100
+    let { data: history } = await supabase
+      .from('messages')
+      .select('*')
+      .eq('room', room)
+      .order('inserted_at', { ascending: true })
+      .limit(100);
+    history.forEach(renderMessage);
+
+    // 4) sottoscrizione realtime
+    supabase
+      .channel('public:messages')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `room=eq.${room}` },
+        payload => renderMessage(payload.new)
+      )
+      .subscribe();
+
+    // 5) invio
+    chatForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const content = chatInput.value.trim();
+      if (!content) return;
+      // scrivi in supabase
+      await supabase.from('messages').insert({ room, user_email: userEmail, content });
+      chatInput.value = '';
     });
-    </script>
-    
+  });
+  </script>
 </body>
 </html>
