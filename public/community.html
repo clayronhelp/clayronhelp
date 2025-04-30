@@ -9,20 +9,16 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    #messages { max-height: 60vh; overflow-y: auto; padding:1rem; background:#f1f1f1; }
-    .message { position: relative; margin-bottom:1rem; max-width:75%; }
-    .message.me { margin-left:auto; }
-    .bubble { display:inline-block; padding:0.75rem 1rem; border-radius:1rem; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
-    .bubble.me { background:#d1e7dd; }
-    .meta { font-size:0.8rem; color:#555; margin-top:0.25rem; }
-    .delete-btn { position:absolute; top:-4px; right:-4px; color:#888; cursor:pointer; }
-    .deleted { font-style:italic; color:#888; }
+    #messages { max-height: 60vh; overflow-y: auto; border:1px solid #ddd; padding:1rem; background:#f9f9f9; }
+    .message { margin-bottom:.75rem; }
+    .message .author { font-weight:600; }
+    .message .time { font-size:.8rem; color:#666; }
   </style>
   <!-- Supabase -->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
     const SUPABASE_URL='https://nptawehzfamaghytkmbk.supabase.co';
-    const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8'; // la tua anon key
+    const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';  // la tua anon key
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
   </script>
   <script src="assets/js/auth.js"></script>
@@ -53,8 +49,10 @@
   <main class="container flex-fill py-4">
     <h2 class="mb-4">Community Chat</h2>
 
+    <!-- Chat window -->
     <div id="messages"></div>
 
+    <!-- Send form -->
     <form id="chatForm" class="d-flex mt-3">
       <input id="chatInput" class="form-control mr-2" placeholder="Scrivi un messaggio..." autocomplete="off" required>
       <button class="btn btn-primary">Invia</button>
@@ -82,80 +80,53 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
   <script>
   document.addEventListener('DOMContentLoaded', async () => {
-    // aggiorna navbar
+    // 1) aggiorna navbar
     await updateNavbar();
 
-    // sessione
+    // 2) sessione
     const { data:{ session } } = await supabase.auth.getSession();
     if (!session) return window.location.href='login.html';
+
+    // 3) nome utente
     const md = session.user.user_metadata || {};
-    const userName = (md.firstName && md.lastName) 
-      ? `${md.firstName} ${md.lastName}` 
+    const userName = (md.firstName && md.lastName)
+      ? `${md.firstName} ${md.lastName}`
       : session.user.email;
-    const meEmail = session.user.email;
+
     const room = 'global';
     const messagesDiv = document.getElementById('messages');
     const chatForm    = document.getElementById('chatForm');
     const chatInput   = document.getElementById('chatInput');
 
-    // render con delete
+    // render
     function renderMessage(msg) {
-      const isMe = msg.user_email === meEmail;
       const when = new Date(msg.inserted_at)
         .toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-      const container = document.createElement('div');
-      container.className = 'message' + (isMe ? ' me' : '');
-      let inner = '';
-      if (msg.deleted) {
-        inner = `<div class="deleted">questo messaggio è stato eliminato</div>`;
-      } else {
-        inner = `<div class="bubble${isMe ? ' me' : ''}">
-            <span class="author">${msg.user_name}:</span>
-            <span>${msg.content}</span>
-          </div>
-          <div class="meta">${when}</div>`;
-        if (isMe) {
-          inner += `<i class="fas fa-trash delete-btn" title="Elimina"></i>`;
-        }
-      }
-      container.innerHTML = inner;
-      messagesDiv.appendChild(container);
+      messagesDiv.innerHTML += `
+        <div class="message">
+          <span class="author">${msg.user_name}:</span>
+          <span>${msg.content}</span>
+          <span class="time">[${when}]</span>
+        </div>`;
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-      if (isMe && !msg.deleted) {
-        container.querySelector('.delete-btn').onclick = async () => {
-          // cancello dal DB
-          await supabase
-            .from('messages')
-            .update({ deleted: true })
-            .eq('id', msg.id);
-          // ricarico la stanza
-          messagesDiv.innerHTML = '';
-          loadAndSubscribe();
-        };
-      }
     }
 
-    // carica + subscribe
-    let subscription = null;
-    async function loadAndSubscribe() {
-      messagesDiv.innerHTML = '';
-      const { data: history } = await supabase
-        .from('messages')
-        .select('*')
-        .eq('room', room)
-        .order('inserted_at', { ascending: true })
-        .limit(100);
-      history.forEach(renderMessage);
-      if (subscription) subscription.unsubscribe();
-      subscription = supabase
-        .channel('public:messages')
-        .on('postgres_changes', {
-          event:'INSERT', schema:'public', table:'messages', filter:`room=eq.${room}`
-        }, ({ new: m }) => renderMessage(m))
-        .subscribe();
-    }
-    await loadAndSubscribe();
+    // carica storia
+    let { data: history } = await supabase
+      .from('messages')
+      .select('*')
+      .eq('room', room)
+      .order('inserted_at', { ascending: true })
+      .limit(100);
+    history.forEach(renderMessage);
+
+    // realtime
+    supabase
+      .channel('public:messages')
+      .on('postgres_changes', {
+        event: 'INSERT', schema: 'public', table: 'messages', filter: `room=eq.${room}`
+      }, ({ new: m }) => renderMessage(m))
+      .subscribe();
 
     // invio
     chatForm.addEventListener('submit', async e => {
@@ -166,8 +137,7 @@
         room,
         user_email: session.user.email,
         user_name:  userName,
-        content,
-        deleted:    false
+        content
       });
       chatInput.value = '';
     });
