@@ -67,60 +67,69 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
   <script>
-  document.addEventListener('DOMContentLoaded', async () => {
-    // 1) recupera sessione
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return window.location.href = 'login.html';
-
-    // 2) update navbar (puoi richiamare updateNavbar())
-    // …
-
-    const userEmail = session.user.email;
-    const room = 'global'; // puoi avere stanze diverse per materia
-
-    const messagesDiv = document.getElementById('messages');
-    const chatForm    = document.getElementById('chatForm');
-    const chatInput   = document.getElementById('chatInput');
-
-    // funzione di render
-    function renderMessage(msg) {
-      const when = new Date(msg.inserted_at).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-      const div = document.createElement('div');
-      div.className = 'message';
-      div.innerHTML = `<span class="user">${msg.user_email}:</span>
-                       <span class="text">${msg.content}</span>
-                       <span class="time">[${when}]</span>`;
-      messagesDiv.appendChild(div);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-
-    // 3) carica cronologia ultimi 100
-    let { data: history } = await supabase
-      .from('messages')
-      .select('*')
-      .eq('room', room)
-      .order('inserted_at', { ascending: true })
-      .limit(100);
-    history.forEach(renderMessage);
-
-    // 4) sottoscrizione realtime
-    supabase
-      .channel('public:messages')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `room=eq.${room}` },
-        payload => renderMessage(payload.new)
-      )
-      .subscribe();
-
-    // 5) invio
-    chatForm.addEventListener('submit', async e => {
-      e.preventDefault();
-      const content = chatInput.value.trim();
-      if (!content) return;
-      // scrivi in supabase
-      await supabase.from('messages').insert({ room, user_email: userEmail, content });
-      chatInput.value = '';
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1) Sessione + protezione
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return window.location.href = 'login.html';
+    
+      // 2) Nome utente dal metadata
+      const userName = session.user.user_metadata.full_name || session.user.email;
+      const room     = 'global';
+    
+      // 3) Aggiorna navbar (richiama il tuo auth.js)
+      await updateNavbar();
+    
+      const messagesDiv = document.getElementById('messages');
+      const chatForm    = document.getElementById('chatForm');
+      const chatInput   = document.getElementById('chatInput');
+    
+      // funzione di render
+      function renderMessage(msg) {
+        const when = new Date(msg.inserted_at)
+                      .toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+        const div = document.createElement('div');
+        div.className = 'message';
+        div.innerHTML = `
+          <span class="user">${msg.user_name}:</span>
+          <span class="text">${msg.content}</span>
+          <span class="time">[${when}]</span>`;
+        messagesDiv.appendChild(div);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+    
+      // 4) Cronologia
+      let { data: history, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('room', room)
+        .order('inserted_at', { ascending: true })
+        .limit(200);
+      if (!error) history.forEach(renderMessage);
+    
+      // 5) Realtime
+      supabase
+        .channel('public:messages')
+        .on('postgres_changes',
+            { event:'INSERT', schema:'public', table:'messages', filter:`room=eq.${room}` },
+            ({ new: m }) => renderMessage(m)
+        )
+        .subscribe();
+    
+      // 6) Invio messaggio
+      chatForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        const content = chatInput.value.trim();
+        if (!content) return;
+        await supabase
+          .from('messages')
+          .insert({
+            room:      room,
+            user_name: userName,
+            content
+          });
+        chatInput.value = '';
+      });
     });
-  });
-  </script>
+    </script>    
 </body>
 </html>
