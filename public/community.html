@@ -115,35 +115,50 @@
       const chatForm = document.getElementById('chatForm');
       const chatInput = document.getElementById('chatInput');
     
+      function canEditOrDelete(inserted_at) {
+        const now = new Date();
+        const insertedTime = new Date(inserted_at);
+        const diffMinutes = (now - insertedTime) / (1000 * 60);
+        return diffMinutes <= 5;
+      }
+    
       function renderMessage(msg) {
         const when = new Date(msg.inserted_at)
           .toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-        
         const isMine = msg.user_email === userEmail;
+        const editable = canEditOrDelete(msg.inserted_at);
     
-        const deleteBtn = isMine && !msg.deleted
-          ? `<button class="btn btn-sm btn-danger btn-delete float-right" data-id="${msg.id}" style="font-size: 0.7rem;">Elimina</button>`
-          : '';
+        let actionButtons = '';
+        if (isMine && !msg.deleted && editable) {
+          actionButtons = `
+            <button class="btn btn-sm btn-secondary btn-edit float-right ml-2" data-id="${msg.id}" data-content="${msg.content}" style="font-size: 0.7rem;">Modifica</button>
+            <button class="btn btn-sm btn-danger btn-delete float-right" data-id="${msg.id}" style="font-size: 0.7rem;">Elimina</button>
+          `;
+        }
+    
+        const contentHtml = msg.deleted
+          ? '<em>Questo messaggio è stato eliminato</em>'
+          : `<span class="message-content">${msg.content}</span>`;
     
         const msgHtml = `
           <div class="message" data-id="${msg.id}">
-            <div class="author">${msg.user_name} ${deleteBtn}</div>
-            <div class="content">${msg.deleted ? '<em>Questo messaggio è stato eliminato</em>' : msg.content}</div>
+            <div class="author">${msg.user_name} ${actionButtons}</div>
+            <div class="content">${contentHtml}</div>
             <div class="time">${when}</div>
           </div>
         `;
     
         const existing = document.querySelector(`.message[data-id="${msg.id}"]`);
         if (existing) {
-          existing.outerHTML = msgHtml; // aggiorna messaggio esistente
+          existing.outerHTML = msgHtml;
         } else {
-          messagesDiv.insertAdjacentHTML('beforeend', msgHtml); // aggiungi nuovo
+          messagesDiv.insertAdjacentHTML('beforeend', msgHtml);
         }
     
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }
     
-      // carica cronologia
+      // cronologia
       let { data: history } = await supabase
         .from('messages')
         .select('*')
@@ -168,7 +183,7 @@
         }, ({ new: m }) => renderMessage(m))
         .subscribe();
     
-      // invio messaggio
+      // invio
       chatForm.addEventListener('submit', async e => {
         e.preventDefault();
         const content = chatInput.value.trim();
@@ -183,15 +198,49 @@
         });
       });
     
-      // eliminazione
+      // elimina
       $(document).on('click', '.btn-delete', async function () {
         const id = $(this).data('id');
         await supabase.from('messages')
           .update({ deleted: true, content: '' })
           .eq('id', id)
-          .eq('user_id', userId); // sicurezza lato client
+          .eq('user_id', userId);
+      });
+    
+      // modifica
+      $(document).on('click', '.btn-edit', function () {
+        const id = $(this).data('id');
+        const oldContent = $(this).data('content');
+        const messageDiv = $(`.message[data-id="${id}"]`);
+        const contentSpan = messageDiv.find('.message-content');
+    
+        // sostituisci con input
+        contentSpan.replaceWith(`
+          <input type="text" class="form-control form-control-sm edit-input" value="${oldContent}" />
+          <button class="btn btn-sm btn-success btn-save" data-id="${id}">Salva</button>
+          <button class="btn btn-sm btn-secondary btn-cancel" data-id="${id}">Annulla</button>
+        `);
+      });
+    
+      // salva modifica
+      $(document).on('click', '.btn-save', async function () {
+        const id = $(this).data('id');
+        const newContent = $(this).siblings('.edit-input').val().trim();
+        if (!newContent) return;
+        await supabase.from('messages')
+          .update({ content: newContent })
+          .eq('id', id)
+          .eq('user_id', userId);
+      });
+    
+      // annulla modifica
+      $(document).on('click', '.btn-cancel', function () {
+        const id = $(this).data('id');
+        const message = history.find(m => m.id === id); // usa cronologia
+        if (message) renderMessage(message);
       });
     });
-    </script>    
+    </script>
+      
 </body>
 </html>
