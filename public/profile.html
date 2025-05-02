@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
   <link rel="stylesheet" href="assets/css/style.css">
+  <!-- Cropper.js -->
+  <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
   <style>
     .profile-card { max-width: 500px; margin: auto; }
     #avatarPreview { width: 120px; height: 120px; object-fit: cover; }
@@ -79,23 +82,24 @@
     </div>
   </main>
 
-  <!-- Crop Modal -->
-  <div class="modal fade" id="cropModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+  <!-- Modale di ritaglio -->
+  <div class="modal fade" id="cropModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Ritaglia Avatar</h5>
-          <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        <div class="modal-header p-2">
+          <h5 class="modal-title">Ritaglia avatar</h5>
+          <button type="button" class="btn-close p-0" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body text-center">
-          <img id="cropImage" src="" alt="Cropper">
+        <div class="modal-body p-1 text-center">
+          <img id="cropImage" style="max-width:100%; max-height:300px;" />
         </div>
-        <div class="modal-footer">
-          <button id="cropConfirm" type="button" class="btn btn-primary">Conferma</button>
+        <div class="modal-footer p-2">
+          <button id="cropConfirm" class="btn btn-primary btn-sm">Conferma</button>
         </div>
       </div>
     </div>
   </div>
+
 
   <!-- Footer -->
   <footer class="py-4 bg-primary text-white text-center mt-auto">
@@ -108,91 +112,65 @@
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
   <script>
-    let cropper;
-
-    async function initProfile() {
-      // Proteggi e recupera utente
-      const { data:{ session } } = await supabase.auth.getSession();
-      if (!session) return window.location.href = 'login.html';
-      await updateNavbar();
-
-      // Popola campi
-      const u = session.user;
-      $('#email').val(u.email);
-      $('#firstName').val(u.user_metadata.firstName||'');
-      $('#lastName').val(u.user_metadata.lastName||'');
-      const avatarUrl = u.user_metadata.avatar_url || 'assets/img/default-profile.png';
-      $('#avatarPreview').attr('src', avatarUrl);
-    }
-
-    // Quando selezioni file: apri cropper
-    $('#avatarFile').on('change', function(){
-      const file = this.files[0];
-      if (!file) return;
-      const objectUrl = URL.createObjectURL(file);
-      $('#cropImage').attr('src', objectUrl);
-      $('#cropModal').modal('show');
-      setTimeout(() => {
+    let cropper, cropModal; 
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      // Inizializza il modale di Bootstrap
+      cropModal = new bootstrap.Modal(document.getElementById('cropModal'));
+  
+      // Quando l’utente sceglie un file
+      document.getElementById('avatarFile').addEventListener('change', function(){
+        const file = this.files[0];
+        if (!file) return;
+        // Mostra l’immagine da ritagliare
+        const url = URL.createObjectURL(file);
+        document.getElementById('cropImage').src = url;
+        cropModal.show();
+        // Avvia Cropper
         if (cropper) cropper.destroy();
         cropper = new Cropper(document.getElementById('cropImage'), {
           aspectRatio: 1,
           viewMode: 1,
           autoCropArea: 1,
         });
-      }, 200);
-    });
-
-    // conferma crop
-  $('#cropConfirm').click(() => {
-    const canvas = cropper.getCroppedCanvas({ width: 256, height: 256 });
-    canvas.toBlob(async blob => {
-      // prima chiudi il modal
-      $('#cropModal').modal('hide');
-      // rimuovi il focus dal bottone per evitare warning aria-hidden
-      $('#cropConfirm').blur();
-
-          // upload su Supabase
+      });
+  
+      // Quando preme “Conferma”
+      document.getElementById('cropConfirm').addEventListener('click', async () => {
+        // Genera il ritaglio come immagine 200×200
+        const canvas = cropper.getCroppedCanvas({ width: 200, height: 200 });
+        canvas.toBlob(async blob => {
+          // Prendi l’utente loggato
           const { data:{ session } } = await supabase.auth.getSession();
           const user = session.user;
-          const path = `${user.id}/avatar.png`;
-          const { error } = await supabase.storage
-            .from('avatars')
+          // Nome file con timestamp
+          const fileName = `avatar_${Date.now()}.png`;
+          // Path dentro il bucket avatars (cartella user.id)
+          const path = `${user.id}/${fileName}`;
+          // Upload in avatars/
+          const { data, error: upErr } = await supabase
+            .storage.from('avatars')
             .upload(path, blob, { upsert: true });
-          if (error) {
-            alert('Upload avatar fallito: ' + error.message);
+          if (upErr) {
+            alert('Upload avatar fallito: ' + upErr.message);
             return;
           }
-
-        // recupera URL pubblico e salva in metadata
-        const { data: urlData } = supabase.storage
-          .from('avatars')
-          .getPublicUrl(path);
-        await supabase.auth.updateUser({ data:{ avatar_url: urlData.publicUrl } });
-        $('#avatarPreview').attr('src', urlData.publicUrl);
+          // Ottieni l’URL pubblico
+          const { data: urlData } = supabase
+            .storage.from('avatars')
+            .getPublicUrl(data.path);
+          document.getElementById('avatarPreview').src = urlData.publicUrl;
+          // Salva in metadata utente
+          const { error: mdErr } = await supabase.auth.updateUser({
+            data: { avatar_url: urlData.publicUrl }
+          });
+          if (mdErr) alert('Salvataggio profilo fallito: ' + mdErr.message);
+          // Chiudi modale
+          cropModal.hide();
+          cropper.destroy();
+        }, 'image/png');
       });
     });
-
-    // Salva nome/cognome
-    $('#profileForm').submit(async e => {
-      e.preventDefault();
-      const firstName = $('#firstName').val().trim(),
-            lastName  = $('#lastName').val().trim();
-      const { error } = await supabase.auth.updateUser({
-        data:{ firstName, lastName }
-      });
-      $('#profileMsg').html(
-        error
-          ? '<div class="alert alert-danger">Errore salvataggio.</div>'
-          : '<div class="alert alert-success">Profilo aggiornato!</div>'
-      );
-    });
-
-    // on modal close, rimuovi focus per aria-hidden
-    $('#cropModal').on('hidden.bs.modal', () => {
-      $('#avatarFile').blur();
-    });
-
-    $(document).ready(initProfile);
-  </script>
+  </script>  
 </body>
 </html>
