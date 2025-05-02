@@ -4,43 +4,25 @@
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Modifica Profilo - ClayRon</title>
   <link rel="icon" href="assets/img/logo.png">
-  <!-- Bootstrap + FontAwesome + style.css -->
+  <!-- Bootstrap, FontAwesome, style.css -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
+  <!-- Cropper.js -->
+  <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
   <style>
     body { background: #f0f4f8; }
-    .profile-card {
-      max-width: 500px;
-      margin: 2rem auto;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-    .profile-header {
-      background: linear-gradient(135deg, #0055aa, #003366);
-      color: #fff;
-      padding: 1.5rem;
-      text-align: center;
-    }
-    .profile-header i { font-size: 3rem; margin-bottom: .5rem; }
+    .profile-card { max-width: 500px; margin: 2rem auto; background: #fff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+    .profile-header { background: linear-gradient(135deg, #0055aa, #003366); color: #fff; padding: 1.5rem; text-align: center; }
     .profile-body { padding: 2rem; }
-    .avatar-preview {
-      width: 120px; height: 120px;
-      border-radius: 50%;
-      border: 3px solid #0055aa;
-      object-fit: cover;
-      margin-bottom: 1rem;
-    }
-    .form-control[disabled] { background-color: #e9ecef; }
-    #profileMsg .alert { margin-bottom: 0; }
+    .avatar-preview { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #0055aa; object-fit: cover; margin-bottom: 1rem; }
+    .modal-lg { max-width: 800px; }
   </style>
   <!-- Supabase -->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
-    const SUPABASE_URL   = 'https://nptawehzfamaghytkmbk.supabase.co';
-    const SUPABASE_ANON  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+    const SUPABASE_URL  = 'https://nptawehzfamaghytkmbk.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
   </script>
   <script src="assets/js/auth.js"></script>
@@ -100,6 +82,22 @@
     </div>
   </div>
 
+  <!-- Cropper Modal -->
+  <div class="modal fade" id="cropModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">Ritaglia l'avatar</h5></div>
+        <div class="modal-body text-center">
+          <img id="cropImage" style="max-width:100%;"/>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cropConfirm" class="btn btn-primary">Conferma</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="py-4 text-white text-center bg-primary mt-auto">
     <div class="container">
@@ -107,53 +105,72 @@
     </div>
   </footer>
 
-  <!-- JS: jQuery + Bootstrap -->
+  <!-- JS: jQuery, Bootstrap, Cropper.js -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
   <script>
+    let cropper, blobToUpload;
+
     async function initProfile() {
       const { data:{ session } } = await supabase.auth.getSession();
       if (!session) return location.href='login.html';
       await updateNavbar();
-
-      // Popola i campi
-      const user = session.user;
-      $('#email').val(user.email);
-      $('#firstName').val(user.user_metadata.firstName||'');
-      $('#lastName').val(user.user_metadata.lastName||'');
-      const avatar = user.user_metadata.avatar_url || 'assets/img/default-profile.png';
+      const u = session.user;
+      $('#email').val(u.email);
+      $('#firstName').val(u.user_metadata.firstName||'');
+      $('#lastName').val(u.user_metadata.lastName||'');
+      const avatar = u.user_metadata.avatar_url || 'assets/img/default-profile.png';
       $('#avatarPreview').attr('src', avatar);
     }
 
-    // Carica avatar
-    $('#avatarFile').on('change', async function(){
+    $('#avatarFile').on('change', function(){
       const file = this.files[0];
       if (!file) return;
-      const { data:{ session } } = await supabase.auth.getSession();
-      const user = session.user;
-      const path = `avatars/${user.id}/${file.name}`;
-      let { data, error } = await supabase.storage.from('avatars')
-        .upload(path, file, { upsert: true });
-      if (error) return alert('Upload avatar fallito');
-      let { data: urlData } = supabase.storage.from('avatars')
-        .getPublicUrl(data.path);
-      $('#avatarPreview').attr('src', urlData.publicUrl);
-      // Salva URL nei metadata
-      await supabase.auth.updateUser({ data:{ avatar_url: urlData.publicUrl } });
+      const url = URL.createObjectURL(file);
+      $('#cropImage').attr('src', url);
+      $('#cropModal').modal('show');
+      // init Cropper
+      setTimeout(()=>{
+        cropper = new Cropper(document.getElementById('cropImage'), {
+          aspectRatio: 1,
+          viewMode: 1
+        });
+      }, 200);
     });
 
-    // Salva nome/cognome
+    $('#cropConfirm').click(async ()=>{
+      const canvas = cropper.getCroppedCanvas({ width: 256, height: 256 });
+      canvas.toBlob(async blob => {
+        blobToUpload = blob;
+        $('#avatarPreview').attr('src', canvas.toDataURL());
+        $('#cropModal').modal('hide');
+        // procedi all'upload
+        const { data:{ session } } = await supabase.auth.getSession();
+        const user = session.user;
+        const path = `avatars/${user.id}/avatar.png`;
+        const { data, error } = await supabase.storage.from('avatars')
+          .upload(path, blobToUpload, { upsert: true });
+        console.log('Storage.upload error:', error);
+        if (error) {
+          alert('Upload avatar fallito: ' + error.message);
+          return;
+        }
+        const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(path);
+        // salva URL nei metadata
+        await supabase.auth.updateUser({ data:{ avatar_url: urlData.publicUrl } });
+      });
+    });
+
     $('#profileForm').submit(async e => {
       e.preventDefault();
       const firstName = $('#firstName').val().trim(),
             lastName  = $('#lastName').val().trim();
-      const { error } = await supabase.auth.updateUser({
-        data:{ firstName, lastName }
-      });
+      const { error } = await supabase.auth.updateUser({ data:{ firstName, lastName } });
       $('#profileMsg').html(
         error
-          ? '<div class="alert alert-danger">Errore nel salvataggio.</div>'
-          : '<div class="alert alert-success">Profilo aggiornato con successo!</div>'
+          ? '<div class="alert alert-danger">Errore salvataggio.</div>'
+          : '<div class="alert alert-success">Profilo aggiornato!</div>'
       );
     });
 
