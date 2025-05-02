@@ -2,20 +2,23 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Giochi – ClayRon</title>
   <link rel="icon" href="assets/img/logo.png">
-  <!-- Bootstrap & FontAwesome -->
+  <!-- Bootstrap + Animate.css + FontAwesome + style.css -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
     .card-game {
-      cursor: pointer;
-      transition: transform .2s;
+      border-radius:1rem; overflow:hidden;
+      background: linear-gradient(135deg,#0055aa,#003366);
+      color:#fff; box-shadow:0 8px 20px rgba(0,0,0,0.2);
+      transition:transform .3s, box-shadow .3s;
     }
-    .card-game:hover { transform: translateY(-5px); }
-    .card-game i { font-size: 3rem; }
+    .card-game:hover { transform:translateY(-8px); box-shadow:0 12px 30px rgba(0,0,0,0.3); }
+    .card-game i { font-size:3rem; margin-bottom:.5rem; }
   </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -37,26 +40,25 @@
   </nav>
 
   <main class="container py-5 flex-fill">
-    <h2 class="text-center mb-4">Giochi</h2>
+    <h2 class="text-center mb-5 animate__animated animate__fadeInDown">Seleziona la categoria</h2>
     <div class="row">
-      <div class="col-md-6 mb-4">
-        <div class="card card-game text-center p-4" onclick="location.href='educational.html'">
-          <i class="fas fa-graduation-cap text-primary"></i>
-          <h4 class="mt-2">Educativi</h4>
-          <p>Math Quiz, Memory e tanto apprendimento divertente!</p>
+      <div class="col-md-6 mb-4 animate__animated animate__fadeInUp">
+        <div class="card card-game text-center p-5" onclick="location.href='educational.html'">
+          <i class="fas fa-graduation-cap"></i>
+          <h4 class="mt-3">Educativi</h4>
+          <p>Scopri giochi di apprendimento!</p>
         </div>
       </div>
-      <div class="col-md-6 mb-4">
-        <div class="card card-game text-center p-4" onclick="location.href='fun.html'">
-          <i class="fas fa-gamepad text-warning"></i>
-          <h4 class="mt-2">Divertimento</h4>
-          <p>Snake, Flappy Bird e giochi da sfida!</p>
+      <div class="col-md-6 mb-4 animate__animated animate__fadeInUp animate__delay-1s">
+        <div class="card card-game text-center p-5" onclick="location.href='fun.html'">
+          <i class="fas fa-gamepad"></i>
+          <h4 class="mt-3">Divertimento</h4>
+          <p>Classici arcade e sfide!</p>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- Footer -->
   <footer class="py-4 bg-primary text-white text-center mt-auto">
     <div class="container">&copy; 2025 ClayRon S.P.A.</div>
   </footer>

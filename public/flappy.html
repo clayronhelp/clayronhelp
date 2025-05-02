@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"><meta name="viewport"content="width=device-width,initial-scale=1">
+  <title>Flappy Bird – ClayRon</title>
+  <link rel="icon" href="assets/img/logo.png">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    body{display:flex;flex-direction:column;min-height:100vh;}
+    #gameC{flex:1;display:flex;justify-content:center;align-items:center;}
+    canvas{background:#70c5ce;border:4px solid #003366;border-radius:8px;}
+    #controls{text-align:center;margin:1rem;}
+    #board{max-width:300px;margin:1rem auto;}
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand text-white" href="fun.html"><i class="fas fa-arrow-left pr-2"></i>Flappy Bird</a>
+    </div>
+  </nav>
+
+  <div id="gameC">
+    <canvas id="flappy" width="320" height="480"></canvas>
+  </div>
+  <div id="controls">
+    <button id="startBtn" class="btn btn-success">Avvia</button>
+    <button id="resetBtn" class="btn btn-warning" disabled>Restart</button>
+    <span class="ml-3">Punteggio: <strong id="fscore">0</strong></span>
+  </div>
+  <div id="board" class="card p-3 shadow-sm">
+    <h5 class="text-center">Classifica Flappy</h5>
+    <ol id="fboard"></ol>
+  </div>
+  <footer class="py-3 bg-primary text-white text-center mt-auto">&copy; 2025 ClayRon</footer>
+
+  <script>
+    const cvs=document.getElementById('flappy'),ctx=cvs.getContext('2d');
+    let bird={x:50,y:150,vy:0}, pipes=[],score=0, grav=0.5,interval;
+
+    function reset(){
+      bird={x:50,y:150,vy:0}; pipes=[]; score=0; updateScore();
+      document.getElementById('resetBtn').disabled=false;
+      loadFB();
+    }
+
+    function updateScore(){ document.getElementById('fscore').innerText=score; }
+
+    function draw(){
+      // background
+      ctx.fillStyle='#70c5ce';ctx.fillRect(0,0,cvs.width,cvs.height);
+      // pipes
+      if(Math.random()<0.02) {
+        const h=50+Math.random()*200;
+        pipes.push({x:cvs.width,y:h});
+      }
+      pipes.forEach(p=>{
+        p.x-=2;
+        ctx.fillStyle='#57a34b'; ctx.fillRect(p.x,0,40,p.y);
+        ctx.fillRect(p.x,p.y+120,40,cvs.height);
+        if(bird.x>p.x+40&&!p.passed){score++;p.passed=true;updateScore();}
+        if((bird.x>p.x&&bird.x< p.x+40)&& (bird.y< p.y||bird.y>p.y+120)){
+          clearInterval(interval); flappyOver();
+        }
+      });
+      // bird
+      bird.vy+=grav; bird.y+=bird.vy;
+      ctx.fillStyle='#ff0'; ctx.beginPath();
+      ctx.arc(bird.x,bird.y,12,0,2*Math.PI); ctx.fill();
+      if(bird.y>cvs.height||bird.y<0){ clearInterval(interval); flappyOver();}
+    }
+
+    document.getElementById('flappy').onclick=()=>bird.vy=-6;
+    document.getElementById('startBtn').onclick=_=>{
+      reset(); interval=setInterval(draw,20);
+      document.getElementById('startBtn').disabled=true;
+    };
+    document.getElementById('resetBtn').onclick=_=>{
+      clearInterval(interval);
+      document.getElementById('startBtn').disabled=false;
+      reset();
+    };
+
+    // leaderboard
+    function loadFB(){
+      const a=JSON.parse(localStorage.getItem('flappyBoard')||'[]')
+              .sort((a,b)=>b.score-a.score).slice(0,5);
+      const ol=document.getElementById('fboard'); ol.innerHTML='';
+      a.forEach(r=>ol.innerHTML+=`<li>${r.name}: ${r.score}</li>`);
+    }
+    function flappyOver(){
+      clearInterval(interval);
+      const n=prompt(`Hai totalizzato ${score} punti! Nome:`,'Giocatore');
+      if(!n)return;
+      const a=JSON.parse(localStorage.getItem('flappyBoard')||'[]');
+      a.push({name:n,score}); localStorage.setItem('flappyBoard',JSON.stringify(a));
+      loadFB();
+    }
+
+    loadFB();
+  </script>
+</body>
+</html>
