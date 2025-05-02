@@ -99,46 +99,51 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      // 1) sessione + navbar
-      const { data:{ session } } = await supabase.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
       if (!session) return window.location.href = 'login.html';
       await updateNavbar();
-  
-      // 2) prendi nome da metadata
+    
       const md = session.user.user_metadata || {};
       const userName = (md.firstName && md.lastName)
         ? `${md.firstName} ${md.lastName}`
         : session.user.email;
-  
+    
+      const userEmail = session.user.email;
+      const userId = session.user.id;
       const room = 'global';
       const messagesDiv = document.getElementById('messages');
-      const chatForm    = document.getElementById('chatForm');
-      const chatInput   = document.getElementById('chatInput');
-  
-      // 3) render messaggio
-      async function renderMessage(msg) {
+      const chatForm = document.getElementById('chatForm');
+      const chatInput = document.getElementById('chatInput');
+    
+      function renderMessage(msg) {
         const when = new Date(msg.inserted_at)
           .toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-  
-        const { data: { session: currentSession } } = await supabase.auth.getSession();
-        const isMine = msg.user_email === currentSession.user.email;
-  
+        
+        const isMine = msg.user_email === userEmail;
+    
         const deleteBtn = isMine && !msg.deleted
           ? `<button class="btn btn-sm btn-danger btn-delete float-right" data-id="${msg.id}" style="font-size: 0.7rem;">Elimina</button>`
           : '';
-  
-        const html = `
+    
+        const msgHtml = `
           <div class="message" data-id="${msg.id}">
             <div class="author">${msg.user_name} ${deleteBtn}</div>
             <div class="content">${msg.deleted ? '<em>Questo messaggio è stato eliminato</em>' : msg.content}</div>
             <div class="time">${when}</div>
           </div>
         `;
-        messagesDiv.insertAdjacentHTML('beforeend', html);
+    
+        const existing = document.querySelector(`.message[data-id="${msg.id}"]`);
+        if (existing) {
+          existing.outerHTML = msgHtml; // aggiorna messaggio esistente
+        } else {
+          messagesDiv.insertAdjacentHTML('beforeend', msgHtml); // aggiungi nuovo
+        }
+    
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }
-  
-      // 4) cronologia
+    
+      // carica cronologia
       let { data: history } = await supabase
         .from('messages')
         .select('*')
@@ -146,45 +151,47 @@
         .order('inserted_at', { ascending: true })
         .limit(100);
       if (history) history.forEach(renderMessage);
-  
-      // 5) realtime
-      supabase
-        .channel('public:messages')
+    
+      // realtime: INSERT + UPDATE
+      supabase.channel('public:messages')
         .on('postgres_changes', {
           event: 'INSERT',
           schema: 'public',
           table: 'messages',
           filter: `room=eq.${room}`
-        }, payload => renderMessage(payload.new))
+        }, ({ new: m }) => renderMessage(m))
+        .on('postgres_changes', {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'messages',
+          filter: `room=eq.${room}`
+        }, ({ new: m }) => renderMessage(m))
         .subscribe();
-  
-      // 6) invio
+    
+      // invio messaggio
       chatForm.addEventListener('submit', async e => {
         e.preventDefault();
         const content = chatInput.value.trim();
         if (!content) return;
         chatInput.value = '';
         await supabase.from('messages').insert({
-          room, user_email: session.user.email,
-          user_name: userName, content,
-          user_id: session.user.id
+          room,
+          user_email: userEmail,
+          user_name: userName,
+          content,
+          user_id: userId
         });
       });
-  
-      // 7) elimina messaggio proprio
-      document.addEventListener('click', async (e) => {
-        if (e.target.classList.contains('btn-delete')) {
-          const msgId = e.target.getAttribute('data-id');
-          if (!confirm('Sei sicuro di voler eliminare questo messaggio? Non potrai recuperarlo.')) return;
-          const { error } = await supabase
-            .from('messages')
-            .update({ content: '', deleted: true })
-            .eq('id', msgId);
-          if (error) alert('Errore durante l\'eliminazione.');
-        }
+    
+      // eliminazione
+      $(document).on('click', '.btn-delete', async function () {
+        const id = $(this).data('id');
+        await supabase.from('messages')
+          .update({ deleted: true, content: '' })
+          .eq('id', id)
+          .eq('user_id', userId); // sicurezza lato client
       });
     });
-  </script>
-  
+    </script>    
 </body>
 </html>
