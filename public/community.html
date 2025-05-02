@@ -243,9 +243,9 @@
         const newContent = $(this).siblings('.edit-input').val().trim();
         if (!newContent) return;
         await supabase.from('messages')
-          .update({ content: newContent })
-          .eq('id', id)
-          .eq('user_id', userId);
+        .update({ content: newContent, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .eq('user_id', userId);
       });
     
       // annulla modifica
