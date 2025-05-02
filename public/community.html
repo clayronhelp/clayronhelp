@@ -166,7 +166,8 @@
         chatInput.value = '';
         await supabase.from('messages').insert({
           room, user_email: session.user.email,
-          user_name: userName, content
+          user_name: userName, content,
+          user_id: session.user.id
         });
       });
   
