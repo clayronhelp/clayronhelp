@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Giochi – ClayRon</title>
+  <link rel="icon" href="assets/img/logo.png">
+  <!-- Bootstrap & FontAwesome -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .card-game {
+      cursor: pointer;
+      transition: transform .2s;
+    }
+    .card-game:hover { transform: translateY(-5px); }
+    .card-game i { font-size: 3rem; }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/img/logo.png" class="logo" alt="Logo"> ClayRon S.P.A.
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navGames">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navGames">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link" href="area.html">Area Personale</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-5 flex-fill">
+    <h2 class="text-center mb-4">Giochi</h2>
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <div class="card card-game text-center p-4" onclick="location.href='educational.html'">
+          <i class="fas fa-graduation-cap text-primary"></i>
+          <h4 class="mt-2">Educativi</h4>
+          <p>Math Quiz, Memory e tanto apprendimento divertente!</p>
+        </div>
+      </div>
+      <div class="col-md-6 mb-4">
+        <div class="card card-game text-center p-4" onclick="location.href='fun.html'">
+          <i class="fas fa-gamepad text-warning"></i>
+          <h4 class="mt-2">Divertimento</h4>
+          <p>Snake, Flappy Bird e giochi da sfida!</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-4 bg-primary text-white text-center mt-auto">
+    <div class="container">&copy; 2025 ClayRon S.P.A.</div>
+  </footer>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
