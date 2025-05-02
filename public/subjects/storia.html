@@ -133,7 +133,11 @@
         // registra nel carrello materiali
         document.getElementById('downloadBtn').addEventListener('click', () => {
           const list = JSON.parse(localStorage.getItem('myMaterials')||'[]');
-          list.push({ title: $('#mat-title').text(), link: fileUrl });
+          list.push({ 
+            title: $('#mat-title').text(), 
+            link: fileUrl,
+            page: 'materie/storia.html'  // <-- aggiunto path della pagina
+          });
           localStorage.setItem('myMaterials', JSON.stringify(list));
         });
       } else {
