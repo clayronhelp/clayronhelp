@@ -142,12 +142,14 @@
       }, 200);
     });
 
-    // Conferma crop e upload
-    $('#cropConfirm').click(() => {
-      const canvas = cropper.getCroppedCanvas({ width: 256, height: 256 });
-      canvas.toBlob(async blob => {
-        $('#cropModal').modal('hide');
-        $('#avatarFile').blur(); // evita warning aria-hidden
+    // conferma crop
+$('#cropConfirm').click(() => {
+  const canvas = cropper.getCroppedCanvas({ width: 256, height: 256 });
+  canvas.toBlob(async blob => {
+    // prima chiudi il modal
+    $('#cropModal').modal('hide');
+    // rimuovi il focus dal bottone per evitare warning aria-hidden
+    $('#cropConfirm').blur();
 
         // upload su Supabase
         const { data:{ session } } = await supabase.auth.getSession();
