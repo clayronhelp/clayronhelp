@@ -115,12 +115,18 @@
         $messages.scrollTop($messages.prop('scrollHeight'));
       }
     
-      let sub = null;
+      // **GESTIONE REALTIME**
+      let channel = null;
       async function subscribe(room) {
-        if (sub) supabase.removeSubscription(sub);
+        // 1) disconnetto canale precedente
+        if (channel) {
+          await supabase.removeChannel(channel);
+          channel = null;
+        }
+        // 2) svuoto finestra chat
         $messages.empty();
     
-        // caricamento cronologia con controllo null
+        // 3) carico cronologia
         let { data: history, error } = await supabase
           .from('messages')
           .select('*')
@@ -134,14 +140,22 @@
           history.forEach(renderMessage);
         }
     
-        // realtime
-        sub = supabase
-          .from(`messages:room=eq.${room}`)
-          .on('INSERT', ({ new: m }) => renderMessage(m))
+        // 4) apro nuovo canale realtime
+        channel = supabase
+          .channel(`room-${room}`)
+          .on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'messages',
+            filter: `room=eq.${room}`
+          }, ({ new: m }) => renderMessage(m))
           .subscribe();
       }
+    
+      // start
       subscribe(currentRoom);
     
+      // cambio stanza
       $tabs.click(function(){
         $tabs.removeClass('active');
         $(this).addClass('active');
@@ -149,18 +163,18 @@
         subscribe(currentRoom);
       });
     
+      // invio
       $('#chat-form').submit(async e => {
         e.preventDefault();
-        const content = $('#chat-input').val();
+        const content = $('#chat-input').val().trim();
+        if (!content) return;
         $('#chat-input').val('');
-        await supabase.from('messages').insert({
-          room: currentRoom,
-          user_email: session.user.email,
-          user_name: userName,
-          content
-        });
+        await supabase
+          .from('messages')
+          .insert({ room: currentRoom, user_email: session.user.email, user_name: userName, content });
       });
     });
-    </script>    
+    </script>
+
 </body>
 </html>
