@@ -9,6 +9,27 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
+    #messages .message {
+      background: #f1f3f5;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.75rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    #messages .message .author {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: #0055aa;
+    }
+    #messages .message .content {
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+    }
+    #messages .message .time {
+      font-size: 0.75rem;
+      color: #666;
+      text-align: right;
+    }
     #messages { max-height: 60vh; overflow-y: auto; }
     .message { margin-bottom: .5rem; }
     .message .user { font-weight: bold; margin-right: .5rem; }
@@ -83,18 +104,19 @@
     const chatForm    = document.getElementById('chatForm');
     const chatInput   = document.getElementById('chatInput');
 
-    function renderMessage(msg) {
+        function renderMessage(msg) {
       const when = new Date(msg.inserted_at)
         .toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-      const div = document.createElement('div');
-      div.className = 'message';
-      div.innerHTML = `
-        <span class="user">${msg.user_name}:</span>
-        <span class="text">${msg.content}</span>
-        <span class="time">[${when}]</span>`;
-      messagesDiv.appendChild(div);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      $('#messages').append(`
+        <div class="message">
+          <div class="author">${msg.user_name}</div>
+          <div class="content">${msg.content}</div>
+          <div class="time">${when}</div>
+        </div>
+      `);
+      $('#messages').scrollTop($('#messages')[0].scrollHeight);
     }
+
 
     // 3) cronologia
     let { data: history } = await supabase

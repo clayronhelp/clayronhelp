@@ -109,7 +109,7 @@
         const next = new Date(new Date(lastChanged).getTime() + 14*24*60*60*1000);
         $('#changeNotice')
           .removeClass('d-none')
-          .text(`Hai modificato il nome l’ultima volta il ${new Date(lastChanged).toLocaleDateString()}, potrai cambiare nuovamente dal ${next.toLocaleDateString()}.`);
+          .text(`Hai modificato il nome l’ultima volta il ${new Date(lastChanged).toLocaleDateString()}, potrai cambiarlo nuovamente dal ${next.toLocaleDateString()}.`);
         $('#firstName, #lastName, #saveBtn').prop('disabled', true);
       }
     }
