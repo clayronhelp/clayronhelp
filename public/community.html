@@ -142,10 +142,10 @@
           ? '<em>Questo messaggio è stato eliminato</em>'
           : `<span class="message-content" style="word-break: break-word; white-space: pre-wrap;">${msg.content}</span>`;
     
-        const editedLabel = (msg.updated_at && msg.updated_at !== msg.inserted_at && !msg.deleted)
+          const editedLabel = (msg.updated_at && msg.updated_at !== msg.inserted_at && !msg.deleted)
           ? `<div class="text-muted" style="font-size: 0.75rem;">(modificato)</div>`
           : '';
-    
+
         const msgHtml = `
           <div class="message mb-2 p-2 border rounded" data-id="${msg.id}">
             <div class="author font-weight-bold">${msg.user_name} ${actionButtons}</div>
@@ -243,9 +243,9 @@
         const newContent = $(this).siblings('.edit-input').val().trim();
         if (!newContent) return;
         await supabase.from('messages')
-        .update({ content: newContent, updated_at: new Date().toISOString() })
-        .eq('id', id)
-        .eq('user_id', userId);
+          .update({ content: newContent })
+          .eq('id', id)
+          .eq('user_id', userId);
       });
     
       // annulla modifica
