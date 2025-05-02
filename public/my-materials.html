@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>I miei materiali - ClayRon</title>
   <link rel="icon" href="assets/img/logo.png">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -23,7 +22,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
       <a class="navbar-brand" href="index.html">
-        <img src="assets/img/logo.png" style="height:32px" alt="Logo"> ClayRon S.P.A.
+        <img src="assets/img/logo.png" alt="Logo" class="logo" style="height:32px"> ClayRon S.P.A.
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome">
         <span class="navbar-toggler-icon"></span>
@@ -35,7 +34,9 @@
           <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
           <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
         </ul>
-        <div id="auth-area" class="ml-2"></div>
+        <div id="auth-area" class="ml-2">
+          <!-- auth.js popolerà qui -->
+        </div>
       </div>
     </div>
   </nav>
@@ -47,16 +48,16 @@
   </main>
 
   <!-- Footer -->
-  <footer class="py-4 text-white text-center bg-primary">
+  <footer class="py-4 text-white text-center">
     <div class="container">
       <div class="social-icons mb-3">
-        <a href="https://www.instagram.com/clayronhelp/" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.facebook.com/profile.php?id=61575494257613" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.tiktok.com/@clayronhelp" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+        <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
       </div>
       <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
       <small>
-        <a href="terms.html" class="text-white">Termini &amp; Condizioni</a> – 
+        <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
         <a href="cookie.html" class="text-white">Cookie Policy</a>
       </small>
     </div>
@@ -68,21 +69,24 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
+      // Proteggi pagina
       const { data:{ session } } = await supabase.auth.getSession();
-      if (!session) return location.href = 'login.html';
+      if (!session) return location.href='login.html';
 
+      // Lista materiali scaricati (unici)
       const ul = $('#myMaterials');
-      const stored = JSON.parse(localStorage.getItem('myMaterials') || '[]');
-      const unique = Array.from(new Map(stored.map(i => [i.page + i.link, i])).values());
+      const stored = JSON.parse(localStorage.getItem('myMaterials')||'[]');
+      const unique = Array.from(new Map(stored.map(i=>[i.id,i])).values());
       if (!unique.length) {
         ul.append('<li class="list-group-item text-muted">Nessun materiale scaricato</li>');
       } else {
-        unique.forEach(item => {
+        unique.forEach(item=>{
+          const page = item.page || `material-detail.html?id=${encodeURIComponent(item.id)}`;
           ul.append(`
             <li class="list-group-item d-flex justify-content-between align-items-center">
               ${item.title}
               <div>
-                <a href="${item.page}" class="btn btn-sm btn-outline-primary mr-1">Visualizza</a>
+                <a href="${page}" class="btn btn-sm btn-outline-primary mr-1">Visualizza</a>
                 <a href="${item.link}" download class="btn btn-sm btn-success">Scarica</a>
               </div>
             </li>`);

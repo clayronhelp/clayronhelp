@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Appunti di Storia - ClayRon</title>
+  <!-- Font & CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="../assets/css/style.css" rel="stylesheet">
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- PayPal SDK -->
   <script src="https://www.paypal.com/sdk/js?client-id=Ad3Up0PLcvijOaaaI5_tLI49rILy1cPgJpB4k6XuDjiUOoi0QSv6ZK6nqEZihQ-xo6euC-1MhWnja_qt&currency=EUR"></script>
+
+  <!-- Supabase (per controllare login) -->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
     const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
   </script>
+
   <style>
     body { display: flex; flex-direction: column; min-height: 100vh; }
     main { flex: 1; }
@@ -26,6 +33,7 @@
   </style>
 </head>
 <body>
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
       <a class="navbar-brand" href="../index.html">
@@ -85,63 +93,67 @@
     </div>
   </footer>
 
+  <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
-<!-- … head con PayPal, supabase, CSS … -->
-<script>
-  const price   = 0;
-  const fileUrl = "../assets/uploads/…pptx";
-  const pageUrl = window.location.pathname.replace(/^\//, '');
 
-  const addToMyMaterials = () => {
-    const list = JSON.parse(localStorage.getItem('myMaterials') || '[]');
-    list.push({
-      title: $('#mat-title').text(),
-      link: fileUrl,
-      page: pageUrl
+  <script>
+    // *** CONFIGURA QUI ***
+    const price = 0;  
+    const fileUrl = "../assets/uploads/mappa1samueleguerrarussomondiale.pptx";
+
+    $(async function(){
+      // 1) Navbar dinamica
+      const { data:{ session } } = await supabase.auth.getSession();
+      $('#auth-area').html(
+        session
+          ? `<a href="../area.html" class="btn btn-light">Area Personale</a>`
+          : `<a href="../login.html" class="btn btn-light">Accedi/Registrati</a>`
+      );
+
+      const container = document.getElementById('payment-button-container');
+
+      // 2) Se non loggato, obbliga a login
+      if (!session) {
+        container.innerHTML = `
+          <a href="../login.html" class="btn btn-warning">
+            <i class="fas fa-sign-in-alt mr-2"></i> Devi accedere
+          </a>`;
+        return;
+      }
+
+      // 3) Sei loggato → mostra download o PayPal
+      if (price === 0) {
+        container.innerHTML = `
+          <a href="${fileUrl}" class="btn btn-success" id="downloadBtn">
+            <i class="fas fa-download mr-2"></i> Scarica
+          </a>`;
+        // registra nel carrello materiali
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+          const list = JSON.parse(localStorage.getItem('myMaterials')||'[]');
+          list.push({ title: $('#mat-title').text(), link: fileUrl });
+          localStorage.setItem('myMaterials', JSON.stringify(list));
+        });
+      } else {
+        paypal.Buttons({
+          style: { layout: 'vertical', color: 'blue', shape: 'rect', label: 'paypal' },
+          createOrder: (data, actions) => actions.order.create({
+            purchase_units:[{ amount:{ value: price.toFixed(2) }, description: $('#mat-title').text() }]
+          }),
+          onApprove: (data, actions) => actions.order.capture().then(details => {
+            if (details.status==='COMPLETED') {
+              const list = JSON.parse(localStorage.getItem('myMaterials')||'[]');
+              list.push({ title: $('#mat-title').text(), link: fileUrl });
+              localStorage.setItem('myMaterials', JSON.stringify(list));
+              window.location = fileUrl;
+            } else alert('Pagamento non completato');
+          }),
+          onError: err => { console.error(err); alert('Errore con PayPal'); }
+        }).render('#payment-button-container');
+      }
     });
-    localStorage.setItem('myMaterials', JSON.stringify(list));
-  };
-
-  $(async function(){
-    const { data:{ session } } = await supabase.auth.getSession();
-    $('#auth-area').html(
-      session
-        ? `<a href="../area.html" class="btn btn-light">Area Personale</a>`
-        : `<a href="../login.html" class="btn btn-light">Accedi/Registrati</a>`
-    );
-    const container = document.getElementById('payment-button-container');
-    if (!session) {
-      container.innerHTML = `<a href="../login.html" class="btn btn-warning">
-        <i class="fas fa-sign-in-alt mr-2"></i> Devi accedere
-      </a>`;
-      return;
-    }
-    if (price === 0) {
-      container.innerHTML = `<a href="${fileUrl}" class="btn btn-success" id="downloadBtn">
-        <i class="fas fa-download mr-2"></i> Scarica
-      </a>`;
-      document.getElementById('downloadBtn').addEventListener('click', addToMyMaterials);
-    } else {
-      paypal.Buttons({
-        style: { layout: 'vertical', color: 'blue', shape: 'rect', label: 'paypal' },
-        createOrder: (data, actions) => actions.order.create({
-          purchase_units:[{ amount:{ value: price.toFixed(2) }, description: $('#mat-title').text() }]
-        }),
-        onApprove: (data, actions) => actions.order.capture().then(details => {
-          if (details.status === 'COMPLETED') {
-            addToMyMaterials();
-            window.location = fileUrl;
-          } else alert('Pagamento non completato');
-        }),
-        onError: err => { console.error(err); alert('Errore con PayPal'); }
-      }).render('#payment-button-container');
-    }
-  });
-</script>
-<!-- … resto del body … -->
-
+  </script>
 </body>
 </html>
