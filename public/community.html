@@ -32,8 +32,15 @@
     text-align: right;
   }
 
-    #messages { max-height: 60vh; overflow-y: auto; }
-    .message { margin-bottom: .5rem; }
+  #messages {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  .message {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    background: #f8f9fa;
+  }
     .message .user { font-weight: bold; margin-right: .5rem; }
     .message .time { font-size: .75rem; color: #666; }
   </style>
@@ -115,6 +122,9 @@
       const chatForm = document.getElementById('chatForm');
       const chatInput = document.getElementById('chatInput');
     
+      // SPAM CONTROL
+      let messageTimestamps = [];
+    
       function canEditOrDelete(inserted_at) {
         const now = new Date();
         const insertedTime = new Date(inserted_at);
@@ -138,13 +148,17 @@
     
         const contentHtml = msg.deleted
           ? '<em>Questo messaggio è stato eliminato</em>'
-          : `<span class="message-content">${msg.content}</span>`;
+          : `<span class="message-content" style="word-break: break-word; white-space: pre-wrap;">${msg.content}</span>`;
+    
+        const editedLabel = (msg.updated_at && msg.updated_at !== msg.inserted_at && !msg.deleted)
+          ? `<div class="text-muted" style="font-size: 0.75rem;">(modificato)</div>`
+          : '';
     
         const msgHtml = `
-          <div class="message" data-id="${msg.id}">
-            <div class="author">${msg.user_name} ${actionButtons}</div>
-            <div class="content">${contentHtml}</div>
-            <div class="time">${when}</div>
+          <div class="message mb-2 p-2 border rounded" data-id="${msg.id}">
+            <div class="author font-weight-bold">${msg.user_name} ${actionButtons}</div>
+            <div class="content">${contentHtml}${editedLabel}</div>
+            <div class="time text-muted" style="font-size: 0.75rem;">${when}</div>
           </div>
         `;
     
@@ -183,12 +197,22 @@
         }, ({ new: m }) => renderMessage(m))
         .subscribe();
     
-      // invio
+      // invio con SPAM check
       chatForm.addEventListener('submit', async e => {
         e.preventDefault();
         const content = chatInput.value.trim();
         if (!content) return;
+    
+        const now = Date.now();
+        messageTimestamps = messageTimestamps.filter(ts => now - ts < 10000);
+        if (messageTimestamps.length >= 5) {
+          alert("Stai inviando messaggi troppo velocemente. Rallenta per favore.");
+          return;
+        }
+    
+        messageTimestamps.push(now);
         chatInput.value = '';
+    
         await supabase.from('messages').insert({
           room,
           user_email: userEmail,
@@ -214,11 +238,10 @@
         const messageDiv = $(`.message[data-id="${id}"]`);
         const contentSpan = messageDiv.find('.message-content');
     
-        // sostituisci con input
         contentSpan.replaceWith(`
           <input type="text" class="form-control form-control-sm edit-input" value="${oldContent}" />
-          <button class="btn btn-sm btn-success btn-save" data-id="${id}">Salva</button>
-          <button class="btn btn-sm btn-secondary btn-cancel" data-id="${id}">Annulla</button>
+          <button class="btn btn-sm btn-success btn-save mt-1" data-id="${id}">Salva</button>
+          <button class="btn btn-sm btn-secondary btn-cancel mt-1" data-id="${id}">Annulla</button>
         `);
       });
     
@@ -236,11 +259,10 @@
       // annulla modifica
       $(document).on('click', '.btn-cancel', function () {
         const id = $(this).data('id');
-        const message = history.find(m => m.id === id); // usa cronologia
+        const message = history.find(m => m.id === id);
         if (message) renderMessage(message);
       });
     });
-    </script>
-      
+    </script>    
 </body>
 </html>
