@@ -114,17 +114,36 @@
       }, ({ new: m }) => renderMessage(m))
       .subscribe();
 
-    // 5) invio
-    chatForm.addEventListener('submit', async e => {
-      e.preventDefault();
-      const content = chatInput.value.trim();
-      if (!content) return;
-      chatInput.value = '';
-      await supabase.from('messages').insert({
-        room, user_email: session.user.email,
-        user_name: userName, content
-      });
-    });
+    // 5) invio (con render immediato)
+$('#chat-form').submit(async e => {
+  e.preventDefault();
+  const content = $('#chat-input').val().trim();
+  if (!content) return;
+
+  // svuota subito l’input
+  $('#chat-input').val('');
+
+  // 5a) invia al DB
+  const { data: inserted, error } = await supabase
+    .from('messages')
+    .insert({
+      room: currentRoom,
+      user_email: session.user.email,
+      user_name: userName,
+      content
+    })
+    .select()        // così supabase ti restituisce l’oggetto appena creato
+    .single();
+
+  if (error) {
+    console.error('Errore invio messaggio:', error);
+    return alert('Impossibile inviare il messaggio');
+  }
+
+  // 5b) render immediato del tuo messaggio
+  renderMessage(inserted);
+});
+
   });
   </script>
 </body>
