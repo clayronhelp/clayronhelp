@@ -88,93 +88,93 @@
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
   <script>
-    $(async () => {
-      await updateNavbar();
-      const { data:{ session } } = await supabase.auth.getSession();
-      if (!session) return window.location.href='login.html';
-    
-      const md = session.user.user_metadata || {};
-      const userName = (md.firstName && md.lastName)
-        ? `${md.firstName} ${md.lastName}`
-        : session.user.email;
-    
-      let currentRoom = 'generale';
-      const $tabs = $('#chat-tabs .nav-link');
-      const $messages = $('#messages');
-    
-      function renderMessage(msg) {
-        const time = new Date(msg.inserted_at)
-          .toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-        $messages.append(`
-          <div class="message">
-            <div class="author">${msg.user_name}</div>
-            <div>${msg.content}</div>
-            <div class="time">${time}</div>
-          </div>
-        `);
-        $messages.scrollTop($messages.prop('scrollHeight'));
+  $(async () => {
+    await updateNavbar();
+    const { data:{ session } } = await supabase.auth.getSession();
+    if (!session) return window.location.href='login.html';
+  
+    const md = session.user.user_metadata || {};
+    const userName = (md.firstName && md.lastName)
+      ? `${md.firstName} ${md.lastName}`
+      : session.user.email;
+  
+    let currentRoom = 'generale';
+    const $tabs = $('#chat-tabs .nav-link');
+    const $messages = $('#messages');
+  
+    function renderMessage(msg) {
+      const time = new Date(msg.inserted_at)
+        .toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+      $messages.append(`
+        <div class="message">
+          <div class="author">${msg.user_name}</div>
+          <div>${msg.content}</div>
+          <div class="time">${time}</div>
+        </div>
+      `);
+      $messages.scrollTop($messages.prop('scrollHeight'));
+    }
+  
+    // **GESTIONE REALTIME**
+    let channel = null;
+    async function subscribe(room) {
+      // 1) disconnetto canale precedente
+      if (channel) {
+        await supabase.removeChannel(channel);
+        channel = null;
       }
-    
-      // **GESTIONE REALTIME**
-      let channel = null;
-      async function subscribe(room) {
-        // 1) disconnetto canale precedente
-        if (channel) {
-          await supabase.removeChannel(channel);
-          channel = null;
-        }
-        // 2) svuoto finestra chat
-        $messages.empty();
-    
-        // 3) carico cronologia
-        let { data: history, error } = await supabase
-          .from('messages')
-          .select('*')
-          .eq('room', room)
-          .order('inserted_at', { ascending: true })
-          .limit(100);
-    
-        if (error) {
-          console.error('Errore fetching history:', error);
-        } else if (history && history.length) {
-          history.forEach(renderMessage);
-        }
-    
-        // 4) apro nuovo canale realtime
-        channel = supabase
-          .channel(`room-${room}`)
-          .on('postgres_changes', {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'messages',
-            filter: `room=eq.${room}`
-          }, ({ new: m }) => renderMessage(m))
-          .subscribe();
+      // 2) svuoto finestra chat
+      $messages.empty();
+  
+      // 3) carico cronologia
+      let { data: history, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('room', room)
+        .order('inserted_at', { ascending: true })
+        .limit(100);
+  
+      if (error) {
+        console.error('Errore fetching history:', error);
+      } else if (history && history.length) {
+        history.forEach(renderMessage);
       }
-    
-      // start
+  
+      // 4) apro nuovo canale realtime
+      channel = supabase
+        .channel(`room-${room}`)
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+          filter: `room=eq.${room}`
+        }, ({ new: m }) => renderMessage(m))
+        .subscribe();
+    }
+  
+    // start
+    subscribe(currentRoom);
+  
+    // cambio stanza
+    $tabs.click(function(){
+      $tabs.removeClass('active');
+      $(this).addClass('active');
+      currentRoom = $(this).data('room');
       subscribe(currentRoom);
-    
-      // cambio stanza
-      $tabs.click(function(){
-        $tabs.removeClass('active');
-        $(this).addClass('active');
-        currentRoom = $(this).data('room');
-        subscribe(currentRoom);
-      });
-    
-      // invio
-      $('#chat-form').submit(async e => {
-        e.preventDefault();
-        const content = $('#chat-input').val().trim();
-        if (!content) return;
-        $('#chat-input').val('');
-        await supabase
-          .from('messages')
-          .insert({ room: currentRoom, user_email: session.user.email, user_name: userName, content });
-      });
     });
-    </script>
+  
+    // invio
+    $('#chat-form').submit(async e => {
+      e.preventDefault();
+      const content = $('#chat-input').val().trim();
+      if (!content) return;
+      $('#chat-input').val('');
+      await supabase
+        .from('messages')
+        .insert({ room: currentRoom, user_email: session.user.email, user_name: userName, content });
+    });
+  });
+  </script>
 
 </body>
 </html>
