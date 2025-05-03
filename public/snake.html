@@ -1,134 +1,183 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Snake – ClayRon</title>
   <link rel="icon" href="assets/img/logo.png">
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap & style.css -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
-    body { background:#121212; color:#eee; }
-    .navbar, .footer { background:#1f1f1f!important; }
-    #board { background:#000; display:block; margin:1rem auto; border:2px solid #0f9d58; transition:box-shadow .3s; }
-    #board:hover { box-shadow:0 0 15px #0f9d58; }
-    #score, #controls, #leaderboard{ text-align:center; margin:1rem; }
+    body, canvas { background:#f8f9fa; }
+    #game-container { text-align:center; margin-top:2rem; }
     #controls button { margin:0 .5rem; }
-    .btn-tech { background: linear-gradient(45deg,#0f9d58,#4285f4); color:#fff; border:none; transition:transform .2s;}
-    .btn-tech:hover { transform:scale(1.05); }
+    #leaderboardOl { max-width:300px; margin:auto; }
   </style>
+  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
+  <script>
+    const SUPABASE_URL='https://nptawehzfamaghytkmbk.supabase.co',
+          SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+    window.supabase = supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
+  </script>
+  <script src="assets/js/auth.js"></script>
 </head>
-<body>
-
+<body class="d-flex flex-column min-vh-100">
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark">
+  <!-- (stessa di games.html, cambia active su Giochi ➞ Snake) -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
-      <a class="navbar-brand" href="index.html"><img src="assets/img/logo.png" style="height:30px"> ClayRon</a>
-      <button class="navbar-toggler" data-toggle="collapse" data-target="#nav"><span class="navbar-toggler-icon"></span></button>
-      <div class="collapse navbar-collapse" id="nav">
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/img/logo.png" class="logo" alt="Logo"> ClayRon S.P.A.
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavProfile">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavProfile">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item"><a class="nav-link" href="snake.html">Snake</a></li>
-          <li class="nav-item"><a class="nav-link" href="memory.html">Memory</a></li>
-          <li class="nav-item"><a class="nav-link" href="quiz.html">Quiz</a></li>
-          <li class="nav-item"><a class="nav-link" href="leaderboards.html">Classifiche</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+          <li class="nav-item"><a class="nav-link" href="games.html">Giochi</a></li>
+          <li class="nav-item active"><a class="nav-link" href="snake.html">Snake</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
         </ul>
+        <div id="auth-area" class="ml-3"></div>
       </div>
     </div>
   </nav>
 
-  <!-- Game -->
-  <div class="container text-center">
-    <h2 class="mt-4">Snake</h2>
-    <div id="score">Score: 0</div>
-    <canvas id="board" width="400" height="400"></canvas>
-    <div id="controls">
-      <button id="startBtn" class="btn btn-tech">Start</button>
-      <button id="resetBtn" class="btn btn-outline-warning">Reset</button>
-      <button id="showLb" class="btn btn-info">Mostra Classifica</button>
+  <div id="game-container" class="flex-fill">
+    <canvas id="snakeCanvas" width="400" height="400" style="border:1px solid #333;"></canvas>
+    <div id="controls" class="mt-3">
+      <button id="startBtn" class="btn btn-success">Start</button>
+      <button id="resetBtn" class="btn btn-danger">Reset</button>
     </div>
-    <div id="leaderboard" style="display:none;"></div>
+    <div class="mt-3">
+      <button id="showLbSnake" class="btn btn-info">Mostra Classifica</button>
+      <ol id="leaderboardSnake" class="list-group mt-2"></ol>
+    </div>
   </div>
 
   <!-- Footer -->
-  <footer class="footer py-3 text-center">
-    <div class="container"><small>&copy; 2025 ClayRon S.P.A.</small></div>
+  <footer class="py-4 text-white text-center bg-primary mt-auto">
+    <div class="container">
+      &copy; 2025 ClayRon S.P.A.
+    </div>
   </footer>
 
-  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
   <script>
-  // Supabase init (per nome utente)
-  const SUPABASE_URL='https://nptawehzfamaghytkmbk.supabase.co';
-  const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
-  window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  document.addEventListener('DOMContentLoaded', async () => {
+    // 1) sessione + navbar
+    const { data:{ session } } = await supabase.auth.getSession();
+    if (!session) return location.href='login.html';
+    await updateNavbar();
 
-  document.addEventListener('DOMContentLoaded',async()=>{
-    // sessione + nome
-    const { data:{ session } }=await supabase.auth.getSession();
-    if(!session) return location='login.html';
-    const md=session.user.user_metadata||{};
-    const userName=(md.firstName&&md.lastName)?`${md.firstName} ${md.lastName}`:session.user.email;
+    // utente e nome
+    const md = session.user.user_metadata||{};
+    const userName = md.firstName
+      ? `${md.firstName} ${md.lastName}`
+      : session.user.email;
 
-    // snake logic
-    const cvs=document.getElementById('board'), ctx=cvs.getContext('2d');
-    const size=20, cols=20, rows=20;
-    let snake, dir, food, score, loop;
-
-    function saveScore(sc){
-      const key='leader_snake';
-      const arr=JSON.parse(localStorage.getItem(key)||'[]');
-      arr.push({name:userName,score:sc});
-      localStorage.setItem(key,JSON.stringify(arr));
+    // leaderboard key
+    const KEY = 'leader_snake';
+    function saveHS(s) {
+      const data = JSON.parse(localStorage.getItem(KEY)||'{}');
+      if (!data[userName]||s>data[userName]) {
+        data[userName]=s;
+        localStorage.setItem(KEY,JSON.stringify(data));
+      }
     }
-    function showLb(){
-      const key='leader_snake';
-      const arr=JSON.parse(localStorage.getItem(key)||'[]')
-        .sort((a,b)=>b.score-a.score).slice(0,5);
-      let h='<ol class="list-group">';
-      arr.forEach(e=>h+=`<li class="list-group-item bg-dark text-white">${e.name}: ${e.score}</li>`);
-      h+='</ol>';
-      document.getElementById('leaderboard').innerHTML=h;
-      document.getElementById('leaderboard').style.display='block';
+    function showLB() {
+      const data = JSON.parse(localStorage.getItem(KEY)||'{}');
+      const arr = Object.entries(data)
+        .map(e=>({ name:e[0], score:e[1]}))
+        .sort((a,b)=>b.score-a.score)
+        .slice(0,5);
+      let html='';
+      arr.forEach(e=>{
+        html+=`<li class="list-group-item">${e.name}: ${e.score}</li>`;
+      });
+      document.getElementById('leaderboardSnake').innerHTML=html;
     }
-    document.getElementById('showLb').onclick=showLb;
+    document.getElementById('showLbSnake')
+      .addEventListener('click', showLB);
 
-    function init(){
-      clearInterval(loop);
-      snake=[{x:10,y:10}]; dir={x:1,y:0}; score=0;
-      document.getElementById('score').innerText='Score: 0';
-      placeFood(); draw();
+    // Snake game logic
+    const canvas = document.getElementById('snakeCanvas'),
+          ctx = canvas.getContext('2d');
+    const size=20, width=canvas.width/size, height=canvas.height/size;
+    let snake, dir, food, gameInterval, score;
+
+    function resetGame(){
+      clearInterval(gameInterval);
+      snake=[{x:10,y:10}];
+      dir={x:1,y:0};
+      placeFood();
+      score=0;
+      draw();
     }
+
     function placeFood(){
-      food={x:Math.floor(Math.random()*cols),y:Math.floor(Math.random()*rows)};
+      food={ x: Math.floor(Math.random()*width),
+             y: Math.floor(Math.random()*height) };
     }
+
     function draw(){
-      ctx.fillStyle='#000'; ctx.fillRect(0,0,cvs.width,cvs.height);
-      ctx.fillStyle='#e63946'; ctx.fillRect(food.x*size,food.y*size,size-2,size-2);
-      ctx.fillStyle='#0f9d58';
-      snake.forEach(s=>ctx.fillRect(s.x*size,s.y*size,size-2,size-2));
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      // snake
+      ctx.fillStyle='#28a745';
+      snake.forEach(p=>{
+        ctx.fillRect(p.x*size,p.y*size,size,size);
+      });
+      // food
+      ctx.fillStyle='#dc3545';
+      ctx.fillRect(food.x*size,food.y*size,size,size);
     }
-    function update(){
-      const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
-      if(head.x<0||head.x>=cols||head.y<0||head.y>=rows||snake.some(s=>s.x===head.x&&s.y===head.y)){
-        clearInterval(loop);
-        alert('Hai perso! Punteggio: '+score);
-        saveScore(score);
+
+    function step(){
+      const head = { x: snake[0].x+dir.x, y: snake[0].y+dir.y };
+      // collision muri o sé stessi
+      if (
+        head.x<0||head.x>=width||
+        head.y<0||head.y>=height||
+        snake.some(s=>s.x===head.x&&s.y===head.y)
+      ) {
+        clearInterval(gameInterval);
+        alert(`Game Over! Punteggio: ${score}`);
+        saveHS(score);
         return;
       }
       snake.unshift(head);
-      if(head.x===food.x&&head.y===food.y){
-        score++; document.getElementById('score').innerText='Score: '+score;
+      if (head.x===food.x&&head.y===food.y) {
+        score++;
         placeFood();
-      } else snake.pop();
+      } else {
+        snake.pop();
+      }
       draw();
     }
-    document.getElementById('startBtn').onclick=()=>{clearInterval(loop); loop=setInterval(update,120)};
-    document.getElementById('resetBtn').onclick=init;
-    document.addEventListener('keydown',e=>{
-      if(e.key==='ArrowUp'&&dir.y===0) dir={x:0,y:-1};
-      if(e.key==='ArrowDown'&&dir.y===0) dir={x:0,y:1};
-      if(e.key==='ArrowLeft'&&dir.x===0) dir={x:-1,y:0};
-      if(e.key==='ArrowRight'&&dir.x===0) dir={x:1,y:0};
+
+    document.getElementById('startBtn')
+      .addEventListener('click', ()=> {
+        clearInterval(gameInterval);
+        gameInterval=setInterval(step,100);
+      });
+    document.getElementById('resetBtn')
+      .addEventListener('click', resetGame);
+
+    // arrow keys
+    document.addEventListener('keydown', e=>{
+      switch(e.key){
+        case 'ArrowUp': if(dir.y===0) dir={x:0,y:-1}; break;
+        case 'ArrowDown': if(dir.y===0) dir={x:0,y:1}; break;
+        case 'ArrowLeft': if(dir.x===0) dir={x:-1,y:0}; break;
+        case 'ArrowRight': if(dir.x===0) dir={x:1,y:0}; break;
+      }
     });
 
-    init();
+    // init
+    resetGame();
   });
   </script>
 </body>
