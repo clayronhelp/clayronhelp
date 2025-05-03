@@ -4,10 +4,10 @@
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Giochi – ClayRon</title>
   <link rel="icon" href="assets/img/logo.png">
-  <!-- Bootstrap + FontAwesome + style.css + Supabase -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
+  <!-- Supabase -->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
     const SUPABASE_URL  = 'https://nptawehzfamaghytkmbk.supabase.co';
@@ -15,6 +15,15 @@
     window.supabase     = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
   </script>
   <script src="assets/js/auth.js"></script>
+  <style>
+    .game-card {
+      border-radius: 12px;
+      transition: transform .2s, box-shadow .2s;
+      background: linear-gradient(135deg,#0055aa,#003366);
+      color:#fff;
+    }
+    .game-card:hover { transform: translateY(-6px); box-shadow:0 8px 20px rgba(0,0,0,.3) }
+  </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
   <!-- Navbar -->
@@ -36,23 +45,23 @@
     </div>
   </nav>
 
-  <main class="container text-center flex-fill py-4">
-    <h2>Seleziona un Gioco</h2>
-    <div class="row mt-4">
-      <div class="col-md-4 mb-3">
-        <a href="snake.html" class="card btn btn-outline-primary h-100 p-3">
+  <main class="container text-center flex-fill py-5">
+    <h2 class="mb-4">Scegli il tuo gioco</h2>
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <a href="snake.html" class="game-card p-4 d-block h-100 text-center">
           <i class="fas fa-ellipsis-h fa-3x mb-2"></i>
           <h5>Snake</h5>
         </a>
       </div>
-      <div class="col-md-4 mb-3">
-        <a href="memory.html" class="card btn btn-outline-success h-100 p-3">
+      <div class="col-md-4 mb-4">
+        <a href="memory.html" class="game-card p-4 d-block h-100 text-center">
           <i class="fas fa-brain fa-3x mb-2"></i>
           <h5>Memory</h5>
         </a>
       </div>
-      <div class="col-md-4 mb-3">
-        <a href="math.html" class="card btn btn-outline-warning h-100 p-3">
+      <div class="col-md-4 mb-4">
+        <a href="math.html" class="game-card p-4 d-block h-100 text-center">
           <i class="fas fa-calculator fa-3x mb-2"></i>
           <h5>Quiz Matematica</h5>
         </a>
