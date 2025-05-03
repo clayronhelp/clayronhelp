@@ -1,85 +1,51 @@
 <!DOCTYPE html>
-<html lang="it"><head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="it">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Memory – ClayRon</title>
-  <link rel="icon" href="assets/img/logo.png">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body{display:flex;flex-direction:column;align-items:center;background:#fff8f0;
-      font-family:'Montserrat',sans-serif;min-height:100vh;margin:0;}
-    #grid{display:grid;grid-template:repeat(4,100px)/repeat(4,100px);gap:10px;margin-top:30px;}
-    .card{background:#003366;color:#fff;display:flex;justify-content:center;align-items:center;
-      border-radius:8px;font-size:2rem;cursor:pointer;transform-style:preserve-3d;
-      transition:transform .5s;}
-    .flipped{transform:rotateY(180deg);}
-    .back{position:absolute;backface-visibility:hidden;}
-    .front{position:absolute;transform:rotateY(180deg);backface-visibility:hidden;}
-    #moves{margin-top:20px;}
-    #toggleBoard{margin-top:10px;}
-    #boardList li{background:#f0e6ff;}
+    body{font-family:Montserrat,sans-serif;background:#fffbe6; display:flex;flex-direction:column;align-items:center;}
+    #grid{display:grid;grid-template:repeat(4,100px)/repeat(4,100px);gap:10px;margin-top:2rem;}
+    .card{background:#0055aa;color:#0055aa;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;position:relative;transition:transform .4s;}
+    .flipped{transform:rotateY(180deg); background:#fff; color:#0055aa;}
+    #moves{margin-top:1rem;font-weight:600;}
   </style>
-  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
-  <script>
-    const SUPABASE_URL='https://nptawehzfamaghytkmbk.supabase.co',
-          SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…';
-    window.supabase=supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
-  </script>
-  <script src="assets/js/auth.js"></script>
-</head><body>
+</head>
+<body>
+
   <h2 class="mt-4">Memory Game</h2>
   <div id="moves">Mosse: 0</div>
-  <button id="toggleBoard" class="btn btn-outline-primary">Classifica</button>
-  <ol id="boardList" class="list-group collapse mt-2"></ol>
   <div id="grid"></div>
 
 <script>
-document.addEventListener('DOMContentLoaded',async()=>{
-  const { data:{session} } = await supabase.auth.getSession();
-  if(!session) return location.href='login.html';
-  await updateNavbar();
-  const userName = session.user.user_metadata.firstName
-    ? `${session.user.user_metadata.firstName} ${session.user.user_metadata.lastName}`
-    : session.user.email;
-  // toggle leaderboard
-  $('#toggleBoard').click(()=>$('#boardList').collapse('toggle'));
-  async function loadBoard(){
-    const { data }=await supabase.from('mem_scores')
-      .select('*').order('moves',{ascending:true}).limit(10);
-    $('#boardList').empty();
-    data.forEach(r=>$('#boardList')
-      .append(`<li class="list-group-item">${r.name} — ${r.moves} mosse</li>`));
-  }
-  loadBoard();
-  // cards
+(function(){
   const icons=['🐶','🐱','🦊','🐻','🐼','🐸','🦁','🐵'];
   let deck=[...icons,...icons].sort(()=>Math.random()-.5),
-      open=[], matches=0, moves=0;
+      open=[],moves=0,matches=0;
+  const grid=document.getElementById('grid');
   deck.forEach((ic,i)=>{
-    $('#grid').append(`
-      <div class="card" data-icon="${ic}" data-id="${i}">
-        <div class="back"></div>
-        <div class="front">${ic}</div>
-      </div>`);
-  });
-  $('#grid').on('click','.card',function(){
-    if(open.length<2&&!$(this).hasClass('flipped')){
-      $(this).addClass('flipped'); open.push(this);
-      if(open.length===2){
-        moves++; $('#moves').text('Mosse: '+moves);
-        const [a,b]=open;
-        if($(a).data('icon')===$(b).data('icon')){
-          matches++; open=[];
-          if(matches===icons.length){
-            alert('Fatto in '+moves+' mosse!');
-            supabase.from('mem_scores').insert([{ name:userName, moves }]);
-            loadBoard();
+    const c=document.createElement('div');
+    c.className='card'; c.dataset.icon=ic;
+    c.onclick=()=>{
+      if(open.length<2&&!c.classList.contains('flipped')){
+        c.classList.add('flipped'); c.innerText=ic; open.push(c);
+        if(open.length===2){
+          moves++; document.getElementById('moves').innerText=`Mosse: ${moves}`;
+          if(open[0].dataset.icon===open[1].dataset.icon){
+            matches++; open=[];
+            if(matches===8) alert(`Hai vinto in ${moves} mosse!`);
+          } else {
+            setTimeout(()=>open.forEach(x=>{x.classList.remove('flipped'); x.innerText='';}),800);
+            open=[];
           }
-        } else {
-          setTimeout(()=>{ $(a).removeClass('flipped'); $(b).removeClass('flipped'); open=[]; },800);
         }
       }
-    }
+    };
+    grid.appendChild(c);
   });
-});
+})();
 </script>
-</body></html>
+
+</body>
+</html>

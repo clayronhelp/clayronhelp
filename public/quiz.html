@@ -1,113 +1,72 @@
 <!DOCTYPE html>
-<html lang="it"><head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="it">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Math Quiz – ClayRon</title>
-  <link rel="icon" href="assets/img/logo.png">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body{display:flex;justify-content:center;align-items:center;height:100vh;background:#f8f9fa;
-      font-family:'Montserrat',sans-serif;}
-    #quizCard{width:100%;max-width:500px;}
-    #timeBar{transition:width 1s linear;}
-    #toggleBoard{margin-top:10px;}
-    #boardList .list-group-item{background:#e2f0fb;}
+    body{font-family:Montserrat,sans-serif;background:#eef7ff;display:flex;justify-content:center;align-items:center;height:100vh;}
+    #card{width:100%;max-width:400px;padding:2rem;background:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);}
+    .btn-answer{width:100%;margin-bottom:.5rem;text-align:left;}
+    #timer{height:8px;background:#ddd;border-radius:4px;overflow:hidden;margin:1rem 0;}
+    #bar{height:100%;background:#0055aa;width:100%;}
   </style>
-  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
-  <script>
-    const SUPABASE_URL='https://nptawehzfamaghytkmbk.supabase.co',
-          SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…';
-    window.supabase = supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
-  </script>
-</head><body>
-<div id="quizCard" class="card p-4 shadow">
-  <h3 class="text-center">Math Quiz</h3>
-  <div id="question" class="mt-3"></div>
-  <div id="answers" class="list-group mt-2"></div>
-  <div class="progress my-3"><div id="timeBar" class="progress-bar" role="progressbar" style="width:100%"></div></div>
-  <button id="nextBtn" class="btn btn-primary btn-block" disabled>Prossima</button>
-  <button id="toggleBoard" class="btn btn-outline-secondary mt-2">Classifica</button>
-  <ol id="boardList" class="list-group collapse mt-2"></ol>
-</div>
+</head>
+<body>
+
+  <div id="card">
+    <h3 class="text-center">Quiz: Somma</h3>
+    <div id="question" class="mt-3"></div>
+    <div id="answers" class="mt-2"></div>
+    <div id="timer"><div id="bar"></div></div>
+    <button id="next" class="btn btn-primary btn-block" disabled>Prossima</button>
+  </div>
 
 <script>
-document.addEventListener('DOMContentLoaded',async()=>{
-  const { data:{session} } = await supabase.auth.getSession();
-  if(!session) return location.href='login.html';
-  await updateNavbar();
-  const userName = session.user.user_metadata.firstName
-    ? `${session.user.user_metadata.firstName} ${session.user.user_metadata.lastName}`
-    : session.user.email;
-  // leaderboard toggle
-  $('#toggleBoard').click(()=>$('#boardList').collapse('toggle'));
-  async function loadBoard(){
-    const { data } = await supabase.from('quiz_scores')
-      .select('*').order('score',{ascending:false}).limit(10);
-    $('#boardList').empty();
-    data.forEach(r=>$('#boardList')
-      .append(`<li class="list-group-item">${r.name} — ${r.score}</li>`));
-  }
-  loadBoard();
-
-  // quiz logic
-  let timer, timeLeft, currentQ, score=0;
-  const qs = [];
-  function genQ(){
-    const a=Math.floor(Math.random()*10)+1;
-    const b=Math.floor(Math.random()*10)+1;
-    const correct=a+b;
-    const opts=[correct];
+(function(){
+  let questions=[],idx=0,score=0,t, time=10;
+  function gen(){
+    const a=1+Math.floor(Math.random()*10), b=1+Math.floor(Math.random()*10);
+    let opts=[a+b];
     while(opts.length<4){
-      const x=Math.floor(Math.random()*20)+2;
+      const x=2+Math.floor(Math.random()*20);
       if(!opts.includes(x)) opts.push(x);
     }
-    opts.sort(()=>Math.random()-0.5);
-    return { q:`${a} + ${b} = ?`, opts, ans:correct };
+    opts.sort(()=>Math.random()-.5);
+    return {q:`${a} + ${b} = ?`,opts,ans:a+b};
   }
-  for(let i=0;i<10;i++) qs.push(genQ());
-  let idx=0;
-  function startTimer(){
-    clearInterval(timer); timeLeft=10;
-    $('#timeBar').css('width','100%');
-    timer=setInterval(()=>{
-      timeLeft--;
-      $('#timeBar').css('width',`${timeLeft*10}%`);
-      if(timeLeft<=0){ clearInterval(timer); reveal(false); }
+  for(let i=0;i<5;i++) questions.push(gen());
+  function render(){
+    clearInterval(t); time=10; document.getElementById('bar').style.width='100%';
+    document.getElementById('next').disabled=true;
+    const o=questions[idx];
+    document.getElementById('question').innerText=o.q;
+    const aDiv=document.getElementById('answers'); aDiv.innerHTML='';
+    o.opts.forEach(x=>{
+      const b=document.createElement('button');
+      b.className='btn btn-outline-primary btn-answer';
+      b.innerText=x; b.onclick=()=>{
+        clearInterval(t);
+        if(x===o.ans){ b.classList.replace('btn-outline-primary','btn-success'); score++; }
+        else b.classList.replace('btn-outline-primary','btn-danger');
+        Array.from(aDiv.children).forEach(y=>y.disabled=true);
+        document.getElementById('next').disabled=false;
+      };
+      aDiv.appendChild(b);
+    });
+    t=setInterval(()=>{
+      time--; document.getElementById('bar').style.width=`${time*10}%`;
+      if(time<=0){ clearInterval(t); Array.from(aDiv.children).forEach(y=>y.disabled=true); document.getElementById('next').disabled=false; }
     },1000);
   }
-  function render(){
-    startTimer(); $('#nextBtn').prop('disabled',true);
-    const { q, opts } = qs[idx];
-    $('#question').text(q);
-    $('#answers').empty();
-    opts.forEach(o=>{
-      $('#answers').append(`<button class="list-group-item list-group-item-action">${o}</button>`);
-    });
-  }
-  function reveal(correct){
-    clearInterval(timer);
-    if(correct) score++;
-    $('#answers button').each(function(){
-      const val=+$(this).text();
-      $(this).toggleClass('list-group-item-success', val===qs[idx].ans)
-             .toggleClass('list-group-item-danger', val!==qs[idx].ans&&$(this).hasClass('active'));
-      $(this).prop('disabled',true);
-    });
-    $('#nextBtn').prop('disabled',false);
-  }
-  $('#answers').on('click','button',function(){
-    $(this).addClass('active');
-    reveal(+$(this).text()===qs[idx].ans);
-  });
-  $('#nextBtn').click(()=>{
+  document.getElementById('next').onclick=()=>{
     idx++;
-    if(idx<qs.length) render();
-    else{
-      supabase.from('quiz_scores').insert([{ name:userName, score }]);
-      alert(`Quiz finito! Punteggio: ${score}`);
-      loadBoard();
-    }
-  });
+    if(idx<questions.length) render();
+    else alert(`Quiz finito! Punteggio: ${score}/${questions.length}`);
+  };
   render();
-});
+})();
 </script>
-</body></html>
+
+</body>
+</html>
