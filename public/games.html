@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
-  <!-- Supabase -->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
     const SUPABASE_URL  = 'https://nptawehzfamaghytkmbk.supabase.co';
@@ -18,15 +17,29 @@
   <style>
     .game-card {
       border-radius: 12px;
-      transition: transform .2s, box-shadow .2s;
+      overflow: hidden;
       background: linear-gradient(135deg,#0055aa,#003366);
       color:#fff;
+      transition:transform .3s,box-shadow .3s;
+      padding:2rem;
+      position:relative;
     }
-    .game-card:hover { transform: translateY(-6px); box-shadow:0 8px 20px rgba(0,0,0,.3) }
+    .game-card:hover {
+      transform:translateY(-6px);
+      box-shadow:0 12px 30px rgba(0,0,0,.3);
+    }
+    .game-card i { font-size:3rem; margin-bottom:1rem; }
+    .game-card h5 { font-size:1.25rem; }
+    .game-card::after {
+      content:"⟶";
+      position:absolute; right:1rem; top:50%; transform:translateY(-50%);
+      font-size:1.5rem; opacity:.5;
+      transition:opacity .3s;
+    }
+    .game-card:hover::after { opacity:1; }
   </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
-  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
       <a class="navbar-brand" href="index.html">
@@ -49,31 +62,28 @@
     <h2 class="mb-4">Scegli il tuo gioco</h2>
     <div class="row">
       <div class="col-md-4 mb-4">
-        <a href="snake.html" class="game-card p-4 d-block h-100 text-center">
-          <i class="fas fa-ellipsis-h fa-3x mb-2"></i>
+        <a href="snake.html" class="game-card d-block h-100 text-center">
+          <i class="fas fa-ellipsis-h"></i>
           <h5>Snake</h5>
         </a>
       </div>
       <div class="col-md-4 mb-4">
-        <a href="memory.html" class="game-card p-4 d-block h-100 text-center">
-          <i class="fas fa-brain fa-3x mb-2"></i>
+        <a href="memory.html" class="game-card d-block h-100 text-center">
+          <i class="fas fa-brain"></i>
           <h5>Memory</h5>
         </a>
       </div>
       <div class="col-md-4 mb-4">
-        <a href="math.html" class="game-card p-4 d-block h-100 text-center">
-          <i class="fas fa-calculator fa-3x mb-2"></i>
+        <a href="math.html" class="game-card d-block h-100 text-center">
+          <i class="fas fa-calculator"></i>
           <h5>Quiz Matematica</h5>
         </a>
       </div>
     </div>
   </main>
 
-  <!-- Footer -->
   <footer class="py-4 bg-primary text-white text-center mt-auto">
-    <div class="container">
-      <p>&copy; 2025 ClayRon S.P.A.</p>
-    </div>
+    <div class="container">&copy; 2025 ClayRon S.P.A.</div>
   </footer>
 </body>
 </html>

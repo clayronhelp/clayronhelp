@@ -15,10 +15,15 @@
   </script>
   <script src="assets/js/auth.js"></script>
   <style>
-    #grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; max-width:400px; margin:auto; }
-    .card { background:#0055aa; color:#fff; font-size:2rem; height:80px; display:flex; align-items:center; justify-content:center; cursor:pointer; border-radius:8px; transition:transform .2s; }
+    #grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; max-width:420px; margin:auto; }
+    .card {
+      background:#0055aa; color:#fff; font-size:2.5rem;
+      height:100px; display:flex; align-items:center; justify-content:center;
+      cursor:pointer; border-radius:8px; transition:transform .2s;
+      perspective:600px;
+    }
+    .card.flipped { background:#fff; color:#0055aa; transform: rotateY(180deg); }
     .card.matched { background:#00aa00; cursor:default; }
-    .card.flipped { background:#fff; color:#0055aa; transform:rotateY(180deg); }
   </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -40,10 +45,10 @@
   <main class="container text-center flex-fill py-4">
     <h2>Memory</h2>
     <button id="startMem" class="btn btn-success mb-3">Start</button>
-    <button id="showBoard" class="btn btn-outline-light mb-3">Mostra Classifica</button>
+    <button id="showBoard" class="btn btn-primary mb-3">Classifica</button>
     <div id="grid"></div>
     <div class="mt-3"><strong>Best Score:</strong> <span id="bestMem">0</span></div>
-    <ol id="memBoard" class="mx-auto text-left mt-3" style="max-width:300px; display:none;"></ol>
+    <ol id="memBoard" class="mx-auto text-left mt-3"></ol>
   </main>
 
   <footer class="py-4 bg-primary text-white text-center mt-auto">
@@ -57,68 +62,77 @@
     if(!session) return location.href='login.html';
     await updateNavbar();
 
-    const userId = session.user.id;
-    const md = session.user.user_metadata;
-    const userName = md.firstName?`${md.firstName} ${md.lastName}`:session.user.email;
+    const uid = session.user.id;
+    const md  = session.user.user_metadata;
+    const un  = md.firstName?`${md.firstName} ${md.lastName}`:session.user.email;
+
     let symbols, firstCard, secondCard, lock=false, score=0, best=0;
+    const pool = ['🍎','🍌','🍇','🍓','🍒','🍍','🥝','🍉','🍎','🍌','🍇','🍓','🍒','🍍','🥝','🍉'];
 
     async function loadBest(){
       let { data } = await supabase
         .from('game_scores')
         .select('score')
-        .eq('game','memory').eq('user_id',userId)
+        .eq('game','memory').eq('user_id',uid)
         .order('score',{ascending:false}).limit(1);
-      best = data.length?data[0].score:0;
+      best = data[0]?.score||0;
       $('#bestMem').text(best);
     }
     async function loadBoard(){
       let { data } = await supabase
         .from('game_scores')
         .select('user_name,score')
-        .eq('game','memory').order('score',{ascending:false}).limit(10);
+        .eq('game','memory').order('score',{ascending:false})
+        .limit(10);
       $('#memBoard').empty();
       data.forEach(r=>$('#memBoard').append(`<li>${r.user_name}: ${r.score}</li>`));
     }
 
     function shuffle(){
-      const pool = 'AABBCCDD'.split('');
-      symbols = pool.sort(()=>0.5-Math.random());
+      symbols = [...pool].sort(()=>0.5-Math.random());
       $('#grid').empty();
-      symbols.forEach((s,i)=>{
-        $('#grid').append(`<div class="card" data-sym="${s}" data-i="${i}"></div>`);
+      symbols.forEach((_,i)=>{
+        $('#grid').append(`<div class="card" data-i="${i}"></div>`);
       });
-      score=0; firstCard=secondCard=null;
+      score=0; firstCard=null; secondCard=null; lock=false;
     }
     function flip(){
       if(lock||$(this).hasClass('matched')||this===firstCard) return;
-      $(this).addClass('flipped').text($(this).data('sym'));
+      const i = $(this).data('i');
+      $(this).addClass('flipped').text(symbols[i]);
       if(!firstCard) firstCard=this;
-      else{
+      else {
         secondCard=this; lock=true;
-        if($(firstCard).data('sym')===$(secondCard).data('sym')){
+        const s1 = symbols[$(firstCard).data('i')], s2 = symbols[$(secondCard).data('i')];
+        if(s1===s2){
           score++; $(firstCard).addClass('matched'); $(secondCard).addClass('matched');
-          setTimeout(checkEnd,300);
         } else {
-          setTimeout(()=>{ $(firstCard).removeClass('flipped').text(''); $(secondCard).removeClass('flipped').text(''); lock=false; firstCard=secondCard=null; },600);
+          score = Math.max(0, score-1);
+          setTimeout(()=>{
+            $(firstCard).removeClass('flipped').text('');
+            $(secondCard).removeClass('flipped').text('');
+          },600);
         }
+        $('#bestMem').text(score>best?score:best);
+        setTimeout(()=>{ firstCard=secondCard=null; lock=false; checkEnd(); },700);
       }
     }
     function checkEnd(){
-      $('.card').each(function(){ if(!$(this).hasClass('matched')) return; });
-      if(score===4) finish();
-      lock=false; firstCard=secondCard=null;
+      if($('.matched').length===16) finish();
     }
     async function finish(){
       if(score>best){
-        best=score; $('#bestMem').text(best);
-        await supabase.from('game_scores').upsert({user_id:userId,user_name:userName,game:'memory',score:best});
+        best=score; await supabase.from('game_scores').upsert(
+          {user_id:uid,user_name:un,game:'memory',score:best},
+          {onConflict:['user_id','game']}
+        );
       }
       loadBoard();
-      alert('Hai vinto! Punteggio: '+score);
+      alert(`Hai vinto! Score: ${score}`);
     }
 
     $('#startMem').click(()=>{
-      shuffle(); $('#grid .card').click(flip);
+      shuffle(); $('.card').click(flip);
     });
     $('#showBoard').click(()=>$('#memBoard').toggle());
 
