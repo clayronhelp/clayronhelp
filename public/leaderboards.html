@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Classifiche – ClayRon</title>
+  <link rel="icon" href="assets/img/logo.png">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body{background:#121212;color:#eee;}
+    .navbar,.footer{background:#1f1f1f!important;}
+    .lb-section{margin:2rem 0;}
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="leaderboards.html"><img src="assets/img/logo.png" style="height:30px"> Classifiche</a>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#nav4"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="nav4">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link" href="snake.html">Snake</a></li>
+          <li class="nav-item"><a class="nav-link" href="memory.html">Memory</a></li>
+          <li class="nav-item"><a class="nav-link" href="quiz.html">Quiz</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container text-center game-container">
+    <h2>Classifiche Generali</h2>
+    <div class="lb-section">
+      <h4>Snake</h4><div id="lb_snake"></div>
+    </div>
+    <div class="lb-section">
+      <h4>Memory</h4><div id="lb_memory"></div>
+    </div>
+    <div class="lb-section">
+      <h4>Quiz</h4><div id="lb_quiz"></div>
+    </div>
+  </div>
+
+  <footer class="footer py-3 text-center"><div class="container"><small>&copy; 2025 ClayRon</small></div></footer>
+
+  <script>
+    function render(key,elm){
+      const arr=JSON.parse(localStorage.getItem(key)||'[]')
+        .sort((a,b)=>b.score-a.score).slice(0,5);
+      let h='<ol class="list-group">';
+      arr.forEach(e=>h+=`<li class="list-group-item bg-dark text-white">${e.name}: ${e.score}</li>`);
+      h+='</ol>';
+      document.getElementById(elm).innerHTML=h;
+    }
+    render('leader_snake','lb_snake');
+    render('leader_memory','lb_memory');
+    render('leader_quiz','lb_quiz');
+  </script>
+</body>
+</html>

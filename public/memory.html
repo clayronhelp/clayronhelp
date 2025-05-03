@@ -3,90 +3,109 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Memory – ClayRon</title>
+  <link rel="icon" href="assets/img/logo.png">
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    #grid{ display:grid; grid-template:repeat(4,80px)/repeat(4,80px); gap:10px; justify-content:center; }
-    .card{ background:#0055aa; color:#0055aa; display:flex;align-items:center;
-           justify-content:center; font-size:2rem; cursor:pointer; border-radius:6px; }
-    .flipped{ background:#fff; color:#0055aa; }
-    #status{ text-align:center; margin:1rem; font-weight:600; }
-    #controls{ text-align:center; margin-bottom:1rem; }
+    body { background:#121212; color:#eee; }
+    .navbar, .footer { background:#1f1f1f!important; }
+    #grid{ display:grid; grid-template:repeat(4,100px)/repeat(4,100px); gap:15px; justify-content:center; }
+    .card{ background:#0f9d58; color:#0f9d58; display:flex;align-items:center;
+           justify-content:center; font-size:2.5rem; cursor:pointer; border-radius:8px;
+           transition:transform .2s; }
+    .card:hover{ transform:scale(1.05); }
+    .flipped{ background:#fff; color:#0f9d58; }
+    #status,#controls,#leaderboard{ text-align:center; margin:1rem; }
+    .btn-tech { background: linear-gradient(45deg,#0f9d58,#4285f4); color:#fff; border:none; }
   </style>
 </head>
 <body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="memory.html"><img src="assets/img/logo.png" style="height:30px"> Memory</a>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#nav2"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="nav2"><ul class="navbar-nav ml-auto">
+        <li class="nav-item"><a class="nav-link" href="snake.html">Snake</a></li>
+        <li class="nav-item"><a class="nav-link" href="memory.html">Memory</a></li>
+        <li class="nav-item"><a class="nav-link" href="quiz.html">Quiz</a></li>
+        <li class="nav-item"><a class="nav-link" href="leaderboards.html">Classifiche</a></li>
+      </ul></div>
+    </div>
+  </nav>
 
-  <div class="container game-container">
-    <h2 class="text-center">Memory</h2>
-    <button id="showLeaderboard" class="btn btn-info btn-sm mb-2">Mostra Classifica</button>
-    <div id="leaderboard" class="mb-3" style="display:none;"></div>
+  <div class="container text-center game-container">
+    <h2>Memory</h2>
     <div id="status">Punteggio: 0</div>
     <div id="controls">
-      <button id="reset" class="btn btn-warning">Reset</button>
+      <button id="resetBtn" class="btn btn-outline-warning">Reset</button>
+      <button id="showLb" class="btn btn-info ml-2">Mostra Classifica</button>
     </div>
     <div id="grid"></div>
+    <div id="leaderboard" style="display:none;"></div>
   </div>
 
-<script>
-(() => {
-  const icons=['🐶','🐱','🦊','🐻','🐼','🐸','🦁','🐵'];
-  let deck, open=[], score=0;
+  <footer class="footer py-3 text-center"><div class="container"><small>&copy; 2025 ClayRon</small></div></footer>
 
-  function init(){
-    deck=[...icons,...icons].sort(()=>Math.random()-.5);
-    open=[]; score=0;
-    document.getElementById('status').innerText='Punteggio: 0';
-    const grid=document.getElementById('grid');
-    grid.innerHTML='';
-    deck.forEach((ic,i)=>{
-      const c=document.createElement('div');
-      c.className='card'; c.dataset.icon=ic;
-      c.onclick = () => {
-        if (open.length<2 && !c.classList.contains('flipped')){
-          c.classList.add('flipped'); c.innerText=ic; open.push(c);
-          if (open.length===2){
-            if (open[0].dataset.icon===open[1].dataset.icon){
-              score++; document.getElementById('status').innerText='Punteggio: '+score;
-              open=[]; if(score===8) alert('Hai vinto!');
-            } else {
-              setTimeout(()=> open.forEach(x=>{x.classList.remove('flipped'); x.innerText='';}),700);
-              open=[];
+  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
+  <script>
+  const SUPABASE_URL='https://nptawehzfamaghytkmbk.supabase.co',
+        SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+  window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  document.addEventListener('DOMContentLoaded',async()=>{
+    const { data:{ session } }=await supabase.auth.getSession();
+    if(!session) return location='login.html';
+    const md=session.user.user_metadata||{}, userName=(md.firstName&&md.lastName)?`${md.firstName} ${md.lastName}`:session.user.email;
+
+    const icons=['🐶','🐱','🦊','🐻','🐼','🐸','🦁','🐵'];
+    let deck, open=[], score=0;
+
+    function saveScore(sc){
+      const key='leader_memory';
+      const arr=JSON.parse(localStorage.getItem(key)||'[]');
+      arr.push({name:userName,score:sc});
+      localStorage.setItem(key,JSON.stringify(arr));
+    }
+    function showLb(){
+      const key='leader_memory';
+      const arr=JSON.parse(localStorage.getItem(key)||'[]')
+        .sort((a,b)=>b.score-a.score).slice(0,5);
+      let h='<ol class="list-group">';
+      arr.forEach(e=>h+=`<li class="list-group-item bg-dark text-white">${e.name}: ${e.score}</li>`);
+      h+='</ol>';
+      document.getElementById('leaderboard').innerHTML=h;
+      document.getElementById('leaderboard').style.display='block';
+    }
+    document.getElementById('showLb').onclick=showLb;
+
+    function init(){
+      deck=[...icons,...icons].sort(()=>Math.random()-.5);
+      open=[]; score=0;
+      document.getElementById('status').innerText='Punteggio: 0';
+      const g=document.getElementById('grid'); g.innerHTML='';
+      deck.forEach(ic=>{
+        const c=document.createElement('div');
+        c.className='card'; c.dataset.icon=ic;
+        c.onclick=()=> {
+          if(open.length<2 && !c.classList.contains('flipped')){
+            c.classList.add('flipped'); c.innerText=ic; open.push(c);
+            if(open.length===2){
+              if(open[0].dataset.icon===open[1].dataset.icon){
+                score++; document.getElementById('status').innerText='Punteggio: '+score;
+                open=[]; if(score===8){ alert('Hai vinto!'); saveScore(score); }
+              } else {
+                setTimeout(()=>open.forEach(x=>{x.classList.remove('flipped'); x.innerText='';}),800);
+                open=[];
+              }
             }
           }
-        }
-      };
-      grid.appendChild(c);
-    });
-  }
+        };
+        g.appendChild(c);
+      });
+    }
 
-  document.getElementById('reset').onclick = init;
-  init();
-})();
-
-// gestione leaderboard
-function saveScore(score){
-  const { user } = supabase.auth.getSession().data.session;
-  const nome = user.user_metadata.firstName+' '+user.user_metadata.lastName;
-  const key='clayron_leader_'+window.location.pathname;
-  const arr = JSON.parse(localStorage.getItem(key) || '[]');
-  arr.push({ nome, score, time:Date.now() });
-  localStorage.setItem(key, JSON.stringify(arr));
-}
-function showLeaderboard(){
-  const key='clayron_leader_'+window.location.pathname;
-  const arr = JSON.parse(localStorage.getItem(key)||'[]')
-               .sort((a,b)=>b.score-a.score).slice(0,5);
-  let html='<ul class="list-group">';
-  arr.forEach(e=> html+=`<li class="list-group-item">${e.nome}: ${e.score}</li>`);
-  html+='</ul>';
-  document.getElementById('leaderboard').innerHTML=html;
-  document.getElementById('leaderboard').style.display='block';
-}
-document.getElementById('showLeaderboard').onclick = showLeaderboard;
-// alla fine di ogni gioco, chiamare saveScore(score);
-
-</script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
+    document.getElementById('resetBtn').onclick=init;
+    init();
+  });
+  </script>
 </body>
 </html>

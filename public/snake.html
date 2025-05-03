@@ -3,121 +3,133 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Snake – ClayRon</title>
-  <!-- include layout -->
+  <link rel="icon" href="assets/img/logo.png">
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    #board { background:#fff; border:2px solid #0055aa; display:block; margin:auto; }
-    #controls { text-align:center; margin-top:1rem; }
+    body { background:#121212; color:#eee; }
+    .navbar, .footer { background:#1f1f1f!important; }
+    #board { background:#000; display:block; margin:1rem auto; border:2px solid #0f9d58; transition:box-shadow .3s; }
+    #board:hover { box-shadow:0 0 15px #0f9d58; }
+    #score, #controls, #leaderboard{ text-align:center; margin:1rem; }
     #controls button { margin:0 .5rem; }
-    #score { font-weight:600; margin-bottom:1rem; text-align:center; }
+    .btn-tech { background: linear-gradient(45deg,#0f9d58,#4285f4); color:#fff; border:none; transition:transform .2s;}
+    .btn-tech:hover { transform:scale(1.05); }
   </style>
 </head>
 <body>
 
-  <!-- Navbar + Footer tramite include (v. sopra) -->
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html"><img src="assets/img/logo.png" style="height:30px"> ClayRon</a>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#nav"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link" href="snake.html">Snake</a></li>
+          <li class="nav-item"><a class="nav-link" href="memory.html">Memory</a></li>
+          <li class="nav-item"><a class="nav-link" href="quiz.html">Quiz</a></li>
+          <li class="nav-item"><a class="nav-link" href="leaderboards.html">Classifiche</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-  <div class="container game-container text-center">
-    <h2>Snake</h2>
-    <button id="showLeaderboard" class="btn btn-info btn-sm mb-2">Mostra Classifica</button>
-    <div id="leaderboard" class="mb-3" style="display:none;"></div>
+  <!-- Game -->
+  <div class="container text-center">
+    <h2 class="mt-4">Snake</h2>
     <div id="score">Score: 0</div>
     <canvas id="board" width="400" height="400"></canvas>
     <div id="controls">
-      <button id="startBtn" class="btn btn-success">Start</button>
-      <button id="resetBtn" class="btn btn-warning">Reset</button>
+      <button id="startBtn" class="btn btn-tech">Start</button>
+      <button id="resetBtn" class="btn btn-outline-warning">Reset</button>
+      <button id="showLb" class="btn btn-info">Mostra Classifica</button>
     </div>
+    <div id="leaderboard" style="display:none;"></div>
   </div>
 
+  <!-- Footer -->
+  <footer class="footer py-3 text-center">
+    <div class="container"><small>&copy; 2025 ClayRon S.P.A.</small></div>
+  </footer>
+
+  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
-  (() => {
-    const cvs = document.getElementById('board'),
-          ctx = cvs.getContext('2d');
+  // Supabase init (per nome utente)
+  const SUPABASE_URL='https://nptawehzfamaghytkmbk.supabase.co';
+  const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+  window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  document.addEventListener('DOMContentLoaded',async()=>{
+    // sessione + nome
+    const { data:{ session } }=await supabase.auth.getSession();
+    if(!session) return location='login.html';
+    const md=session.user.user_metadata||{};
+    const userName=(md.firstName&&md.lastName)?`${md.firstName} ${md.lastName}`:session.user.email;
+
+    // snake logic
+    const cvs=document.getElementById('board'), ctx=cvs.getContext('2d');
     const size=20, cols=20, rows=20;
     let snake, dir, food, score, loop;
 
+    function saveScore(sc){
+      const key='leader_snake';
+      const arr=JSON.parse(localStorage.getItem(key)||'[]');
+      arr.push({name:userName,score:sc});
+      localStorage.setItem(key,JSON.stringify(arr));
+    }
+    function showLb(){
+      const key='leader_snake';
+      const arr=JSON.parse(localStorage.getItem(key)||'[]')
+        .sort((a,b)=>b.score-a.score).slice(0,5);
+      let h='<ol class="list-group">';
+      arr.forEach(e=>h+=`<li class="list-group-item bg-dark text-white">${e.name}: ${e.score}</li>`);
+      h+='</ol>';
+      document.getElementById('leaderboard').innerHTML=h;
+      document.getElementById('leaderboard').style.display='block';
+    }
+    document.getElementById('showLb').onclick=showLb;
+
     function init(){
       clearInterval(loop);
-      snake=[{x:10,y:10}];
-      dir={x:1,y:0};
-      score=0; document.getElementById('score').innerText='Score: 0';
+      snake=[{x:10,y:10}]; dir={x:1,y:0}; score=0;
+      document.getElementById('score').innerText='Score: 0';
       placeFood(); draw();
     }
-
     function placeFood(){
-      food={ x:Math.floor(Math.random()*cols), y:Math.floor(Math.random()*rows) };
+      food={x:Math.floor(Math.random()*cols),y:Math.floor(Math.random()*rows)};
     }
-
     function draw(){
-      ctx.fillStyle='#fff'; ctx.fillRect(0,0,cvs.width,cvs.height);
-      ctx.fillStyle='#e63946';
-      ctx.fillRect(food.x*size, food.y*size, size-2, size-2);
-      ctx.fillStyle='#0055aa';
-      snake.forEach(s => ctx.fillRect(s.x*size, s.y*size, size-2, size-2));
+      ctx.fillStyle='#000'; ctx.fillRect(0,0,cvs.width,cvs.height);
+      ctx.fillStyle='#e63946'; ctx.fillRect(food.x*size,food.y*size,size-2,size-2);
+      ctx.fillStyle='#0f9d58';
+      snake.forEach(s=>ctx.fillRect(s.x*size,s.y*size,size-2,size-2));
     }
-
     function update(){
-      const head={ x:snake[0].x+dir.x, y:snake[0].y+dir.y };
-      // collisione muro = game over
-      if (head.x<0||head.x>=cols||head.y<0||head.y>=rows) {
+      const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
+      if(head.x<0||head.x>=cols||head.y<0||head.y>=rows||snake.some(s=>s.x===head.x&&s.y===head.y)){
         clearInterval(loop);
         alert('Hai perso! Punteggio: '+score);
-        return;
-      }
-      // collisione con sé stessi
-      if (snake.some(s=>s.x===head.x&&s.y===head.y)) {
-        clearInterval(loop);
-        alert('Hai perso! Punteggio: '+score);
+        saveScore(score);
         return;
       }
       snake.unshift(head);
-      if (head.x===food.x&&head.y===food.y) {
+      if(head.x===food.x&&head.y===food.y){
         score++; document.getElementById('score').innerText='Score: '+score;
         placeFood();
       } else snake.pop();
       draw();
     }
-
-    document.getElementById('startBtn').onclick = () => {
-      clearInterval(loop);
-      loop = setInterval(update, 120);
-    };
-    document.getElementById('resetBtn').onclick = init;
-
-    document.addEventListener('keydown', e => {
-      if (e.key==='ArrowUp'&& dir.y===0) dir={x:0,y:-1};
-      if (e.key==='ArrowDown'&& dir.y===0) dir={x:0,y:1};
-      if (e.key==='ArrowLeft'&& dir.x===0) dir={x:-1,y:0};
-      if (e.key==='ArrowRight'&&dir.x===0) dir={x:1,y:0};
+    document.getElementById('startBtn').onclick=()=>{clearInterval(loop); loop=setInterval(update,120)};
+    document.getElementById('resetBtn').onclick=init;
+    document.addEventListener('keydown',e=>{
+      if(e.key==='ArrowUp'&&dir.y===0) dir={x:0,y:-1};
+      if(e.key==='ArrowDown'&&dir.y===0) dir={x:0,y:1};
+      if(e.key==='ArrowLeft'&&dir.x===0) dir={x:-1,y:0};
+      if(e.key==='ArrowRight'&&dir.x===0) dir={x:1,y:0};
     });
 
     init();
-  })();
-
-  // gestione leaderboard
-function saveScore(score){
-  const { user } = supabase.auth.getSession().data.session;
-  const nome = user.user_metadata.firstName+' '+user.user_metadata.lastName;
-  const key='clayron_leader_'+window.location.pathname;
-  const arr = JSON.parse(localStorage.getItem(key) || '[]');
-  arr.push({ nome, score, time:Date.now() });
-  localStorage.setItem(key, JSON.stringify(arr));
-}
-function showLeaderboard(){
-  const key='clayron_leader_'+window.location.pathname;
-  const arr = JSON.parse(localStorage.getItem(key)||'[]')
-               .sort((a,b)=>b.score-a.score).slice(0,5);
-  let html='<ul class="list-group">';
-  arr.forEach(e=> html+=`<li class="list-group-item">${e.nome}: ${e.score}</li>`);
-  html+='</ul>';
-  document.getElementById('leaderboard').innerHTML=html;
-  document.getElementById('leaderboard').style.display='block';
-}
-document.getElementById('showLeaderboard').onclick = showLeaderboard;
-// alla fine di ogni gioco, chiamare saveScore(score);
-
+  });
   </script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
 </body>
 </html>
