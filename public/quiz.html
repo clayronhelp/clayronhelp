@@ -2,71 +2,115 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Math Quiz – ClayRon</title>
+  <title>Quiz – ClayRon</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    body{font-family:Montserrat,sans-serif;background:#eef7ff;display:flex;justify-content:center;align-items:center;height:100vh;}
-    #card{width:100%;max-width:400px;padding:2rem;background:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);}
-    .btn-answer{width:100%;margin-bottom:.5rem;text-align:left;}
-    #timer{height:8px;background:#ddd;border-radius:4px;overflow:hidden;margin:1rem 0;}
-    #bar{height:100%;background:#0055aa;width:100%;}
+    #card{ max-width:400px; margin:auto; background:#fff; padding:1.5rem; border-radius:8px; }
+    #answers button{ width:100%; margin:.5rem 0; text-align:left; }
+    #controls{ text-align:center; margin-bottom:1rem; }
+    #status{ text-align:center; margin:1rem; font-weight:600; }
   </style>
 </head>
 <body>
 
-  <div id="card">
-    <h3 class="text-center">Quiz: Somma</h3>
-    <div id="question" class="mt-3"></div>
-    <div id="answers" class="mt-2"></div>
-    <div id="timer"><div id="bar"></div></div>
-    <button id="next" class="btn btn-primary btn-block" disabled>Prossima</button>
+  <div class="container game-container">
+    <h2 class="text-center">Math Quiz</h2>
+    <div id="controls">
+      <select id="level" class="form-control mb-2 w-50 mx-auto">
+        <option value="1">Facile</option>
+        <option value="2">Medio</option>
+        <option value="3">Difficile</option>
+      </select>
+      <button id="start" class="btn btn-success">Start</button>
+      <button id="reset" class="btn btn-warning ml-2">Reset</button>
+    </div>
+
+    <div id="card" style="display:none;">
+      <div id="status">Punteggio: 0 / 0</div>
+      <div id="question" class="h4 text-center"></div>
+      <div id="answers" class="mt-3"></div>
+    </div>
   </div>
 
 <script>
-(function(){
-  let questions=[],idx=0,score=0,t, time=10;
-  function gen(){
-    const a=1+Math.floor(Math.random()*10), b=1+Math.floor(Math.random()*10);
-    let opts=[a+b];
-    while(opts.length<4){
-      const x=2+Math.floor(Math.random()*20);
-      if(!opts.includes(x)) opts.push(x);
+(() => {
+  let questions, idx, score;
+  const lvlMap = {1:10,2:20,3:50};
+
+  function gen(n){
+    const a=Math.floor(Math.random()*n)+1,
+          b=Math.floor(Math.random()*n)+1;
+    return {
+      q:`${a} + ${b} = ?`,
+      ans:a+b,
+      opts:[a+b, a+b+1, a+b-1, a+b+2].sort(()=>Math.random()-.5)
+    };
+  }
+
+  function start(){
+    idx=0; score=0;
+    const lvl=+document.getElementById('level').value;
+    questions=Array.from({length:5},()=>gen(lvlMap[lvl]));
+    document.getElementById('card').style.display='block';
+    next();
+  }
+
+  function next(){
+    if(idx>=questions.length){
+      return alert(`Fine! Punteggio ${score}/${questions.length}`);
     }
-    opts.sort(()=>Math.random()-.5);
-    return {q:`${a} + ${b} = ?`,opts,ans:a+b};
-  }
-  for(let i=0;i<5;i++) questions.push(gen());
-  function render(){
-    clearInterval(t); time=10; document.getElementById('bar').style.width='100%';
-    document.getElementById('next').disabled=true;
-    const o=questions[idx];
+    const o=questions[idx++];
     document.getElementById('question').innerText=o.q;
-    const aDiv=document.getElementById('answers'); aDiv.innerHTML='';
+    const ansDiv=document.getElementById('answers');
+    ansDiv.innerHTML='';
     o.opts.forEach(x=>{
-      const b=document.createElement('button');
-      b.className='btn btn-outline-primary btn-answer';
-      b.innerText=x; b.onclick=()=>{
-        clearInterval(t);
-        if(x===o.ans){ b.classList.replace('btn-outline-primary','btn-success'); score++; }
-        else b.classList.replace('btn-outline-primary','btn-danger');
-        Array.from(aDiv.children).forEach(y=>y.disabled=true);
-        document.getElementById('next').disabled=false;
+      const btn=document.createElement('button');
+      btn.className='btn btn-outline-primary';
+      btn.innerText=x;
+      btn.onclick = () => {
+        if(x===o.ans){ btn.classList.replace('btn-outline-primary','btn-success'); score++; }
+        else btn.classList.replace('btn-outline-primary','btn-danger');
+        Array.from(ansDiv.children).forEach(b=>b.disabled=true);
+        document.getElementById('status').innerText=`Punteggio: ${score} / ${idx}`;
+        setTimeout(next,700);
       };
-      aDiv.appendChild(b);
+      ansDiv.appendChild(btn);
     });
-    t=setInterval(()=>{
-      time--; document.getElementById('bar').style.width=`${time*10}%`;
-      if(time<=0){ clearInterval(t); Array.from(aDiv.children).forEach(y=>y.disabled=true); document.getElementById('next').disabled=false; }
-    },1000);
+    document.getElementById('status').innerText=`Punteggio: ${score} / ${idx}`;
   }
-  document.getElementById('next').onclick=()=>{
-    idx++;
-    if(idx<questions.length) render();
-    else alert(`Quiz finito! Punteggio: ${score}/${questions.length}`);
+
+  document.getElementById('start').onclick = start;
+  document.getElementById('reset').onclick = () => {
+    document.getElementById('card').style.display='none';
+    document.getElementById('status').innerText='';
   };
-  render();
 })();
+
+// gestione leaderboard
+function saveScore(score){
+  const { user } = supabase.auth.getSession().data.session;
+  const nome = user.user_metadata.firstName+' '+user.user_metadata.lastName;
+  const key='clayron_leader_'+window.location.pathname;
+  const arr = JSON.parse(localStorage.getItem(key) || '[]');
+  arr.push({ nome, score, time:Date.now() });
+  localStorage.setItem(key, JSON.stringify(arr));
+}
+function showLeaderboard(){
+  const key='clayron_leader_'+window.location.pathname;
+  const arr = JSON.parse(localStorage.getItem(key)||'[]')
+               .sort((a,b)=>b.score-a.score).slice(0,5);
+  let html='<ul class="list-group">';
+  arr.forEach(e=> html+=`<li class="list-group-item">${e.nome}: ${e.score}</li>`);
+  html+='</ul>';
+  document.getElementById('leaderboard').innerHTML=html;
+  document.getElementById('leaderboard').style.display='block';
+}
+document.getElementById('showLeaderboard').onclick = showLeaderboard;
+// alla fine di ogni gioco, chiamare saveScore(score);
+
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
 </body>
 </html>

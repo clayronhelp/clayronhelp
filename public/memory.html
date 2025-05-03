@@ -4,48 +4,87 @@
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Memory – ClayRon</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    body{font-family:Montserrat,sans-serif;background:#fffbe6; display:flex;flex-direction:column;align-items:center;}
-    #grid{display:grid;grid-template:repeat(4,100px)/repeat(4,100px);gap:10px;margin-top:2rem;}
-    .card{background:#0055aa;color:#0055aa;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;position:relative;transition:transform .4s;}
-    .flipped{transform:rotateY(180deg); background:#fff; color:#0055aa;}
-    #moves{margin-top:1rem;font-weight:600;}
+    #grid{ display:grid; grid-template:repeat(4,80px)/repeat(4,80px); gap:10px; justify-content:center; }
+    .card{ background:#0055aa; color:#0055aa; display:flex;align-items:center;
+           justify-content:center; font-size:2rem; cursor:pointer; border-radius:6px; }
+    .flipped{ background:#fff; color:#0055aa; }
+    #status{ text-align:center; margin:1rem; font-weight:600; }
+    #controls{ text-align:center; margin-bottom:1rem; }
   </style>
 </head>
 <body>
 
-  <h2 class="mt-4">Memory Game</h2>
-  <div id="moves">Mosse: 0</div>
-  <div id="grid"></div>
+  <div class="container game-container">
+    <h2 class="text-center">Memory</h2>
+    <div id="status">Punteggio: 0</div>
+    <div id="controls">
+      <button id="reset" class="btn btn-warning">Reset</button>
+    </div>
+    <div id="grid"></div>
+  </div>
 
 <script>
-(function(){
+(() => {
   const icons=['🐶','🐱','🦊','🐻','🐼','🐸','🦁','🐵'];
-  let deck=[...icons,...icons].sort(()=>Math.random()-.5),
-      open=[],moves=0,matches=0;
-  const grid=document.getElementById('grid');
-  deck.forEach((ic,i)=>{
-    const c=document.createElement('div');
-    c.className='card'; c.dataset.icon=ic;
-    c.onclick=()=>{
-      if(open.length<2&&!c.classList.contains('flipped')){
-        c.classList.add('flipped'); c.innerText=ic; open.push(c);
-        if(open.length===2){
-          moves++; document.getElementById('moves').innerText=`Mosse: ${moves}`;
-          if(open[0].dataset.icon===open[1].dataset.icon){
-            matches++; open=[];
-            if(matches===8) alert(`Hai vinto in ${moves} mosse!`);
-          } else {
-            setTimeout(()=>open.forEach(x=>{x.classList.remove('flipped'); x.innerText='';}),800);
-            open=[];
+  let deck, open=[], score=0;
+
+  function init(){
+    deck=[...icons,...icons].sort(()=>Math.random()-.5);
+    open=[]; score=0;
+    document.getElementById('status').innerText='Punteggio: 0';
+    const grid=document.getElementById('grid');
+    grid.innerHTML='';
+    deck.forEach((ic,i)=>{
+      const c=document.createElement('div');
+      c.className='card'; c.dataset.icon=ic;
+      c.onclick = () => {
+        if (open.length<2 && !c.classList.contains('flipped')){
+          c.classList.add('flipped'); c.innerText=ic; open.push(c);
+          if (open.length===2){
+            if (open[0].dataset.icon===open[1].dataset.icon){
+              score++; document.getElementById('status').innerText='Punteggio: '+score;
+              open=[]; if(score===8) alert('Hai vinto!');
+            } else {
+              setTimeout(()=> open.forEach(x=>{x.classList.remove('flipped'); x.innerText='';}),700);
+              open=[];
+            }
           }
         }
-      }
-    };
-    grid.appendChild(c);
-  });
+      };
+      grid.appendChild(c);
+    });
+  }
+
+  document.getElementById('reset').onclick = init;
+  init();
 })();
+
+// gestione leaderboard
+function saveScore(score){
+  const { user } = supabase.auth.getSession().data.session;
+  const nome = user.user_metadata.firstName+' '+user.user_metadata.lastName;
+  const key='clayron_leader_'+window.location.pathname;
+  const arr = JSON.parse(localStorage.getItem(key) || '[]');
+  arr.push({ nome, score, time:Date.now() });
+  localStorage.setItem(key, JSON.stringify(arr));
+}
+function showLeaderboard(){
+  const key='clayron_leader_'+window.location.pathname;
+  const arr = JSON.parse(localStorage.getItem(key)||'[]')
+               .sort((a,b)=>b.score-a.score).slice(0,5);
+  let html='<ul class="list-group">';
+  arr.forEach(e=> html+=`<li class="list-group-item">${e.nome}: ${e.score}</li>`);
+  html+='</ul>';
+  document.getElementById('leaderboard').innerHTML=html;
+  document.getElementById('leaderboard').style.display='block';
+}
+document.getElementById('showLeaderboard').onclick = showLeaderboard;
+// alla fine di ogni gioco, chiamare saveScore(score);
+
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
 </body>
 </html>

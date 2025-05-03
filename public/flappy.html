@@ -94,5 +94,28 @@ document.addEventListener('DOMContentLoaded',async()=>{
     if(playing){ bird.vy=flap; }
   };
 });
+
+// gestione leaderboard
+function saveScore(score){
+  const { user } = supabase.auth.getSession().data.session;
+  const nome = user.user_metadata.firstName+' '+user.user_metadata.lastName;
+  const key='clayron_leader_'+window.location.pathname;
+  const arr = JSON.parse(localStorage.getItem(key) || '[]');
+  arr.push({ nome, score, time:Date.now() });
+  localStorage.setItem(key, JSON.stringify(arr));
+}
+function showLeaderboard(){
+  const key='clayron_leader_'+window.location.pathname;
+  const arr = JSON.parse(localStorage.getItem(key)||'[]')
+               .sort((a,b)=>b.score-a.score).slice(0,5);
+  let html='<ul class="list-group">';
+  arr.forEach(e=> html+=`<li class="list-group-item">${e.nome}: ${e.score}</li>`);
+  html+='</ul>';
+  document.getElementById('leaderboard').innerHTML=html;
+  document.getElementById('leaderboard').style.display='block';
+}
+document.getElementById('showLeaderboard').onclick = showLeaderboard;
+// alla fine di ogni gioco, chiamare saveScore(score);
+
 </script>
 </body></html>
