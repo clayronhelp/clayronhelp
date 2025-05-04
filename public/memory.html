@@ -6,7 +6,17 @@
   <link rel="icon" href="assets/img/logo.png">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+  <!-- Bootstrap, Animate.css, FontAwesome -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <!--SCRIPT PER MENU' A TENDINA-->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <!--SCRIPT PER MENU' A TENDINA-->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
     const SUPABASE_URL  = 'https://nptawehzfamaghytkmbk.supabase.co';
@@ -16,28 +26,38 @@
   <script src="assets/js/auth.js"></script>
   <style>
     #grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; max-width:420px; margin:auto; }
-    .card {
-      background:#0055aa; color:#fff; font-size:2.5rem;
-      height:100px; display:flex; align-items:center; justify-content:center;
-      cursor:pointer; border-radius:8px; transition:transform .2s;
-      perspective:600px;
-    }
+    .card { background:#0055aa; color:#fff; font-size:2.5rem; height:100px;
+      display:flex; align-items:center; justify-content:center; cursor:pointer;
+      border-radius:8px; transition:transform .2s; }
     .card.flipped { background:#fff; color:#0055aa; transform: rotateY(180deg); }
     .card.matched { background:#00aa00; cursor:default; }
+    #memBoard { max-width:300px; margin:auto; display:none; text-align:left; }
+    #memBoard li { padding:.3rem 0; border-bottom:1px solid #ccc; }
   </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
     <div class="container">
-      <a class="navbar-brand" href="games.html">
-        <img src="assets/img/logo.png" class="logo" alt="Logo"> Giochi
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
       </a>
-      <button class="navbar-toggler" data-toggle="collapse" data-target="#navMem"><span class="navbar-toggler-icon"></span></button>
-      <div class="collapse navbar-collapse" id="navMem">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item"><a class="nav-link" href="games.html">Giochi</a></li>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
+        aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- La navbar con link comuni -->
+      <div class="collapse navbar-collapse" id="navbarNavHome">
+        <ul class="navbar-nav ml-auto" id="nav-links">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
         </ul>
-        <div id="auth-area" class="ml-3"></div>
+        <!-- L'area di autenticazione verrà aggiornata dinamicamente -->
+        <div id="auth-area">
+          <a href="login.html" class="btn btn-outline-light ml-2">Accedi/Registrati</a>
+        </div>
       </div>
     </div>
   </nav>
@@ -51,8 +71,20 @@
     <ol id="memBoard" class="mx-auto text-left mt-3"></ol>
   </main>
 
-  <footer class="py-4 bg-primary text-white text-center mt-auto">
-    <div class="container">&copy; 2025 ClayRon S.P.A.</div>
+  <!-- Footer -->
+  <footer class="py-4 text-white text-center">
+    <div class="container">
+      <div class="social-icons mb-3">
+        <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+      </div>
+      <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
+      <small>
+        <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
+        <a href="cookie.html" class="text-white">Cookie Policy</a>
+      </small>
+    </div>
   </footer>
 
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -64,7 +96,7 @@
 
     const uid = session.user.id;
     const md  = session.user.user_metadata;
-    const un  = md.firstName?`${md.firstName} ${md.lastName}`:session.user.email;
+    const un  = md.firstName ? `${md.firstName} ${md.lastName}` : session.user.email;
 
     let symbols, firstCard, secondCard, lock=false, score=0, best=0;
     const pool = ['🍎','🍌','🍇','🍓','🍒','🍍','🥝','🍉','🍎','🍌','🍇','🍓','🍒','🍍','🥝','🍉'];
@@ -114,30 +146,29 @@
           },600);
         }
         $('#bestMem').text(score>best?score:best);
-        setTimeout(()=>{ firstCard=secondCard=null; lock=false; checkEnd(); },700);
+        setTimeout(()=>{
+          firstCard=secondCard=null; lock=false; if($('.matched').length===16) finish();
+        },700);
       }
-    }
-    function checkEnd(){
-      if($('.matched').length===16) finish();
     }
     async function finish(){
       if(score>best){
-        best=score; await supabase.from('game_scores').upsert(
-          {user_id:uid,user_name:un,game:'memory',score:best},
-          {onConflict:['user_id','game']}
-        );
+        best=score;
+        await supabase
+          .from('game_scores')
+          .upsert(
+            {user_id:uid,user_name:un,game:'memory',score:best},
+            { onConflict:['user_id','game'] }
+          )
+          .select();
       }
-      loadBoard();
+      await loadBoard();
       alert(`Hai vinto! Score: ${score}`);
     }
 
-    $('#startMem').click(()=>{
-      shuffle(); $('.card').click(flip);
-    });
+    $('#startMem').click(()=>{ shuffle(); $('.card').click(flip); });
     $('#showBoard').click(()=>$('#memBoard').toggle());
-
-    await loadBest(); await loadBoard();
-    shuffle();
+    await loadBest(); await loadBoard(); shuffle();
   });
   </script>
 </body>

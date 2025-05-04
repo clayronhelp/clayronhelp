@@ -17,6 +17,7 @@ async function updateNavbar() {
           </button>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
             <a class="dropdown-item" href="area.html">Area Personale</a>
+            <a class="dropdown-item" href="impostazioni.html">Impostazioni</a>
             <button class="dropdown-item" id="logoutBtn">Esci</button>
           </div>
         </div>`;

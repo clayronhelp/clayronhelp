@@ -6,7 +6,17 @@
   <link rel="icon" href="assets/img/logo.png">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+  <!-- Bootstrap, Animate.css, FontAwesome -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <!--SCRIPT PER MENU' A TENDINA-->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <!--SCRIPT PER MENU' A TENDINA-->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
     const SUPABASE_URL  = 'https://nptawehzfamaghytkmbk.supabase.co';
@@ -23,19 +33,28 @@
   </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
     <div class="container">
       <a class="navbar-brand" href="index.html">
-        <img src="assets/img/logo.png" class="logo" alt="Logo"> ClayRon
+        <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
       </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navSnake">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
+        aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navSnake">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item"><a class="nav-link" href="games.html">Giochi</a></li>
+      <!-- La navbar con link comuni -->
+      <div class="collapse navbar-collapse" id="navbarNavHome">
+        <ul class="navbar-nav ml-auto" id="nav-links">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
         </ul>
-        <div id="auth-area" class="ml-3"></div>
+        <!-- L'area di autenticazione verrà aggiornata dinamicamente -->
+        <div id="auth-area">
+          <a href="login.html" class="btn btn-outline-light ml-2">Accedi/Registrati</a>
+        </div>
       </div>
     </div>
   </nav>
@@ -54,8 +73,20 @@
     <ol id="leaderboard"></ol>
   </main>
 
-  <footer class="py-4 bg-primary text-white text-center mt-auto">
-    <div class="container">&copy; 2025 ClayRon S.P.A.</div>
+  <!-- Footer -->
+  <footer class="py-4 text-white text-center">
+    <div class="container">
+      <div class="social-icons mb-3">
+        <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+      </div>
+      <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
+      <small>
+        <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
+        <a href="cookie.html" class="text-white">Cookie Policy</a>
+      </small>
+    </div>
   </footer>
 
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -67,11 +98,10 @@
 
     const uid = session.user.id;
     const md  = session.user.user_metadata;
-    const un  = md.firstName?`${md.firstName} ${md.lastName}`:session.user.email;
+    const un  = md.firstName ? `${md.firstName} ${md.lastName}` : session.user.email;
 
     let best=0, interval, dir, snake, food, score=0;
-    const canvas = document.getElementById('gameArea');
-    const ctx    = canvas.getContext('2d');
+    const canvas = document.getElementById('gameArea'), ctx = canvas.getContext('2d');
 
     async function loadBest(){
       let { data } = await supabase
@@ -97,9 +127,7 @@
     function init(){
       dir='RIGHT'; snake=[{x:10,y:10}]; placeFood(); score=0; render();
     }
-    function placeFood(){
-      food={x:rand(20),y:rand(20)};
-    }
+    function placeFood(){ food={x:rand(20),y:rand(20)}; }
     function rand(n){return Math.floor(Math.random()*n);}
     function tick(){
       const head={...snake[0]};
@@ -107,7 +135,7 @@
       if(dir==='UP') head.y--; if(dir==='DOWN') head.y++;
       if(head.x<0||head.x>=20||head.y<0||head.y>=20||
          snake.some(s=>s.x===head.x&&s.y===head.y)){
-        clearInterval(interval); gameOver(); return;
+        clearInterval(interval); return gameOver();
       }
       snake.unshift(head);
       if(head.x===food.x&&head.y===food.y){ score++; placeFood(); }
@@ -122,11 +150,15 @@
     async function gameOver(){
       if(score>best){
         best=score; $('#bestScore').text(best);
-        await supabase.from('game_scores')
-          .upsert({user_id:uid,user_name:un,game:'snake',score:best},
-                  { onConflict:['user_id','game'] });
+        await supabase
+          .from('game_scores')
+          .upsert(
+            {user_id:uid,user_name:un,game:'snake',score:best},
+            { onConflict:['user_id','game'] }
+          )
+          .select();
       }
-      loadBoard();
+      await loadBoard();
       alert('Game Over! Score: '+score);
     }
 
@@ -134,14 +166,13 @@
       clearInterval(interval); init();
       interval=setInterval(tick,100);
     });
-    $('#resetBtn').click(()=>{clearInterval(interval);init();});
+    $('#resetBtn').click(()=>{ clearInterval(interval); init(); });
     $('#showBoard').click(()=>$('#leaderboard').toggle());
-    document.addEventListener('keydown',e=>{
-      if(e.key.includes('Arrow')) dir=e.key.replace('Arrow','').toUpperCase();
+    document.addEventListener('keydown', e => {
+      if(e.key.includes('Arrow')) dir = e.key.replace('Arrow','').toUpperCase();
     });
 
-    await loadBest(); await loadBoard();
-    init();
+    await loadBest(); await loadBoard(); init();
   });
   </script>
 </body>
