@@ -75,18 +75,35 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      // Proteggi pagina
+      // 1) Proteggi pagina + aggiorna navbar
       const { data:{ session } } = await supabase.auth.getSession();
-      if (!session) return location.href='login.html';
+      if (!session) return location.href = 'login.html';
+      await updateNavbar();
 
-      // Lista materiali scaricati (unici)
       const ul = $('#myMaterials');
+
+      // 2) Prima carica da localStorage (facoltativo)
       const stored = JSON.parse(localStorage.getItem('myMaterials')||'[]');
-      const unique = Array.from(new Map(stored.map(i=>[i.id,i])).values());
-      if (!unique.length) {
+      if (stored.length) {
+        ul.append('<li class="list-group-item text-info">Caricando…</li>');
+      }
+
+      // 3) Ora sincronizza da Supabase
+      let { data: downloads, error } = await supabase
+        .from('downloaded_materials')
+        .select('id,title,link,page,created_at')
+        .order('created_at', { ascending: false });
+
+      ul.empty();
+      if (error) {
+        console.error('Errore fetch materiali:', error.message);
+        ul.append('<li class="list-group-item text-danger">Errore caricamento materiali.</li>');
+        return;
+      }
+      if (!downloads.length) {
         ul.append('<li class="list-group-item text-muted">Nessun materiale scaricato</li>');
       } else {
-        unique.forEach(item=>{
+        downloads.forEach(item => {
           const page = item.page || `material-detail.html?id=${encodeURIComponent(item.id)}`;
           ul.append(`
             <li class="list-group-item d-flex justify-content-between align-items-center">
