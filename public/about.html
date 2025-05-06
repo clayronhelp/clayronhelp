@@ -21,6 +21,33 @@
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
   </script>
+  <style>
+    /* Flex layout to push footer down */
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    main {
+      flex: 1;
+    }
+    .team-card img {
+      object-fit: cover;
+      height: 200px;
+    }
+    .custom-control .carousel-control-prev-icon,
+    .custom-control .carousel-control-next-icon {
+      filter: invert(1);
+    }
+    .team-card .card-img-top {
+    width: 100%;
+    height: 300px;      /* alza l’immagine a 300px di altezza */
+    object-fit: cover;  /* ritaglia centralmente senza deformare */
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  </style>
+  </style>
   <script src="assets/js/auth.js"></script>
 </head>
 <body>
@@ -32,40 +59,21 @@
       <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
-      aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
+        aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     <div class="collapse navbar-collapse" id="navbarNavHome">
-      <!-- 1) i link di navigazione -->
-      <ul class="navbar-nav ml-auto" id="nav-links">
-        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
-        <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
-        <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
-      </ul>
-
-      <!-- 2) area autenticazione -->
-      <div id="auth-area">
-        <!-- qui auth.js inietta "Accedi/Registrati" oppure il dropdown utente -->
-      </div>
-
-      <!-- 3) campanella notifiche, ORA DOPO auth-area -->
-      <div class="nav-item dropdown ml-3">
-        <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown">
-          <i class="fas fa-bell"></i>
-          <span id="notifCount" class="badge badge-danger position-absolute"
-                style="top:0;right:0;font-size:.7rem;display:none">0</span>
-        </button>
-        <div class="dropdown-menu dropdown-menu-right" style="min-width:300px">
-          <h6 class="dropdown-header">Notifiche</h6>
-          <div id="notifList" style="max-height:300px;overflow-y:auto">
-            <div class="dropdown-item text-muted">Caricamento…</div>
-          </div>
+        <ul class="navbar-nav ml-auto" id="nav-links">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
+        </ul>
+        <!-- L'area di autenticazione verrà aggiornata dinamicamente -->
+        <div id="auth-area">
+          <a href="login.html" class="btn btn-outline-light ml-2">Accedi/Registrati</a>
         </div>
       </div>
-
-    </div>
   </div>
 </nav>
 
@@ -178,6 +186,22 @@
     </a>
   </div>
 </div>
+
+<!-- Footer -->
+<footer class="py-4  text-white text-center mt-auto">
+  <div class="container">
+    <div class="social-icons mb-3">
+      <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+    </div>
+    <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
+    <small>
+      <a href="terms.html" class="text-white">Termini &amp; Condizioni</a> – 
+      <a href="cookie.html" class="text-white">Cookie Policy</a>
+    </small>
+  </div>
+</footer>
 
   <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

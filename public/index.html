@@ -60,7 +60,7 @@
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notifBell" style="min-width:280px">
           <h6 class="dropdown-header">Notifiche</h6>
           <div id="notifList" style="max-height:300px; overflow-y:auto">
-            <div class="dropdown-item text-muted">Caricamento…</div>
+            <div class="dropdown-item text-muted">Nessuna Notifica</div>
           </div>
         </div>
       </div>
@@ -78,9 +78,24 @@
       <h1 class="display-4 animate__animated animate__fadeInDown">"Il tuo percorso, il nostro supporto."</h1>
       <p class="lead animate__animated animate__fadeInUp animate__delay-1s">Supporto personalizzato per studenti con DSA
         e PDP.</p>
-      <a href="login.html"
-        class="btn btn-primary btn-lg mt-3 animate__animated animate__fadeInUp animate__delay-2s" id="hero-cta">Accedi o
-        Registrati</a>
+        <a href="login.html"
+        class="btn btn-primary btn-lg mt-3 animate__animated animate__fadeInUp animate__delay-2s"
+        id="hero-cta">Accedi o Registrati</a>
+
+     <script>
+       document.addEventListener('DOMContentLoaded', async () => {
+         // controlla la sessione Supabase
+         const { data:{ session } } = await supabase.auth.getSession();
+         const cta = document.getElementById('hero-cta');
+         if (session) {
+           // se loggato, cambia testo e link
+           cta.textContent = 'Area Personale';
+           cta.setAttribute('href', 'area.html');
+         }
+         // altrimenti rimane Accedi/Registrati -> login.html
+       });
+     </script>
+
     </div>
   </section>
 

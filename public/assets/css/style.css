@@ -212,3 +212,20 @@ a:hover {
   }
 }
 
+@media (max-width: 576px) {
+  .game-card {
+    padding: 1rem;           /* riduce i padding */
+    min-height: 180px;       /* abbassa l’altezza minima */
+  }
+  .game-card i {
+    font-size: 2.5rem;       /* icona leggermente più piccola */
+  }
+  .game-card h5 {
+    font-size: 1rem;         /* titolo un po’ più piccolo */
+  }
+  .game-card p {
+    font-size: 0.85rem;      /* testo descrizione più compatto */
+  }
+}
+
+
