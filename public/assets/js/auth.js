@@ -93,5 +93,72 @@ async function updateNavbar() {
       }
     });
   }
-  
-  
+
+  // ----------------------
+  // NOTIFICHE DINAMICHE
+  // ----------------------
+  async function initNotifications() {
+    const { data:{ session } } = await supabase.auth.getSession();
+    if (!session) return;
+    const userId = session.user.id;
+    const bellCount = document.getElementById('notifCount');
+    const list = document.getElementById('notifList');
+
+    function addNotif(text) {
+      const item = document.createElement('div');
+      item.className = 'dropdown-item';
+      item.textContent = text;
+      list.prepend(item);
+      const c = parseInt(bellCount.textContent||'0')+1;
+      bellCount.textContent = c;
+      bellCount.style.display = 'inline-block';
+    }
+
+    // Pulisco e carico eventi in scadenza (prossime 24h)
+    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
+    const { data: events } = await supabase
+      .from('events')
+      .select('title,start')
+      .eq('user_id', userId)
+      .gte('start', new Date().toISOString())
+      .lte('start', tomorrow.toISOString())
+      .order('start', { ascending: true });
+    list.innerHTML = '';
+    if (events.length) {
+      events.forEach(ev =>
+        addNotif(`Scade domani: "${ev.title}"`)
+      );
+    } else {
+      const none = document.createElement('div');
+      none.className = 'dropdown-item text-muted';
+      none.textContent = 'Nessun evento in scadenza';
+      list.append(none);
+    }
+
+    // Realtime: nuovi eventi
+    supabase
+      .channel(`events_user_${userId}`)
+      .on('postgres_changes', {
+        event: 'INSERT', schema: 'public', table: 'events',
+        filter: `user_id=eq.${userId}`
+      }, ({ new: ev }) => {
+        addNotif(`Nuovo evento: "${ev.title}" il ${new Date(ev.start).toLocaleDateString()}`);
+      })
+      .subscribe();
+
+    // Realtime: nuovi messaggi community (room = 'generale')
+    supabase
+      .channel('messages_global')
+      .on('postgres_changes', {
+        event: 'INSERT', schema: 'public', table: 'messages',
+        filter: `room=eq.generale`
+      }, () => {
+        addNotif('Nuovi messaggi in Community!');
+      })
+      .subscribe();
+  }
+
+  document.addEventListener('DOMContentLoaded', initNotifications);
+
+    
+    

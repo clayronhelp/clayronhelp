@@ -4,62 +4,52 @@
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Community Chat – ClayRon</title>
   <link rel="icon" href="assets/img/logo.png">
-  <!-- Bootstrap + FontAwesome + style.css -->
+  <!-- Bootstrap, FontAwesome, Animate.css, style.css -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <!-- Bootstrap, Animate.css, FontAwesome -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
+
   <style>
-    #messages .message {
-    background: #f1f3f5;
-    border-radius: 6px;
-    padding: 0.5rem 0.75rem;
-    margin-bottom: 0.5rem;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    font-size: 0.95rem;
-  }
-  #messages .message .author {
-    font-weight: 600;
-    margin-bottom: 0.2rem;
-    color: #0055aa;
-  }
-  #messages .message .content {
-    margin-bottom: 0.3rem;
-    line-height: 1.3;
-  }
-  #messages .message .time {
-    font-size: 0.7rem;
-    color: #888;
-    text-align: right;
-  }
+    /* --- Chat bubbles --- */
     #messages { max-height: 60vh; overflow-y: auto; }
-    .message { margin-bottom: .5rem; }
-    .message .user { font-weight: bold; margin-right: .5rem; }
-    .message .time { font-size: .75rem; color: #666; }
+    .message {
+      background: #f1f3f5; border-radius:6px;
+      padding:0.5rem 0.75rem; margin-bottom:0.5rem;
+      box-shadow:0 1px 4px rgba(0,0,0,.05);
+    }
+    .message .author { font-weight:600; color:#0055aa; margin-bottom:0.25rem; }
+    .message .content { line-height:1.3; margin-bottom:0.25rem; word-break:break-word; white-space:pre-wrap; }
+    .message .time { font-size:0.75rem; color:#888; text-align:right; }
+    .message .btn { font-size:0.7rem; padding:0.15rem 0.5rem; }
+
+    /* --- Notification bell --- */
+    #notifBell { position:relative; }
+    #notifCount {
+      position:absolute; top:0; right:0;
+      font-size:0.7rem; display:none;
+    }
   </style>
-  <!-- Supabase JS -->
+
+  <!-- Supabase client + auth.js -->
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
-    const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+    const SUPABASE_URL  = 'https://nptawehzfamaghytkmbk.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';  // la tua anon key
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
   </script>
   <script src="assets/js/auth.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-  <!-- Navbar -->
+  <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
       <a class="navbar-brand" href="index.html">
         <img src="assets/img/logo.png" class="logo" alt="Logo"> ClayRon S.P.A.
       </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome">
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNavHome">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavHome">
@@ -69,13 +59,28 @@
           <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
           <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
         </ul>
+        <!-- Auth area -->
         <div id="auth-area" class="ml-3"></div>
+        <!-- Notification bell -->
+        <div class="nav-item dropdown ml-2">
+          <button id="notifBell" class="btn btn-outline-light" data-toggle="dropdown">
+            <i class="fas fa-bell"></i>
+            <span id="notifCount" class="badge badge-danger">0</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" style="min-width:300px">
+            <h6 class="dropdown-header">Notifiche</h6>
+            <div id="notifList" style="max-height:300px; overflow-y:auto">
+              <div class="dropdown-item text-muted">Caricamento…</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </nav>
 
+  <!-- MAIN -->
   <main class="container flex-fill py-4">
-    <h2 class="mb-3">Chat della Community</h2>
+    <h2 class="mb-3">Community Chat</h2>
     <div id="messages" class="border rounded p-3 mb-3"></div>
     <form id="chatForm" class="d-flex">
       <input id="chatInput" class="form-control mr-2" placeholder="Scrivi un messaggio..." autocomplete="off">
@@ -83,184 +88,201 @@
     </form>
   </main>
 
-  <!-- Footer -->
-  <footer class="py-4 text-white text-center">
+  <!-- FOOTER -->
+  <footer class="py-4 text-white text-center bg-primary mt-auto">
     <div class="container">
       <div class="social-icons mb-3">
-        <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+        <a href="https://www.instagram.com/clayronhelp/" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/..." class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.tiktok.com/..." class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
       </div>
       <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
       <small>
-        <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
+        <a href="terms.html" class="text-white">Termini &amp; Condizioni</a> – 
         <a href="cookie.html" class="text-white">Cookie Policy</a>
       </small>
     </div>
   </footer>
 
-  <!-- JS: jQuery + Bootstrap -->
+  <!-- SCRIPTS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return window.location.href = 'login.html';
-      await updateNavbar();
-    
-      const md = session.user.user_metadata || {};
-      const userName = (md.firstName && md.lastName)
-        ? `${md.firstName} ${md.lastName}`
-        : session.user.email;
-    
-      const userEmail = session.user.email;
-      const userId = session.user.id;
-      const room = 'global';
-      const messagesDiv = document.getElementById('messages');
-      const chatForm = document.getElementById('chatForm');
-      const chatInput = document.getElementById('chatInput');
-    
-      // SPAM CONTROL
-      let messageTimestamps = [];
-    
-      function canEditOrDelete(inserted_at) {
-        const now = new Date();
-        const insertedTime = new Date(inserted_at);
-        const diffMinutes = (now - insertedTime) / (1000 * 60);
-        return diffMinutes <= 5;
-      }
-    
-      function renderMessage(msg) {
-        const when = new Date(msg.inserted_at)
-          .toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-        const isMine = msg.user_email === userEmail;
-        const editable = canEditOrDelete(msg.inserted_at);
-    
-        let actionButtons = '';
-        if (isMine && !msg.deleted && editable) {
-          actionButtons = `
-            <button class="btn btn-sm btn-secondary btn-edit float-right ml-2" data-id="${msg.id}" data-content="${msg.content}" style="font-size: 0.7rem;">Modifica</button>
-            <button class="btn btn-sm btn-danger btn-delete float-right" data-id="${msg.id}" style="font-size: 0.7rem;">Elimina</button>
-          `;
-        }
-    
-        const contentHtml = msg.deleted
-          ? '<em>Questo messaggio è stato eliminato</em>'
-          : `<span class="message-content" style="word-break: break-word; white-space: pre-wrap;">${msg.content}</span>`;
-    
-          const editedLabel = (msg.updated_at && msg.updated_at !== msg.inserted_at && !msg.deleted)
-          ? `<div class="text-muted" style="font-size: 0.74rem;">(modificato)</div>`
-          : '';
 
-        const msgHtml = `
-          <div class="message mb-2 p-2 border rounded" data-id="${msg.id}">
-            <div class="author font-weight-bold">${msg.user_name} ${actionButtons}</div>
-            <div class="content">${contentHtml}${editedLabel}</div>
-            <div class="time text-muted" style="font-size: 0.75rem;">${when}</div>
-          </div>
-        `;
-    
-        const existing = document.querySelector(`.message[data-id="${msg.id}"]`);
-        if (existing) {
-          existing.outerHTML = msgHtml;
-        } else {
-          messagesDiv.insertAdjacentHTML('beforeend', msgHtml);
-        }
-    
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  <script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    // 1) sessione + navbar
+    const { data:{ session } } = await supabase.auth.getSession();
+    if (!session) return location.href='login.html';
+    await updateNavbar();
+
+    // config
+    const me_id    = session.user.id;
+    const me_email = session.user.email;
+    const md       = session.user.user_metadata || {};
+    const me_name  = md.firstName && md.lastName
+                    ? md.firstName+' '+md.lastName
+                    : me_email;
+    const room     = 'generale';
+
+    // notification elements
+    const bellCountEl = document.getElementById('notifCount');
+    const notifListEl = document.getElementById('notifList');
+    let totalNotifs   = 0;
+    function addNotification(html) {
+      const div = document.createElement('div');
+      div.className = 'dropdown-item';
+      div.innerHTML = html;
+      notifListEl.appendChild(div);
+      if (++totalNotifs > 0) {
+        bellCountEl.innerText = totalNotifs;
+        bellCountEl.style.display = 'inline-block';
       }
-    
-      // cronologia
-      let { data: history } = await supabase
-        .from('messages')
-        .select('*')
-        .eq('room', room)
-        .order('inserted_at', { ascending: true })
-        .limit(100);
-      if (history) history.forEach(renderMessage);
-    
-      // realtime: INSERT + UPDATE
-      supabase.channel('public:messages')
-        .on('postgres_changes', {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'messages',
-          filter: `room=eq.${room}`
-        }, ({ new: m }) => renderMessage(m))
-        .on('postgres_changes', {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'messages',
-          filter: `room=eq.${room}`
-        }, ({ new: m }) => renderMessage(m))
-        .subscribe();
-    
-      // invio con SPAM check
-      chatForm.addEventListener('submit', async e => {
-        e.preventDefault();
-        const content = chatInput.value.trim();
-        if (!content) return;
-    
-        const now = Date.now();
-        messageTimestamps = messageTimestamps.filter(ts => now - ts < 10000);
-        if (messageTimestamps.length >= 5) {
-          alert("Stai inviando messaggi troppo velocemente. Rallenta per favore.");
-          return;
-        }
-    
-        messageTimestamps.push(now);
-        chatInput.value = '';
-    
-        await supabase.from('messages').insert({
-          room,
-          user_email: userEmail,
-          user_name: userName,
-          content,
-          user_id: userId
-        });
+    }
+
+    // 2) check eventi domani
+    const dom = new Date(); dom.setDate(dom.getDate()+1);
+    const isoD = dom.toISOString().slice(0,10);
+    let { data: evs } = await supabase
+      .from('events')
+      .select('title,date')
+      .eq('user_id', me_id)
+      .eq('date', isoD);
+    (evs||[]).forEach(e =>
+      addNotification(`📅 Domani: ${e.title}`)
+    );
+
+    // 3) realtime NOTIFICHE MESSAGGI
+    supabase
+      .channel('notif-channel')
+      .on('postgres_changes',{
+        event:'INSERT', schema:'public', table:'messages',
+        filter:`room=eq.${room}`
+      }, ({ new: m }) => {
+        addNotification(`💬 Nuovo messaggio: "${m.content.slice(0,20)}..."`);
+      })
+      .subscribe();
+
+    // reset badge all’apertura
+    document.getElementById('notifBell')
+      .addEventListener('click', ()=> {
+        totalNotifs = 0;
+        bellCountEl.style.display = 'none';
+        notifListEl.innerHTML = '';
       });
-    
-      // elimina
-      $(document).on('click', '.btn-delete', async function () {
-        const id = $(this).data('id');
-        await supabase.from('messages')
-          .update({ deleted: true, content: '' })
-          .eq('id', id)
-          .eq('user_id', userId);
-      });
-    
-      // modifica
-      $(document).on('click', '.btn-edit', function () {
-        const id = $(this).data('id');
-        const oldContent = $(this).data('content');
-        const messageDiv = $(`.message[data-id="${id}"]`);
-        const contentSpan = messageDiv.find('.message-content');
-    
-        contentSpan.replaceWith(`
-          <input type="text" class="form-control form-control-sm edit-input" value="${oldContent}" />
-          <button class="btn btn-sm btn-success btn-save mt-1" data-id="${id}">Salva</button>
-          <button class="btn btn-sm btn-secondary btn-cancel mt-1" data-id="${id}">Annulla</button>
-        `);
-      });
-    
-      // salva modifica
-      $(document).on('click', '.btn-save', async function () {
-        const id = $(this).data('id');
-        const newContent = $(this).siblings('.edit-input').val().trim();
-        if (!newContent) return;
-        await supabase.from('messages')
-          .update({ content: newContent })
-          .eq('id', id)
-          .eq('user_id', userId);
-      });
-    
-      // annulla modifica
-      $(document).on('click', '.btn-cancel', function () {
-        const id = $(this).data('id');
-        const message = history.find(m => m.id === id);
-        if (message) renderMessage(message);
+
+
+    // --- CHAT REALTIME ---
+    const messagesDiv = document.getElementById('messages');
+    let history = (await supabase
+      .from('messages')
+      .select('*')
+      .eq('room', room)
+      .order('inserted_at',{ascending:true})
+      .limit(100)
+    ).data||[];
+    // spam-control
+    let stamps = [];
+
+    function canEdit(ts) {
+      return ((Date.now() - new Date(ts))/60000) <= 5;
+    }
+
+    function render(msg) {
+      const when = new Date(msg.inserted_at)
+        .toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+      const isMine = msg.user_id===me_id;
+      const isDeleted = msg.deleted;
+      let actions = '';
+      if (isMine && !isDeleted && canEdit(msg.inserted_at)) {
+        actions = `
+          <button class="btn btn-sm btn-secondary btn-edit float-right ml-1" 
+                  data-id="${msg.id}" data-old="${msg.content}">Modifica</button>
+          <button class="btn btn-sm btn-danger btn-delete float-right" 
+                  data-id="${msg.id}">Elimina</button>`;
+      }
+      const contentHtml = isDeleted
+        ? '<em>Questo messaggio è stato eliminato</em>'
+        : `<span class="message-content">${msg.content}</span>`;
+      const editedLabel = (msg.updated_at && msg.updated_at!==msg.inserted_at && !isDeleted)
+        ? `<div class="text-muted" style="font-size:.74rem;">(modificato)</div>`
+        : '';
+      const html = `
+        <div class="message" data-id="${msg.id}">
+          <div class="author">${msg.user_name}${actions}</div>
+          <div class="content">${contentHtml}${editedLabel}</div>
+          <div class="time">${when}</div>
+        </div>`;
+      let existing = messagesDiv.querySelector(`.message[data-id="${msg.id}"]`);
+      if (existing) existing.outerHTML = html;
+      else messagesDiv.insertAdjacentHTML('beforeend', html);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+    history.forEach(render);
+
+    // subscribe chat INSERT+UPDATE
+    supabase
+      .channel('chat-channel')
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:`room=eq.${room}`},
+          payload=> render(payload.new))
+      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'messages',filter:`room=eq.${room}`},
+          payload=> render(payload.new))
+      .subscribe();
+
+    // INVIO
+    document.getElementById('chatForm').addEventListener('submit', async e=>{
+      e.preventDefault();
+      let txt = document.getElementById('chatInput').value.trim();
+      if (!txt) return;
+      // spam: max 5 in 10s
+      const now=Date.now();
+      stamps=stamps.filter(t=> now-t<10000);
+      if (stamps.length>=5) {
+        alert('Stai inviando troppi messaggi, rallenta.');
+        return;
+      }
+      stamps.push(now);
+      document.getElementById('chatInput').value='';
+      await supabase.from('messages').insert({
+        room, user_id:me_id, user_email:me_email, user_name:me_name, content:txt
       });
     });
-    </script>    
+
+    // ELIMINA
+    $(document).on('click','.btn-delete',async function(){
+      const id=$(this).data('id');
+      await supabase.from('messages')
+        .update({deleted:true,content:''})
+        .eq('id',id).eq('user_id',me_id);
+    });
+
+    // MODIFICA: show input + save/cancel
+    $(document).on('click','.btn-edit',function(){
+      const id=$(this).data('id'), old=$(this).data('old');
+      let div = $(`.message[data-id="${id}"] .content`);
+      div.html(`
+        <input class="form-control form-control-sm edit-inp" value="${old}">
+        <button class="btn btn-sm btn-success btn-save mt-1" data-id="${id}">Salva</button>
+        <button class="btn btn-sm btn-secondary btn-cancel mt-1" data-id="${id}">Annulla</button>
+      `);
+    });
+
+    // SALVA MODIFICA
+    $(document).on('click','.btn-save',async function(){
+      const id=$(this).data('id'),
+            val=$(this).siblings('.edit-inp').val().trim();
+      if (!val) return;
+      await supabase.from('messages').update({content:val})
+        .eq('id',id).eq('user_id',me_id);
+    });
+
+    // ANNULLA MODIFICA (ripristina da history)
+    $(document).on('click','.btn-cancel',function(){
+      const id=$(this).data('id'),
+            msg = history.find(m=>m.id===id);
+      msg && render(msg);
+    });
+  });
+  </script>
+
 </body>
 </html>
