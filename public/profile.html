@@ -125,53 +125,60 @@
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
   <script>
-    $(async () => {
-      // 1) Recupera sessione e riempi form
-      const { data:{ session } } = await supabase.auth.getSession();
-      if (!session) return location.href='login.html';
-      await updateNavbar();
+  $(async () => {
+    // 1) Recupera sessione e riempi form
+    const { data:{ session } } = await supabase.auth.getSession();
+    if (!session) return location.href='login.html';
+    await updateNavbar();
 
-      const user = session.user;
-      $('#email').val(user.email);
-      const md = user.user_metadata || {};
-      $('#firstName').val(md.firstName || '');
-      $('#lastName').val(md.lastName || '');
+    const user = session.user;
+    $('#email').val(user.email);
+    $('#firstName').val(user.user_metadata.firstName||'');
+    $('#lastName').val(user.user_metadata.lastName||'');
 
-      // 2) Controllo 14 giorni
-      let canChange = true;
-      if (md.name_changed_at) {
-        const last = new Date(md.name_changed_at);
-        const diff = (Date.now() - last.getTime()) / (1000*60*60*24);
-        if (diff < 14) {
-          canChange = false;
-          const nextDate = new Date(last.getTime() + 14*24*60*60*1000);
-          $('#changeNotice')
-            .removeClass('d-none')
-            .text(`Hai cambiato il nome il ${last.toLocaleDateString()}. Potrai farlo di nuovo dal ${nextDate.toLocaleDateString()}.`);
-          $('#firstName, #lastName, #saveBtn').prop('disabled', true);
-        }
+    // 2) Controllo 14 giorni
+    const lastChanged = user.user_metadata.name_changed_at;
+    let canChange = true;
+    if (lastChanged) {
+      const diffMs = Date.now() - new Date(lastChanged).getTime();
+      const diffDays = diffMs / (1000*60*60*24);
+      if (diffDays < 14) {
+        canChange = false;
+        const next = new Date(new Date(lastChanged).getTime() + 14*24*60*60*1000);
+        $('#changeNotice')
+          .removeClass('d-none')
+          .text(`Hai modificato il nome l’ultima volta il ${new Date(lastChanged).toLocaleDateString()}, potrai cambiarlo nuovamente dal ${next.toLocaleDateString()}.`);
+        $('#firstName, #lastName, #saveBtn').prop('disabled', true);
+      }
+    }
+
+    // 3) Submit con conferma + salvataggio metadata
+    $('#profileForm').on('submit', async e => {
+      e.preventDefault();
+      if (!canChange) return;
+
+      if (!confirm('Sei sicuro di voler cambiare nome e cognome? Potrai farlo nuovamente solo fra 14 giorni.')) {
+        return;
       }
 
-      // 3) Submit con conferma + salvataggio metadata
-      $('#profileForm').on('submit', async e => {
-        e.preventDefault();
-        if (!canChange) return;
-        if (!confirm('Sei sicuro di cambiare nome e cognome? Potrai farlo di nuovo solo tra 14 giorni.')) return;
-        const fn = $('#firstName').val().trim();
-        const ln = $('#lastName').val().trim();
-        const changeAt = new Date().toISOString();
-        const { error } = await supabase.auth.updateUser({
-          data: { firstName: fn, lastName: ln, name_changed_at: changeAt }
-        });
-        if (error) {
-          $('#profileMsg').html('<div class="alert alert-danger">Errore salvataggio.</div>');
-        } else {
-          $('#profileMsg').html('<div class="alert alert-success">Profilo aggiornato!</div>');
-          canChange = false;
-          $('#firstName, #lastName, #saveBtn').prop('disabled', true);
-        }
+      const fn = $('#firstName').val().trim(),
+            ln = $('#lastName').val().trim();
+      const changeAt = new Date().toISOString();
+
+      const { error } = await supabase.auth.updateUser({
+        data: { firstName: fn, lastName: ln, name_changed_at: changeAt }
       });
+
+      if (error) {
+        $('#profileMsg').html('<div class="alert alert-danger">Errore salvataggio.</div>');
+      } else {
+        $('#profileMsg').html('<div class="alert alert-success">Profilo aggiornato!</div>');
+        // disabilita di nuovo
+        canChange = false;
+        $('#firstName, #lastName, #saveBtn').prop('disabled', true);
+      }
     });
+  });
   </script>
 </body>
 </html>
