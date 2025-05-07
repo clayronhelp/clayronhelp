@@ -228,4 +228,28 @@ a:hover {
   }
 }
 
+/* Banner fisso sotto navbar */
+#profileBanner {
+  position: sticky;
+  top: 56px; /* altezza navbar */
+  z-index: 1020;
+}
+
+/* Blocca gli elementi sensibili */
+.locked {
+  opacity: 0.5;
+  pointer-events: none; /* disabilita click */
+  position: relative;
+}
+/* Icona lucchetto in overlay */
+.locked::after {
+  content: "\1F512"; /* 🔒 */
+  position: absolute;
+  top: 50%; right: 10px;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: #333;
+}
+
+
 

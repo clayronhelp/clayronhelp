@@ -115,14 +115,6 @@
   <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script>
-    // validazione in tempo reale
-    $('#regPassword').on('input', function(){
-      const v = this.value;
-      $('#reqLength').toggleClass('valid', v.length >= 5);
-      $('#reqUpper').toggleClass('valid', /[A-Z]/.test(v));
-      $('#reqSpecial').toggleClass('valid', /[^A-Za-z0-9]/.test(v));
-    });
-
     $('#registerForm').on('submit', async e => {
       e.preventDefault();
       const rec = grecaptcha.getResponse();
@@ -133,8 +125,8 @@
       // leggo i valori
       const email     = $('#regEmail').val();
       const password  = $('#regPassword').val();
-      const firstName = $('#firstName').val();
-      const lastName  = $('#lastName').val();
+      const firstName = $('#firstName').val().trim();
+      const lastName  = $('#lastName').val().trim();
       const birthDate = $('#birthDate').val();
       // signUp con user_metadata
       const { data, error } = await supabase.auth.signUp({
@@ -142,17 +134,18 @@
         password
       }, {
         data: {
-          full_name: `${firstName} ${lastName}`,
-          birth_date: birthDate
+          firstName,
+          lastName,
+          birthDate
         }
       });
       if (error) {
         $('#registerMessage').html(`<div class="alert alert-danger">${error.message}</div>`);
       } else {
         $('#registerMessage').html('<div class="alert alert-success">Registrazione riuscita! Controlla la tua email per confermare.</div>');
-        setTimeout(()=> location.href='login.html', 2000);
+        setTimeout(() => location.href = 'login.html', 2000);
       }
     });
-  </script>
+  </script>  
 </body>
 </html>

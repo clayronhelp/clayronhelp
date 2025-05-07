@@ -153,3 +153,38 @@ async function initNotifications() {
 }
 
 document.addEventListener('DOMContentLoaded', initNotifications);
+
+// ----------------------
+// 6) BLOCCO FUNZIONALITÀ SE PROFILO INCOMPLETO
+// ----------------------
+async function enforceCompleteProfile() {
+  const { data:{ session } } = await supabase.auth.getSession();
+  if (!session) return;
+
+  const md = session.user.user_metadata || {};
+  const complete = md.firstName && md.lastName;
+  if (complete) return;
+
+  // 1) Banner sotto la navbar
+  const banner = document.createElement('div');
+  banner.id = 'profileBanner';
+  banner.innerHTML = `
+    <div class="alert alert-warning text-center mb-0">
+      ⚠️ Devi completare il tuo <a href="profile.html" class="alert-link">profilo</a> (nome e cognome)
+      per usare tutte le funzionalità!
+    </div>
+  `;
+  document.body.insertBefore(banner, document.querySelector('main'));
+
+  // 2) Blocca elementi con classe .requires-profile
+  document.querySelectorAll('.requires-profile').forEach(el => {
+    el.classList.add('locked');
+    el.addEventListener('click', e => e.preventDefault());
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateNavbar();
+  initNotifications();
+  enforceCompleteProfile();
+});
