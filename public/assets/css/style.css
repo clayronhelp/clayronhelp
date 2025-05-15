@@ -228,28 +228,34 @@ a:hover {
   }
 }
 
-/* Banner fisso sotto navbar */
-#profileBanner {
+/* Banner sticky subito sotto la navbar */
+#completeProfileBanner {
   position: sticky;
-  top: 56px; /* altezza navbar */
-  z-index: 1020;
+  top: 56px;              /* o l’altezza esatta della tua navbar */
+  width: 100%;
+  background: #ffc107;    /* giallo */
+  color: #212529;
+  text-align: center;
+  line-height: 2.5rem;    /* regola a piacere */
+  font-weight: 500;
+  display: none;          /* mostrato solo se profilo incompleto */
+  z-index: 1030;          /* sopra i contenuti, sotto dropdown (1040) */
+}
+/* link del banner */
+#completeProfileBanner a { color: #212529; text-decoration: underline; }
+
+
+/* Spaziatura per il contenuto */
+body.has-banner main,
+body.has-banner footer {
+  margin-top: 56px;      /* lascia posto al banner fisso */
 }
 
-/* Blocca gli elementi sensibili */
-.locked {
-  opacity: 0.5;
-  pointer-events: none; /* disabilita click */
-  position: relative;
+/* Forza il dropdown utente sopra al banner */
+.dropdown-menu {
+  z-index: 1050 !important;
 }
-/* Icona lucchetto in overlay */
-.locked::after {
-  content: "\1F512"; /* 🔒 */
-  position: absolute;
-  top: 50%; right: 10px;
-  transform: translateY(-50%);
-  font-size: 1rem;
-  color: #333;
-}
+
 
 
 

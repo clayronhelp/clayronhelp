@@ -188,3 +188,23 @@ document.addEventListener('DOMContentLoaded', () => {
   initNotifications();
   enforceCompleteProfile();
 });
+
+async function checkProfileComplete() {
+  const { data:{ session } } = await supabase.auth.getSession();
+  if (!session) return;  // non loggato, niente banner
+
+  // recupera user_metadata
+  const md = session.user.user_metadata || {};
+  const incomplete = !md.firstName || !md.lastName;
+
+  if (incomplete) {
+    document.body.classList.add('has-banner');
+  } else {
+    document.body.classList.remove('has-banner');
+  }
+}
+
+// esegue ad ogni caricamento pagina
+document.addEventListener('DOMContentLoaded', () => {
+  checkProfileComplete();
+});
