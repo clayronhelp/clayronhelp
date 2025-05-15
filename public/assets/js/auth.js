@@ -84,7 +84,6 @@ async function initNotifications() {
   const bellCount = document.getElementById('notifCount');
   const list      = document.getElementById('notifList');
 
-  // helper
   function clearNotifs() {
     bellCount.style.display = 'none';
     bellCount.textContent = '0';
@@ -98,12 +97,10 @@ async function initNotifications() {
     bellCount.style.display = 'inline-block';
   }
 
-  // quando apro il menu, azzero il badge
   $('#notifBell').on('click', () => {
     setTimeout(() => clearNotifs(), 100);
   });
 
-  // 5.1) eventi in scadenza <24h>
   const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
   const { data: events } = await supabase
     .from('events')
@@ -125,7 +122,6 @@ async function initNotifications() {
     list.append(none);
   }
 
-  // 5.2) realtime nuovi eventi
   supabase
     .channel(`events_user_${userId}`)
     .on('postgres_changes', {
@@ -136,7 +132,6 @@ async function initNotifications() {
     })
     .subscribe();
 
-  // 5.3) realtime nuovi messaggi Community (room=generale)
   let notified = false;
   supabase
     .channel('messages_global')
@@ -161,6 +156,9 @@ async function enforceCompleteProfile() {
   const { data:{ session } } = await supabase.auth.getSession();
   if (!session) return;
 
+  // eseguo solo in area.html (body.area-page)
+  if (!document.body.classList.contains('area-page')) return;
+
   const md = session.user.user_metadata || {};
   const complete = md.firstName && md.lastName;
   if (complete) return;
@@ -176,10 +174,17 @@ async function enforceCompleteProfile() {
   `;
   document.body.insertBefore(banner, document.querySelector('main'));
 
-  // 2) Blocca elementi con classe .requires-profile
+  // 2) Blocca card e metti lucchetto
   document.querySelectorAll('.requires-profile').forEach(el => {
     el.classList.add('locked');
     el.addEventListener('click', e => e.preventDefault());
+
+    const cardBody = el.querySelector('.card-body');
+    if (cardBody && !cardBody.querySelector('.lock-icon')) {
+      cardBody.insertAdjacentHTML('afterbegin',
+        `<i class="fas fa-lock lock-icon"></i>`
+      );
+    }
   });
 }
 
@@ -187,24 +192,4 @@ document.addEventListener('DOMContentLoaded', () => {
   updateNavbar();
   initNotifications();
   enforceCompleteProfile();
-});
-
-async function checkProfileComplete() {
-  const { data:{ session } } = await supabase.auth.getSession();
-  if (!session) return;  // non loggato, niente banner
-
-  // recupera user_metadata
-  const md = session.user.user_metadata || {};
-  const incomplete = !md.firstName || !md.lastName;
-
-  if (incomplete) {
-    document.body.classList.add('has-banner');
-  } else {
-    document.body.classList.remove('has-banner');
-  }
-}
-
-// esegue ad ogni caricamento pagina
-document.addEventListener('DOMContentLoaded', () => {
-  checkProfileComplete();
 });
