@@ -25,64 +25,85 @@ async function updateNavbar() {
     authArea.innerHTML = `<a href="login.html" class="btn btn-outline-light">Accedi/Registrati</a>`;
   }
 }
-document.addEventListener('DOMContentLoaded', updateNavbar);
 
 // 2) ERRORI IN ITALIANO
 function italianError(msg) {
-  if (msg.includes('Invalid login credentials')) return 'Email o password non valide';
-  if (msg.includes('User not found')) return 'Utente non trovato';
-  if (msg.includes('Email not confirmed')) return 'Conferma prima la tua email';
-  if (msg.includes('Password should be')) return 'La password non rispetta i requisiti';
+  const errorMap = {
+    'Invalid login credentials': 'Email o password non valide',
+    'User not found': 'Utente non trovato',
+    'Email not confirmed': 'Conferma prima la tua email',
+    'Password should be': 'La password non rispetta i requisiti'
+  };
+  for (const key in errorMap) {
+    if (msg.includes(key)) {
+      return errorMap[key];
+    }
+  }
   return msg;
 }
 
-// 3) LOGIN CUSTOM
-if (document.getElementById('loginForm')) {
-  $('#loginForm').on('submit', async e => {
-    e.preventDefault();
-    const email = $('#loginEmail').val(),
-          pwd   = $('#loginPassword').val();
-    const { error } = await supabase.auth.signInWithPassword({ email, password: pwd });
-    if (error) {
-      $('#loginMessage').html(`<div class="alert alert-danger">${italianError(error.message)}</div>`);
-    } else {
-      window.location.href = 'area.html';
-    }
-  });
-}
+// 3) GESTIONE FORM DI AUTENTICAZIONE (LOGIN/REGISTER)
+['loginForm', 'registerForm'].forEach(formId => {
+  const form = document.getElementById(formId);
+  if (form) {
+    $(form).on('submit', async e => {
+      e.preventDefault();
 
-// 4) REGISTER CUSTOM
-if (document.getElementById('registerForm')) {
-  $('#registerForm').on('submit', async e => {
-    e.preventDefault();
-    const rec = grecaptcha.getResponse();
-    if (!rec) {
-      $('#registerMessage').html('<div class="alert alert-danger">Completa la verifica reCAPTCHA.</div>');
-      return;
-    }
-    const email = $('#regEmail').val(),
-          pwd   = $('#regPassword').val();
-    const { data, error } = await supabase.auth.signUp({
-      email, 
-      password: pwd,
-      options: { data: {} }
+      let email, pwd, messageElementId;
+      if (formId === 'loginForm') {
+        email = $('#loginEmail').val();
+        pwd = $('#loginPassword').val();
+        messageElementId = 'loginMessage';
+      } else { // registerForm
+        const rec = grecaptcha.getResponse();
+        if (!rec) {
+          $('#registerMessage').html('<div class="alert alert-danger">Completa la verifica reCAPTCHA.</div>');
+          return;
+        }
+        email = $('#regEmail').val();
+        pwd = $('#regPassword').val();
+        messageElementId = 'registerMessage';
+      }
+
+      let error = null;
+      let successMessage = '';
+
+      if (formId === 'loginForm') {
+        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password: pwd });
+        error = signInError;
+      } else { // registerForm
+        const { data, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password: pwd,
+          options: { data: {} }
+        });
+        error = signUpError;
+        if (!error) {
+          successMessage = 'Controlla la tua email per confermare l’account.';
+        }
+      }
+
+      if (error) {
+        $(`#${messageElementId}`).html(`<div class="alert alert-danger">${italianError(error.message)}</div>`);
+      } else {
+        if (formId === 'loginForm') {
+          window.location.href = 'area.html';
+        } else {
+          $(`#${messageElementId}`).html(`<div class="alert alert-success">${successMessage}</div>`);
+          setTimeout(() => window.location.href = 'login.html', 2000);
+        }
+      }
     });
-    if (error) {
-      $('#registerMessage').html(`<div class="alert alert-danger">${italianError(error.message)}</div>`);
-    } else {
-      $('#registerMessage').html('<div class="alert alert-success">Controlla la tua email per confermare l’account.</div>');
-      setTimeout(() => window.location.href = 'login.html', 2000);
-    }
-  });
-}
+  }
+});
 
-// 5) NOTIFICHE DINAMICHE (eventi + community)
+// 4) NOTIFICHE DINAMICHE (eventi + community)
 async function initNotifications() {
   const { data:{ session } } = await supabase.auth.getSession();
   if (!session) return;
   const userId = session.user.id;
   const bellCount = document.getElementById('notifCount');
-  const list      = document.getElementById('notifList');
+  const list = document.getElementById('notifList');
 
   function clearNotifs() {
     bellCount.style.display = 'none';
@@ -147,11 +168,7 @@ async function initNotifications() {
     .subscribe();
 }
 
-document.addEventListener('DOMContentLoaded', initNotifications);
-
-// ----------------------
-// 6) BLOCCO FUNZIONALITÀ SE PROFILO INCOMPLETO
-// ----------------------
+// 5) BLOCCO FUNZIONALITÀ SE PROFILO INCOMPLETO
 async function enforceCompleteProfile() {
   const { data:{ session } } = await supabase.auth.getSession();
   if (!session) return;

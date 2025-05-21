@@ -4,112 +4,387 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Materiali - ClayRon</title>
-  <!-- Font + Bootstrap + style.css + favicon -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
-  <!-- Bootstrap, Animate.css, FontAwesome -->
+
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
-  <script>
-    const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
-    window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-  </script>
-  <script src="assets/js/auth.js"></script>
-  <style>
-    /* Verticalizza i bottoni e stili badge */
-    .card-body { display: flex; flex-direction: column; }
-    .material-btn {
-      display: block;
-      margin: 6px 0;
-      width: fit-content;
-      padding: 10px 16px;
-      border: 2px solid #0055aa;
-      border-radius: 8px;
-      background: #fff;
-      color: #0055aa;
-      font-weight: 500;
-      transition: background 0.3s, color 0.3s;
-      text-decoration: none;
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"> <link rel="stylesheet" href="assets/css/style.css"> <style>
+    /* PRELOADER STYLES - COPIATI DA index.html per coerenza */
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #007bff, #17a2b8); /* Sfumatura accattivante */
+      z-index: 99999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      overflow: hidden;
+      transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
     }
-    .material-btn:hover { background: #0055aa; color: #fff; }
-    .material-btn .price-badge {
-      margin-left: 8px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      font-weight: 600;
+
+    .preloader-logo {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      animation: pulseLogo 2s infinite ease-in-out;
+      box-shadow: 0 0 30px rgba(255,255,255,0.5);
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.1);
+      padding: 10px;
+    }
+
+    @keyframes pulseLogo {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .loading-text {
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-top: 20px;
+      animation: fadeInText 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes fadeInText {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    /* DARK MODE STYLES - COPIATI DA index.html per coerenza */
+    body.dark-mode {
+      background-color: #212529; /* Scuro */
+      color: #e2e6ea; /* Testo chiaro */
+    }
+    .dark-mode .navbar {
+      background-color: #343a40 !important; /* Navbar scura */
+    }
+    .dark-mode .navbar-brand, .dark-mode .nav-link, .dark-mode .dropdown-header {
+      color: #e2e6ea !important;
+    }
+    .dark-mode .accordion .card {
+      background-color: #343a40;
+      border-color: #495057;
+    }
+    .dark-mode .accordion .card-header {
+      background-color: #495057;
+      border-bottom: 1px solid #6c757d;
+    }
+    .dark-mode .accordion .card-header button {
+      color: #e2e6ea;
+    }
+    .dark-mode .accordion .card-body {
+      background-color: #2c3034;
+      color: #e2e6ea;
+    }
+    .dark-mode .material-btn {
+      border-color: #007bff;
+      background: #343a40;
+      color: #007bff;
+    }
+    .dark-mode .material-btn:hover {
+      background: #007bff;
       color: #fff;
     }
-    .price-badge.free { background: #28a745; }
-    .price-badge.paid { background: #ffc107; color: #000; }
-    .no-material { color: #666; font-style: italic; }
+    .dark-mode .price-badge.free { background: #28a745; } /* Verde scuro */
+    .dark-mode .price-badge.paid { background: #ffc107; color: #212529; } /* Giallo con testo scuro */
+    .dark-mode .no-material {
+      color: #adb5bd;
+    }
+    .dark-mode footer {
+      background-color: #0056b3 !important; /* Blu scuro per il footer */
+    }
+    .dark-mode .btn-outline-light {
+      color: #e2e6ea !important;
+      border-color: #e2e6ea !important;
+    }
+    .dark-mode .btn-outline-light:hover {
+      background-color: #e2e6ea !important;
+      color: #212529 !important;
+    }
+
+    /* Stili specifici per i materiali */
+    .card-body { display: flex; flex-direction: column; } /* Mantiene la verticalizzazione */
+    .material-btn {
+      display: flex; /* Flexbox per allineare testo e badge */
+      align-items: center; /* Centra verticalmente testo e badge */
+      justify-content: space-between; /* Spinge il badge a destra */
+      margin: 6px 0;
+      width: 100%; /* Occupa tutta la larghezza disponibile */
+      padding: 12px 20px; /* Aumenta padding */
+      border: 2px solid #007bff; /* Colore primario Bootstrap */
+      border-radius: 10px; /* Bordi più arrotondati */
+      background: #fff;
+      color: #007bff;
+      font-weight: 600; /* Font più spesso */
+      transition: all 0.3s ease; /* Transizione più fluida */
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Ombra leggera */
+    }
+    .material-btn:hover {
+      background: #007bff;
+      color: #fff;
+      transform: translateY(-3px); /* Leggero sollevamento */
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15); /* Ombra più pronunciata */
+    }
+    .material-btn .price-badge {
+      margin-left: 15px; /* Aumenta spazio dal testo */
+      padding: 4px 10px; /* Aumenta padding del badge */
+      border-radius: 6px; /* Bordi badge arrotondati */
+      font-size: 0.85rem;
+      font-weight: 700; /* Testo badge più spesso */
+      color: #fff;
+      min-width: 70px; /* Assicura una larghezza minima per il badge */
+      text-align: center;
+    }
+    .price-badge.free { background: #28a745; } /* Verde Bootstrap */
+    .price-badge.paid { background: #ffc107; color: #343a40; } /* Giallo Bootstrap con testo scuro */
+    .no-material {
+      color: #6c757d; /* Grigio più coerente */
+      font-style: italic;
+      padding: 15px;
+      text-align: center;
+      background-color: #e9ecef; /* Sfondo leggero per il messaggio */
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    body.dark-mode .no-material {
+      background-color: #495057;
+      color: #adb5bd;
+    }
+
+    /* Icona a freccia nell'accordion */
+    .card-header button .fas.fa-chevron-down {
+      transition: transform 0.3s ease;
+    }
+    .card-header button:not(.collapsed) .fas.fa-chevron-down {
+      transform: rotate(180deg);
+    }
+
+    /* Hero Section per la pagina Materiali */
+    .materials-hero {
+      background: linear-gradient(rgba(0, 123, 255, 0.7), rgba(23, 162, 184, 0.7)), url('assets/img/materials-banner.jpg') no-repeat center center;
+      background-size: cover;
+      color: white;
+      padding: 6rem 0;
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden; /* Per animazioni come particelle */
+    }
+    .materials-hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+    }
+    .materials-hero p {
+      font-size: 1.25rem;
+      max-width: 800px;
+      margin: 0 auto 2rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+
+    /* Effetto particelle nello hero (opzionale, richiede JS) */
+    .materials-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      pointer-events: none;
+      z-index: 1;
+      /* Animazione di sfondo per un effetto dinamico */
+      animation: particle-flow 30s linear infinite;
+      opacity: 0.1; /* Sottile effetto */
+      background-image: radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    @keyframes particle-flow {
+      from { background-position: 0 0; }
+      to { background-position: 100% 100%; }
+    }
+
+    /* Filtri Materie */
+    .filter-buttons {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .filter-buttons .btn {
+      margin: 5px;
+      font-weight: 600;
+      border-radius: 20px;
+      padding: 8px 20px;
+    }
+    .filter-buttons .btn.active {
+      background-color: #007bff;
+      color: white;
+      border-color: #007bff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+    }
+
+    /* Stili per la search bar dinamica */
+    .search-bar-container {
+      margin-bottom: 2rem;
+      position: relative; /* Per posizionare icona di ricerca */
+    }
+    #materialSearch {
+      padding-left: 40px; /* Spazio per l'icona */
+      border-radius: 25px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      border: 1px solid #ced4da;
+      transition: all 0.3s ease;
+    }
+    #materialSearch:focus {
+      border-color: #007bff;
+      box-shadow: 0 2px 15px rgba(0,123,255,0.2);
+    }
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6c757d;
+      font-size: 1.2rem;
+    }
+    body.dark-mode #materialSearch {
+      background-color: #343a40;
+      color: #e2e6ea;
+      border-color: #495057;
+    }
+    body.dark-mode #materialSearch::placeholder {
+      color: #adb5bd;
+    }
+    body.dark-mode .search-icon {
+      color: #adb5bd;
+    }
+
+    /* Miglioramenti per la card generica */
+    .card {
+      border: none; /* Rimuovi il bordo predefinito */
+      border-radius: 12px; /* Angoli arrotondati */
+      margin-bottom: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.07); /* Ombra più visibile */
+      transition: all 0.3s ease;
+      overflow: hidden; /* Per evitare che elementi interni escano */
+    }
+    .card:hover {
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12); /* Ombra più intensa all'hover */
+      transform: translateY(-2px); /* Leggero sollevamento */
+    }
+    .card-header {
+      background-color: #f0f8ff; /* Colore di sfondo leggero */
+      border-bottom: 1px solid #dee2e6;
+      padding: 15px 20px;
+    }
+    .card-header h2 button {
+      color: #343a40;
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-decoration: none;
+    }
+    body.dark-mode .card-header {
+      background-color: #495057;
+      border-bottom-color: #6c757d;
+    }
+    body.dark-mode .card-header h2 button {
+      color: #e2e6ea;
+    }
   </style>
+  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
+    <script>
+        const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
+        const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+        window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    </script>
+    <script src="assets/js/auth.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
-  <div class="container">
-    <a class="navbar-brand" href="index.html">
-      <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
-      aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+  <div id="preloader">
+    <img src="assets/img/logo.png" alt="ClayRon Logo" class="preloader-logo">
+    <p class="loading-text">Caricamento materiali...</p>
+  </div>
 
-    <div class="collapse navbar-collapse" id="navbarNavHome">
-      <!-- 1) i link di navigazione -->
-      <ul class="navbar-nav ml-auto" id="nav-links">
-        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
-        <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
-        <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
-        <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
-      </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
+        aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-      <!-- 2) area autenticazione -->
-      <div id="auth-area">
-        <!-- qui auth.js inietta "Accedi/Registrati" oppure il dropdown utente -->
-      </div>
+      <div class="collapse navbar-collapse" id="navbarNavHome">
+        <ul class="navbar-nav ml-auto" id="nav-links">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
+          <li class="nav-item active"><a class="nav-link" href="contact.html">Contatti <span class="sr-only">(current)</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+        </ul>
 
-      <!-- 3) campanella notifiche, ORA DOPO auth-area -->
-      <div class="nav-item dropdown ml-3">
-        <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown">
-          <i class="fas fa-bell"></i>
-          <span id="notifCount" class="badge badge-danger position-absolute"
-                style="top:0;right:0;font-size:.7rem;display:none">0</span>
-        </button>
-        <div class="dropdown-menu dropdown-menu-right" style="min-width:300px">
-          <h6 class="dropdown-header">Notifiche</h6>
-          <div id="notifList" style="max-height:300px;overflow-y:auto">
-            <div class="dropdown-item text-muted">Nessuna Notifica</div>
+        <div id="auth-area" class="ml-3"></div>
+
+        <div id="notifWrapper" class="nav-item dropdown ml-2">
+          <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown" title="Notifiche">
+            <i class="fas fa-bell"></i>
+            <span id="notifCount" class="badge badge-danger position-absolute" style="top:0; right:0; font-size:.7rem; display:none">0</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notifBell" style="min-width:280px">
+            <h6 class="dropdown-header">Notifiche</h6>
+            <div id="notifList" style="max-height:300px; overflow-y:auto">
+              <div class="dropdown-item text-muted">Nessuna Notifica</div>
+            </div>
           </div>
         </div>
+        <button id="darkModeToggle" class="btn btn-outline-light ml-2" title="Modalità Scura">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="materials-hero" data-aos="fade-in" data-aos-duration="1500">
+    <div class="container">
+      <h1 class="animate__animated animate__fadeInDown">Esplora i Nostri Materiali Didattici</h1>
+      <p class="animate__animated animate__fadeInUp animate__delay-1s">Una vasta libreria di risorse aggiornate, create per supportare ogni stile di apprendimento. Trova ciò di cui hai bisogno, quando ne hai bisogno.</p>
+    </div>
+  </section>
+
+  <main class="container flex-fill mb-5">
+    <div class="row justify-content-center mb-4" data-aos="fade-up" data-aos-delay="200">
+      <div class="col-md-8">
+        <div class="search-bar-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" id="materialSearch" class="form-control form-control-lg" placeholder="Cerca materiali per titolo o materia...">
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-buttons" data-aos="fade-up" data-aos-delay="300">
+      <button class="btn btn-outline-primary active" data-filter="all">Tutti</button>
+      <button class="btn btn-outline-success" data-filter="free">Gratis</button>
+      <button class="btn btn-outline-warning" data-filter="paid">Premium</button>
       </div>
 
-    </div>
-  </div>
-</nav>
+    <div class="accordion" id="accordionMaterials" data-aos="fade-up" data-aos-delay="400">
 
-  <!-- Contenuto principale -->
-  <main class="container flex-fill mt-5 mb-5">
-    <h2>Materiali Didattici</h2>
-    <p>Esplora i materiali divisi per materia:</p>
-  
-    <div class="accordion" id="accordionMaterials">
-
-      <!-- Lingua e Letteratura Italiana -->
-      <div class="card">
+      <div class="card" data-subject="Italiano">
         <div class="card-header" id="headingItaliano">
           <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed" 
+            <button class="btn btn-link btn-block text-left collapsed"
                     type="button" data-toggle="collapse" data-target="#collapseItaliano"
                     aria-expanded="false" aria-controls="collapseItaliano">
               Lingua e Letteratura Italiana <i class="fas fa-chevron-down float-right"></i>
@@ -118,16 +393,23 @@
         </div>
         <div id="collapseItaliano" class="collapse" aria-labelledby="headingItaliano" data-parent="#accordionMaterials">
           <div class="card-body">
-            <a href="subjects/italiano.html" class="material-btn">
+            <a href="subjects/italiano.html" class="material-btn" data-type="free">
               I VERBI NELLA LINGUA ITALIANA
               <span class="price-badge free">Gratis</span>
+            </a>
+            <a href="#" class="material-btn" data-type="paid">
+              DANTE ALIGHIERI: Un'analisi approfondita
+              <span class="price-badge paid">Premium</span>
+            </a>
+            <a href="#" class="material-btn" data-type="paid">
+              FIGURE RETORICHE: Esempi ed esercizi
+              <span class="price-badge paid">Premium</span>
             </a>
           </div>
         </div>
       </div>
 
-      <!-- Lingua Inglese -->
-      <div class="card">
+      <div class="card" data-subject="Inglese">
         <div class="card-header" id="headingInglese">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left collapsed"
@@ -139,13 +421,23 @@
         </div>
         <div id="collapseInglese" class="collapse" aria-labelledby="headingInglese" data-parent="#accordionMaterials">
           <div class="card-body">
-            <p class="no-material">Nessun materiale disponibile</p>
+            <a href="#" class="material-btn" data-type="free">
+              BASIC ENGLISH GRAMMAR
+              <span class="price-badge free">Gratis</span>
+            </a>
+            <a href="#" class="material-btn" data-type="paid">
+              ADVANCED VERB TENSES
+              <span class="price-badge paid">Premium</span>
+            </a>
+            <a href="#" class="material-btn" data-type="paid">
+              ENGLISH LITERATURE: Shakespeare
+              <span class="price-badge paid">Premium</span>
+            </a>
           </div>
         </div>
       </div>
 
-      <!-- Lingua Francese -->
-      <div class="card">
+      <div class="card" data-subject="Francese">
         <div class="card-header" id="headingFrancese">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left collapsed"
@@ -157,13 +449,12 @@
         </div>
         <div id="collapseFrancese" class="collapse" aria-labelledby="headingFrancese" data-parent="#accordionMaterials">
           <div class="card-body">
-            <p class="no-material">Nessun materiale disponibile</p>
+            <p class="no-material">Nessun materiale disponibile per questa materia al momento. Torna presto!</p>
           </div>
         </div>
       </div>
 
-      <!-- Matematica -->
-      <div class="card">
+      <div class="card" data-subject="Matematica">
         <div class="card-header" id="headingMatematica">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left collapsed"
@@ -175,13 +466,23 @@
         </div>
         <div id="collapseMatematica" class="collapse" aria-labelledby="headingMatematica" data-parent="#accordionMaterials">
           <div class="card-body">
-            <p class="no-material">Nessun materiale disponibile</p>
+            <a href="#" class="material-btn" data-type="free">
+              LE EQUAZIONI DI PRIMO GRADO
+              <span class="price-badge free">Gratis</span>
+            </a>
+            <a href="#" class="material-btn" data-type="paid">
+              CALCOLO INTEGRALE: Teoria ed Esercizi
+              <span class="price-badge paid">Premium</span>
+            </a>
+            <a href="#" class="material-btn" data-type="paid">
+              GEOMETRIA ANALITICA: La retta e la parabola
+              <span class="price-badge paid">Premium</span>
+            </a>
           </div>
         </div>
       </div>
 
-      <!-- Tecnologie Informatiche -->
-      <div class="card">
+      <div class="card" data-subject="Informatica">
         <div class="card-header" id="headingInformatica">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left collapsed"
@@ -193,13 +494,19 @@
         </div>
         <div id="collapseInformatica" class="collapse" aria-labelledby="headingInformatica" data-parent="#accordionMaterials">
           <div class="card-body">
-            <p class="no-material">Nessun materiale disponibile</p>
+            <a href="#" class="material-btn" data-type="free">
+              INTRODUZIONE AL LINGUAGGIO HTML
+              <span class="price-badge free">Gratis</span>
+            </a>
+            <a href="#" class="material-btn" data-type="paid">
+              PROGRAMMAZIONE C++ AVANZATA
+              <span class="price-badge paid">Premium</span>
+            </a>
           </div>
         </div>
       </div>
 
-      <!-- Scienze della Terra -->
-      <div class="card">
+      <div class="card" data-subject="Scienze della Terra">
         <div class="card-header" id="headingTerra">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left collapsed"
@@ -211,13 +518,12 @@
         </div>
         <div id="collapseTerra" class="collapse" aria-labelledby="headingTerra" data-parent="#accordionMaterials">
           <div class="card-body">
-            <p class="no-material">Nessun materiale disponibile</p>
+            <p class="no-material">Nessun materiale disponibile per questa materia al momento. Torna presto!</p>
           </div>
         </div>
       </div>
 
-      <!-- Chimica -->
-      <div class="card">
+      <div class="card" data-subject="Chimica">
         <div class="card-header" id="headingChimica">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left collapsed"
@@ -229,16 +535,19 @@
         </div>
         <div id="collapseChimica" class="collapse" aria-labelledby="headingChimica" data-parent="#accordionMaterials">
           <div class="card-body">
-            <a href="subjects/chimica.html" class="material-btn">
+            <a href="subjects/chimica.html" class="material-btn" data-type="free">
               LE PARTICELLE E GLI ATOMI IN CHIMICA
               <span class="price-badge free">Gratis</span>
+            </a>
+            <a href="#" class="material-btn" data-type="paid">
+              REAZIONI CHIMICHE: Bilanciamento e tipologie
+              <span class="price-badge paid">Premium</span>
             </a>
           </div>
         </div>
       </div>
 
-      <!-- Geografia -->
-      <div class="card">
+      <div class="card" data-subject="Geografia">
         <div class="card-header" id="headingGeografia">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left collapsed"
@@ -250,16 +559,15 @@
         </div>
         <div id="collapseGeografia" class="collapse" aria-labelledby="headingGeografia" data-parent="#accordionMaterials">
           <div class="card-body">
-            <p class="no-material">Nessun materiale disponibile</p>
+            <p class="no-material">Nessun materiale disponibile per questa materia al momento. Torna presto!</p>
           </div>
         </div>
       </div>
 
-      <!-- Storia -->
-      <div class="card">
+      <div class="card" data-subject="Storia">
         <div class="card-header" id="headingStoria">
           <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left" 
+            <button class="btn btn-link btn-block text-left"
                     type="button" data-toggle="collapse" data-target="#collapseStoria"
                     aria-expanded="false" aria-controls="collapseStoria">
               Storia, Cittadinanza e Costituzione <i class="fas fa-chevron-down float-right"></i>
@@ -268,16 +576,19 @@
         </div>
         <div id="collapseStoria" class="collapse" aria-labelledby="headingStoria" data-parent="#accordionMaterials">
           <div class="card-body">
-            <a href="subjects/storia.html" class="material-btn">
+            <a href="subjects/storia.html" class="material-btn" data-type="free">
               LA PRIMA GUERRA MONDIALE - DALLE ALLEANZE AL PRIMO GRANDE CONFLITTO
               <span class="price-badge free">Gratis</span>
+            </a>
+            <a href="#" class="material-btn" data-type="paid">
+              LA RIVOLUZIONE FRANCESE: Eventi e impatto
+              <span class="price-badge paid">Premium</span>
             </a>
           </div>
         </div>
       </div>
 
-      <!-- Diritto -->
-      <div class="card">
+      <div class="card" data-subject="Diritto">
         <div class="card-header" id="headingDiritto">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left collapsed"
@@ -289,13 +600,12 @@
         </div>
         <div id="collapseDiritto" class="collapse" aria-labelledby="headingDiritto" data-parent="#accordionMaterials">
           <div class="card-body">
-            <p class="no-material">Nessun materiale disponibile</p>
+            <p class="no-material">Nessun materiale disponibile per questa materia al momento. Torna presto!</p>
           </div>
         </div>
       </div>
 
-      <!-- Economia Politica -->
-      <div class="card">
+      <div class="card" data-subject="Economia Politica">
         <div class="card-header" id="headingEconPolitica">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left collapsed"
@@ -307,13 +617,12 @@
         </div>
         <div id="collapseEconPolitica" class="collapse" aria-labelledby="headingEconPolitica" data-parent="#accordionMaterials">
           <div class="card-body">
-            <p class="no-material">Nessun materiale disponibile</p>
+            <p class="no-material">Nessun materiale disponibile per questa materia al momento. Torna presto!</p>
           </div>
         </div>
       </div>
 
-      <!-- Economia Aziendale -->
-      <div class="card">
+      <div class="card" data-subject="Economia Aziendale">
         <div class="card-header" id="headingEconAziendale">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left collapsed"
@@ -325,7 +634,7 @@
         </div>
         <div id="collapseEconAziendale" class="collapse" aria-labelledby="headingEconAziendale" data-parent="#accordionMaterials">
           <div class="card-body">
-            <p class="no-material">Nessun materiale disponibile</p>
+            <p class="no-material">Nessun materiale disponibile per questa materia al momento. Torna presto!</p>
           </div>
         </div>
       </div>
@@ -333,37 +642,272 @@
     </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="py-4 text-white text-center">
-    <div class="container">
-      <div class="social-icons mb-3">
-        <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+<footer class="py-4 text-white text-center">
+      <div class="container">
+        <div class="social-icons mb-3">
+          <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+        </div>
+        <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
+        <small>
+          <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
+          <a href="cookie.html" class="text-white">Cookie Policy</a>
+        </small>
       </div>
-      <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
-      <small>
-        <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
-        <a href="cookie.html" class="text-white">Cookie Policy</a>
-      </small>
-    </div>
-  </footer>
-  
-  <!-- JS -->
+    </footer>
+
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
-  <script>
-    // Navbar dinamica
-    $(function(){
-      const token = localStorage.getItem('token');
-      $('#auth-area').html(
-        token
-          ? `<a href="area.html" class="btn btn-light">Area Personale</a>`
-          : `<a href="login.html" class="btn btn-light">Accedi/Registrati</a>`
-      );
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script> <script>
+    // Inizializza AOS
+    AOS.init({
+      duration: 800,
+      once: true
     });
+
+    // Preloader (migliorato) - COPIATO DA index.html
+    window.addEventListener('load', function() {
+      const preloader = document.getElementById('preloader');
+      setTimeout(() => {
+        preloader.style.opacity = '0';
+        preloader.style.visibility = 'hidden';
+        document.body.style.overflow = '';
+      }, 1500);
+      document.body.style.overflow = 'hidden';
+    });
+
+    // Dark Mode Toggle - COPIATO DA index.html
+    document.getElementById('darkModeToggle').addEventListener('click', function() {
+      document.body.classList.toggle('dark-mode');
+      if (document.body.classList.contains('dark-mode')) {
+        localStorage.setItem('darkMode', 'enabled');
+        this.innerHTML = '<i class="fas fa-sun"></i>';
+        this.title = 'Modalità Chiara';
+      } else {
+        localStorage.setItem('darkMode', 'disabled');
+        this.innerHTML = '<i class="fas fa-moon"></i>';
+        this.title = 'Modalità Scura';
+      }
+    });
+
+    // Applica la preferenza del dark mode al caricamento della pagina
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.body.classList.add('dark-mode');
+      document.getElementById('darkModeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+      document.getElementById('darkModeToggle').title = 'Modalità Chiara';
+    }
+
+    // AUTH e NOTIFICHE: Funzioni riprese da auth.js (assicurati che auth.js sia aggiornato!)
+    // Per coerenza con l'index, la navbar dinamica viene gestita qui.
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Navbar dinamica (qui è stata spostata per coerenza)
+      const { data: { session } } = await supabase.auth.getSession();
+      const authArea = document.getElementById('auth-area');
+      const navLinks = document.getElementById('nav-links');
+
+      if (session) {
+        authArea.innerHTML = `
+          <div class="dropdown">
+            <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              ${session.user.email}
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+              <h6 class="dropdown-header">Benvenuto, ${session.user.email}</h6>
+              <a class="dropdown-item" href="area.html"><i class="fas fa-user-circle mr-2"></i> Area Personale</a>
+              <a class="dropdown-item" href="settings.html"><i class="fas fa-cog mr-2"></i> Impostazioni</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+          e.preventDefault();
+          const { error } = await supabase.auth.signOut();
+          if (error) {
+            console.error('Errore logout:', error.message);
+          } else {
+            localStorage.removeItem('token'); // Rimuovi il token locale
+            localStorage.removeItem('userPlan'); // Rimuovi il piano utente
+            window.location.href = 'index.html'; // Reindirizza alla home
+          }
+        });
+
+        // Fetch e mostra le notifiche se l'utente è loggato
+        await fetchNotifications(session.user.id);
+      } else {
+        authArea.innerHTML = `<a href="login.html" class="btn btn-outline-light">Accedi / Registrati</a>`;
+        document.getElementById('notifWrapper').style.display = 'none'; // Nascondi campana se non loggato
+      }
+
+      // Funzione per recuperare e visualizzare le notifiche (placeholder)
+      async function fetchNotifications(userId) {
+        const notifList = document.getElementById('notifList');
+        const notifCount = document.getElementById('notifCount');
+        notifList.innerHTML = ''; // Pulisci le notifiche esistenti
+
+        // Esempio di dati di notifica da Supabase (simulato)
+        // In un'applicazione reale, faresti una query a una tabella 'notifications'
+        const { data, error } = await supabase
+          .from('notifications')
+          .select('*')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: false })
+          .limit(5); // Limita a 5 notifiche recenti
+
+        if (error) {
+          console.error('Errore nel recupero notifiche:', error);
+          notifList.innerHTML = '<div class="dropdown-item text-danger">Errore nel caricamento notifiche.</div>';
+          notifCount.style.display = 'none';
+          return;
+        }
+
+        if (data.length === 0) {
+          notifList.innerHTML = '<div class="dropdown-item text-muted">Nessuna Notifica</div>';
+          notifCount.style.display = 'none';
+        } else {
+          let unreadCount = 0;
+          data.forEach(notif => {
+            const notifItem = document.createElement('a');
+            notifItem.classList.add('dropdown-item');
+            notifItem.href = notif.link || '#'; // Link alla notifica o #
+            notifItem.innerHTML = `<i class="${notif.icon || 'fas fa-info-circle'} mr-2"></i> ${notif.message}`;
+            if (!notif.read) {
+              notifItem.classList.add('font-weight-bold'); // Notifica non letta in grassetto
+              notifItem.style.backgroundColor = '#e9ecef'; // Sfondo leggero per non letta
+              unreadCount++;
+            }
+            notifList.appendChild(notifItem);
+          });
+          if (unreadCount > 0) {
+            notifCount.textContent = unreadCount;
+            notifCount.style.display = 'block';
+          } else {
+            notifCount.style.display = 'none';
+          }
+        }
+      }
+    });
+
+    // Funzionalità di ricerca dinamica
+    const materialSearch = document.getElementById('materialSearch');
+    const accordionMaterials = document.getElementById('accordionMaterials');
+
+    materialSearch.addEventListener('keyup', function() {
+      const searchTerm = this.value.toLowerCase();
+      const cards = accordionMaterials.querySelectorAll('.card');
+
+      cards.forEach(card => {
+        const cardHeader = card.querySelector('.card-header h2 button').textContent.toLowerCase();
+        const materialButtons = card.querySelectorAll('.material-btn');
+        let cardHasVisibleMaterials = false;
+
+        // Itera su tutti i materiali all'interno della card
+        materialButtons.forEach(button => {
+          const materialTitle = button.textContent.toLowerCase();
+          if (materialTitle.includes(searchTerm) || cardHeader.includes(searchTerm)) {
+            button.style.display = 'flex'; // Mostra il bottone
+            cardHasVisibleMaterials = true;
+          } else {
+            button.style.display = 'none'; // Nascondi il bottone
+          }
+        });
+
+        // Se la card non ha materiali visibili e nemmeno il suo titolo corrisponde, nascondila
+        if (!cardHasVisibleMaterials && !cardHeader.includes(searchTerm)) {
+          card.style.display = 'none';
+        } else {
+          card.style.display = 'block';
+
+          // Se la card viene mostrata perché un suo materiale corrisponde,
+          // espandi l'accordion della materia.
+          if (cardHasVisibleMaterials && !cardHeader.includes(searchTerm)) {
+             const collapseId = card.querySelector('.card-header button').getAttribute('data-target');
+             $(collapseId).collapse('show'); // Usa jQuery di Bootstrap per espandere
+          }
+        }
+
+        // Se la barra di ricerca è vuota, resetta lo stato delle card
+        if (searchTerm === '') {
+          card.style.display = 'block'; // Mostra tutte le card
+          const collapseId = card.querySelector('.card-header button').getAttribute('data-target');
+          $(collapseId).collapse('hide'); // Chiudi tutti gli accordion
+        }
+      });
+    });
+
+    // Funzionalità di filtro per tipo di materiale (Gratis/Premium)
+    const filterButtons = document.querySelectorAll('.filter-buttons .btn');
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        filterButtons.forEach(btn => btn.classList.remove('active')); // Rimuovi 'active' da tutti
+        this.classList.add('active'); // Aggiungi 'active' al bottone cliccato
+
+        const filterType = this.dataset.filter; // 'all', 'free', 'paid'
+        const cards = accordionMaterials.querySelectorAll('.card');
+
+        cards.forEach(card => {
+          const materialButtons = card.querySelectorAll('.material-btn');
+          let cardHasVisibleMaterials = false;
+
+          materialButtons.forEach(button => {
+            const materialType = button.dataset.type; // 'free' o 'paid'
+
+            if (filterType === 'all' || materialType === filterType) {
+              button.style.display = 'flex';
+              cardHasVisibleMaterials = true;
+            } else {
+              button.style.display = 'none';
+            }
+          });
+
+          // Mostra o nascondi la card della materia in base ai materiali visibili
+          if (cardHasVisibleMaterials) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+
+          // Se la card è visibile ed ha materiali, espandi l'accordion.
+          // Altrimenti, se è nascosta, chiudi l'accordion.
+          const collapseId = card.querySelector('.card-header button').getAttribute('data-target');
+          if (card.style.display === 'block') {
+            $(collapseId).collapse('show');
+          } else {
+            $(collapseId).collapse('hide');
+          }
+
+          // Se non ci sono materiali visibili all'interno di una materia espansa, mostra il messaggio "Nessun materiale disponibile"
+          const noMaterialMessage = card.querySelector('.no-material');
+          if (noMaterialMessage) {
+            let hasAnyVisibleMaterial = false;
+            materialButtons.forEach(btn => {
+              if (btn.style.display !== 'none') {
+                hasAnyVisibleMaterial = true;
+              }
+            });
+            if (!hasAnyVisibleMaterial) {
+              noMaterialMessage.style.display = 'block';
+            } else {
+              noMaterialMessage.style.display = 'none';
+            }
+          }
+        });
+      });
+    });
+
+    // Gestione della rotazione dell'icona a freccia nell'accordion
+    $('#accordionMaterials').on('show.bs.collapse', function (e) {
+      $(e.target).prev('.card-header').find('.fa-chevron-down').removeClass('collapsed');
+    });
+
+    $('#accordionMaterials').on('hide.bs.collapse', function (e) {
+      $(e.target).prev('.card-header').find('.fa-chevron-down').addClass('collapsed');
+    });
+
   </script>
 </body>
 </html>

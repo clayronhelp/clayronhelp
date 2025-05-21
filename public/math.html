@@ -1,190 +1,403 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quiz Matematica – ClayRon</title>
-  <link rel="icon" href="assets/img/logo.png">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-  <!-- Bootstrap, Animate.css, FontAwesome -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <!--SCRIPT PER MENU' A TENDINA-->
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-  <!--SCRIPT PER MENU' A TENDINA-->
-  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
-  <script>
-    const SUPABASE_URL  = 'https://nptawehzfamaghytkmbk.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
-    window.supabase     = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-  </script>
-  <script src="assets/js/auth.js"></script>
-  <style>
-    #leaderboard-math { max-width:300px; margin:auto; display:none; text-align:left; }
-    #leaderboard-math li { padding:.3rem 0; border-bottom:1px solid #ccc; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiz Matematica – ClayRon</title>
+    <link rel="icon" href="assets/img/logo.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
+    <script>
+        const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
+        const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+        window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    </script>
+    <script src="assets/js/auth.js"></script>
+    <style>
+        /* PRELOADER STYLES */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #007bff, #17a2b8); /* Sfumatura accattivante */
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        .preloader-logo {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            animation: pulseLogo 2s infinite ease-in-out;
+            box-shadow: 0 0 30px rgba(255,255,255,0.5);
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.1);
+            padding: 10px;
+        }
+
+        @keyframes pulseLogo {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        .loading-text {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 20px;
+            animation: fadeInText 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes fadeInText {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* DARK MODE STYLES */
+        body.dark-mode {
+            background-color: #212529; /* Scuro */
+            color: #e2e6ea; /* Testo chiaro */
+        }
+        .dark-mode .navbar {
+            background-color: #343a40 !important; /* Navbar scura */
+        }
+        .dark-mode .navbar-brand, .dark-mode .nav-link, .dark-mode .dropdown-header {
+            color: #e2e6ea !important;
+        }
+        .dark-mode .form-control {
+            background-color: #495057;
+            color: #e2e6ea;
+            border-color: #6c757d;
+        }
+        .dark-mode .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+        .dark-mode .btn-success {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .dark-mode .btn-primary {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+        .dark-mode #leaderboard-math {
+            background-color: #343a40;
+            border-color: #495057;
+            color: #e2e6ea;
+        }
+        .dark-mode #leaderboard-math li {
+            border-bottom-color: #6c757d;
+        }
+        .dark-mode footer {
+            background-color: #0056b3 !important; /* Blu scuro per il footer */
+        }
+        .dark-mode .btn-outline-light {
+            color: #e2e6ea !important;
+            border-color: #e2e6ea !important;
+        }
+        .dark-mode .btn-outline-light:hover {
+            background-color: #e2e6ea !important;
+            color: #212529 !important;
+        }
+
+        /* Stili specifici della pagina */
+        #leaderboard-math { 
+            max-width:300px; 
+            margin:auto; 
+            display:none; 
+            text-align:left;
+            list-style: none; /* Rimuove i puntini */
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            margin-top: 20px;
+        }
+        #leaderboard-math li { 
+            padding:.5rem 0; 
+            border-bottom:1px solid #eee; 
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #leaderboard-math li:last-child {
+            border-bottom: none;
+        }
+        .w-auto { width: auto !important; } /* override bootstrap per select e input */
+    </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
-  <div class="container">
-    <a class="navbar-brand" href="index.html">
-      <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
-      aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <div id="preloader">
+        <img src="assets/img/logo.png" alt="ClayRon Logo" class="preloader-logo">
+        <p class="loading-text">Caricamento quiz...</p>
+    </div>
 
-    <div class="collapse navbar-collapse" id="navbarNavHome">
-      <!-- 1) i link di navigazione -->
-      <ul class="navbar-nav ml-auto" id="nav-links">
-        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
-        <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
-        <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
-        <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
-      </ul>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
+        aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-      <!-- 2) area autenticazione -->
-      <div id="auth-area">
-        <!-- qui auth.js inietta "Accedi/Registrati" oppure il dropdown utente -->
-      </div>
+      <div class="collapse navbar-collapse" id="navbarNavHome">
+        <ul class="navbar-nav ml-auto" id="nav-links">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
+          <li class="nav-item active"><a class="nav-link" href="contact.html">Contatti <span class="sr-only">(current)</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+        </ul>
 
-      <!-- 3) campanella notifiche, ORA DOPO auth-area -->
-      <div class="nav-item dropdown ml-3">
-        <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown">
-          <i class="fas fa-bell"></i>
-          <span id="notifCount" class="badge badge-danger position-absolute"
-                style="top:0;right:0;font-size:.7rem;display:none">0</span>
-        </button>
-        <div class="dropdown-menu dropdown-menu-right" style="min-width:300px">
-          <h6 class="dropdown-header">Notifiche</h6>
-          <div id="notifList" style="max-height:300px;overflow-y:auto">
-            <div class="dropdown-item text-muted">Nessuna Notifica</div>
+        <div id="auth-area" class="ml-3"></div>
+
+        <div id="notifWrapper" class="nav-item dropdown ml-2">
+          <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown" title="Notifiche">
+            <i class="fas fa-bell"></i>
+            <span id="notifCount" class="badge badge-danger position-absolute" style="top:0; right:0; font-size:.7rem; display:none">0</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notifBell" style="min-width:280px">
+            <h6 class="dropdown-header">Notifiche</h6>
+            <div id="notifList" style="max-height:300px; overflow-y:auto">
+              <div class="dropdown-item text-muted">Nessuna Notifica</div>
+            </div>
           </div>
         </div>
+        <button id="darkModeToggle" class="btn btn-outline-light ml-2" title="Modalità Scura">
+          <i class="fas fa-moon"></i>
+        </button>
       </div>
-
     </div>
-  </div>
-</nav>
-  <main class="container text-center flex-fill py-4">
-    <h2>Quiz di Matematica</h2>
-    <div class="mb-3">
-      <select id="difficulty" class="form-control d-inline-block w-auto">
-        <option value="easy">Facile</option>
-        <option value="medium">Medio</option>
-        <option value="hard">Difficile</option>
-      </select>
-      <button id="startQuiz" class="btn btn-success ml-2">Start</button>
-      <button id="showBoardMath" class="btn btn-primary ml-2">Classifica</button>
-    </div>
-    <div id="quizArea"></div>
-    <div class="mt-3"><strong>Best Score:</strong> <span id="quizScore">0</span></div>
-    <ol id="leaderboard-math"></ol>
-  </main>
+  </nav>
 
-  <!-- Footer -->
-  <footer class="py-4 text-white text-center">
-    <div class="container">
-      <div class="social-icons mb-3">
-        <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+    <main class="container text-center flex-fill py-4">
+        <h2 class="mb-4">Quiz di Matematica</h2>
+        <div class="mb-3">
+            <select id="difficulty" class="form-control d-inline-block w-auto">
+                <option value="easy">Facile</option>
+                <option value="medium">Medio</option>
+                <option value="hard">Difficile</option>
+            </select>
+            <button id="startQuiz" class="btn btn-success ml-2">Start</button>
+            <button id="showBoardMath" class="btn btn-primary ml-2">Classifica</button>
+        </div>
+        <div id="quizArea" class="my-4"></div>
+        <div class="mt-3"><strong>Best Score:</strong> <span id="quizScore">0</span></div>
+        <ol id="leaderboard-math"></ol>
+    </main>
+
+<footer class="py-4 text-white text-center">
+      <div class="container">
+        <div class="social-icons mb-3">
+          <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+        </div>
+        <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
+        <small>
+          <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
+          <a href="cookie.html" class="text-white">Cookie Policy</a>
+        </small>
       </div>
-      <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
-      <small>
-        <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
-        <a href="cookie.html" class="text-white">Cookie Policy</a>
-      </small>
-    </div>
-  </footer>
+    </footer>
 
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script>
-  document.addEventListener('DOMContentLoaded',async()=>{
-    const { data:{ session } } = await supabase.auth.getSession();
-    if(!session) return location.href='login.html';
-    await updateNavbar();
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Applica la preferenza del dark mode al caricamento della pagina
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                // Aggiorna l'icona del toggle se il dark mode è abilitato
+                const darkModeToggle = document.getElementById('darkModeToggle');
+                if (darkModeToggle) {
+                    darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                    darkModeToggle.title = 'Modalità Chiara';
+                }
+            }
 
-    const uid = session.user.id;
-    const md  = session.user.user_metadata;
-    const un  = md.firstName ? `${md.firstName} ${md.lastName}` : session.user.email;
+            // Gestione del preloader
+            document.body.style.overflow = 'hidden'; // Blocco lo scroll durante il preloading
 
-    let questions, idx, score=0, best=0;
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                location.href = 'login.html';
+                return;
+            }
+            await updateNavbar();
 
-    async function loadBest(){
-      let { data } = await supabase
-        .from('game_scores')
-        .select('score')
-        .eq('game','math').eq('user_id',uid)
-        .order('score',{ascending:false}).limit(1);
-      best = data[0]?.score||0;
-      $('#quizScore').text(best);
-    }
-    async function loadBoard(){
-      let { data } = await supabase
-        .from('game_scores')
-        .select('user_name,score')
-        .eq('game','math').order('score',{ascending:false})
-        .limit(10);
-      $('#leaderboard-math').empty();
-      data.forEach(r=>$('#leaderboard-math').append(`<li>${r.user_name}: ${r.score}</li>`));
-    }
+            // Nascondi il preloader dopo che tutto è caricato e pronto
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+                document.body.style.overflow = ''; // Riabilita lo scroll
+            }, 800); // Puoi regolare questo timeout
 
-    function genQuestions(diff){
-      const range = diff==='easy'?10: diff==='medium'?20:50;
-      questions = Array.from({length:5},()=>{
-        const a=rand(range),b=rand(range);
-        return { q:`${a}+${b}`, ans:a+b };
-      });
-    }
-    function rand(n){return Math.floor(Math.random()*n);}
+            // Inizializzazione del quiz
+            const uid = session.user.id;
+            const md = session.user.user_metadata;
+            const un = md.firstName ? `${md.firstName} ${md.lastName}` : session.user.email;
 
-    function render(){
-      if(idx>=questions.length) return finish();
-      const {q,ans} = questions[idx];
-      $('#quizArea').html(`
-        <div><strong>${q} = ?</strong></div>
-        <input type="number" id="answer" class="form-control d-inline-block w-auto">
-        <button id="submitAns" class="btn btn-primary ml-2">OK</button>
-      `);
-      $('#submitAns').click(()=>{
-        if(Number($('#answer').val())===ans) score++;
-        idx++; $('#quizScore').text(score);
-        render();
-      });
-    }
-    async function finish(){
-      if(score>best){
-        best=score;
-        await supabase
-          .from('game_scores')
-          .upsert(
-            {user_id:uid,user_name:un,game:'math',score:best},
-            { onConflict:['user_id','game'] }
-          )
-          .select();
-      }
-      await loadBoard();
-      alert(`Quiz finito! Score: ${score}`);
-    }
+            let questions, idx, score = 0, best = 0;
 
-    $('#startQuiz').click(()=>{
-      genQuestions($('#difficulty').val());
-      idx=0; score=0; $('#quizScore').text(score);
-      render();
-    });
-    $('#showBoardMath').click(()=>$('#leaderboard-math').toggle());
+            async function loadBest() {
+                let { data } = await supabase
+                    .from('game_scores')
+                    .select('score')
+                    .eq('game', 'math').eq('user_id', uid)
+                    .order('score', { ascending: false }).limit(1);
+                best = data[0]?.score || 0;
+                $('#quizScore').text(best);
+            }
 
-    await loadBest(); await loadBoard();
-  });
-  </script>
+            async function loadBoard() {
+                let { data } = await supabase
+                    .from('game_scores')
+                    .select('user_name,score')
+                    .eq('game', 'math').order('score', { ascending: false })
+                    .limit(10);
+                $('#leaderboard-math').empty();
+                if (data.length === 0) {
+                    $('#leaderboard-math').append('<li>Nessun punteggio disponibile.</li>');
+                } else {
+                    data.forEach((r, index) => {
+                        const rankEmoji = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '';
+                        $('#leaderboard-math').append(`<li>${rankEmoji}${r.user_name}: <span>${r.score}</span></li>`);
+                    });
+                }
+            }
+
+            function genQuestions(diff) {
+                const range = diff === 'easy' ? 10 : diff === 'medium' ? 20 : 50;
+                questions = Array.from({ length: 5 }, () => {
+                    const a = rand(range), b = rand(range);
+                    return { q: `${a}+${b}`, ans: a + b };
+                });
+            }
+
+            function rand(n) { return Math.floor(Math.random() * n); }
+
+            function render() {
+                if (idx >= questions.length) return finish();
+                const { q, ans } = questions[idx];
+                $('#quizArea').html(`
+                    <div class="animate__animated animate__fadeInUp"><strong>${q} = ?</strong></div>
+                    <input type="number" id="answer" class="form-control d-inline-block w-auto animate__animated animate__fadeIn" placeholder="La tua risposta">
+                    <button id="submitAns" class="btn btn-primary ml-2 animate__animated animate__zoomIn">OK</button>
+                `);
+                $('#answer').focus(); // Metti il focus sul campo risposta
+                $('#submitAns').click(() => {
+                    const userAnswer = Number($('#answer').val());
+                    if (userAnswer === ans) {
+                        score++;
+                        showMessage('quizArea', `Risposta Corretta!`, 'success');
+                    } else {
+                        showMessage('quizArea', `Risposta Sbagliata. La risposta era ${ans}.`, 'danger');
+                    }
+                    idx++; $('#quizScore').text(score);
+                    render();
+                });
+                // Gestisci l'invio con il tasto Invio
+                $('#answer').on('keypress', function(e) {
+                    if (e.which === 13) { // 13 è il codice per il tasto Invio
+                        $('#submitAns').click();
+                    }
+                });
+            }
+
+            async function finish() {
+                if (score > best) {
+                    best = score;
+                    // Prima cerchiamo se esiste già un record per l'utente e il gioco
+                    const { data: existingScore, error: fetchError } = await supabase
+                        .from('game_scores')
+                        .select('score')
+                        .eq('user_id', uid)
+                        .eq('game', 'math')
+                        .single();
+
+                    if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 è "No rows found"
+                        console.error('Errore nel recupero del punteggio esistente:', fetchError.message);
+                    }
+
+                    if (!existingScore || score > existingScore.score) {
+                        const { error: upsertError } = await supabase
+                            .from('game_scores')
+                            .upsert(
+                                { user_id: uid, user_name: un, game: 'math', score: best },
+                                { onConflict: ['user_id', 'game'] }
+                            );
+                        if (upsertError) {
+                            console.error('Errore nell\'upsert del punteggio:', upsertError.message);
+                        }
+                    }
+                }
+                await loadBoard();
+                $('#quizArea').html(`<div class="alert alert-info animate__animated animate__fadeIn">Quiz finito! Il tuo punteggio finale è: <strong>${score}</strong>. Il tuo miglior punteggio è: <strong>${best}</strong>.</div>`);
+            }
+
+            // Funzione per mostrare messaggi temporanei nella quizArea
+            function showMessage(elementId, message, type = 'info') {
+                const el = $(`#${elementId}`);
+                // Non rimuoviamo i contenuti esistenti se è un messaggio temporaneo
+                
+                const msgEl = $('<div>').addClass(`alert alert-${type} animate__animated animate__fadeInUp`).html(message);
+                el.prepend(msgEl); // Aggiungi il messaggio sopra il contenuto esistente
+
+                setTimeout(() => {
+                    msgEl.removeClass('animate__fadeInUp').addClass('animate__fadeOutDown')
+                        .one('animationend', () => {
+                            msgEl.remove(); // Rimuovi solo il messaggio
+                        });
+                }, 2000); // Messaggio visibile per 2 secondi
+            }
+
+            $('#startQuiz').click(() => {
+                genQuestions($('#difficulty').val());
+                idx = 0; score = 0; $('#quizScore').text(score);
+                render();
+                $('#leaderboard-math').hide(); // Nascondi la classifica quando inizia un nuovo quiz
+            });
+
+            $('#showBoardMath').click(() => {
+                $('#leaderboard-math').toggle();
+            });
+
+            // Toggle Dark Mode
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            darkModeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                if (document.body.classList.contains('dark-mode')) {
+                    localStorage.setItem('darkMode', 'enabled');
+                    this.innerHTML = '<i class="fas fa-sun"></i>';
+                    this.title = 'Modalità Chiara';
+                } else {
+                    localStorage.setItem('darkMode', 'disabled');
+                    this.innerHTML = '<i class="fas fa-moon"></i>';
+                    this.title = 'Modalità Scura';
+                }
+            });
+
+            await loadBest();
+            await loadBoard();
+        });
+    </script>
 </body>
 </html>

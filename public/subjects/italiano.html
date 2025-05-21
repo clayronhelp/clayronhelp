@@ -1,181 +1,388 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Appunti di Storia – ClayRon</title>
-  <link rel="icon" href="../assets/img/logo.png">
-  <!-- Font, Bootstrap, Animate, FontAwesome, Style -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Appunti di Storia – ClayRon</title>
+    <link rel="icon" href="../assets/img/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 
-  <!-- PayPal SDK -->
-  <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=EUR"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=EUR"></script>
 
-  <!-- Supabase + Auth -->
-  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
-  <script>
-    const SUPABASE_URL  = 'https://nptawehzfamaghytkmbk.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
-    window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-  </script>
-  <script src="../assets/js/auth.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
+    <script>
+        const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
+        const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+        window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    </script>
+    <script src="../assets/js/auth.js"></script>
 
-  <style>
-    body { display: flex; flex-direction: column; min-height: 100vh; }
-    main { flex: 1; }
-    .back-link { display:inline-flex; align-items:center; margin-bottom:1rem; color:#0055aa; text-decoration:none; font-weight:500; }
-    .back-link i { margin-right:6px; }
-    .card-material { margin-bottom:2rem; border:none; }
-    .card-material img { width:100%; border-radius:8px; box-shadow:0 0 15px rgba(0,0,0,0.1); }
-    .card-material h3 { color:#003366; margin-bottom:.5rem; }
-    .card-material p { color:#444; line-height:1.6; }
-    footer.bg-primary { background-color:#003366 !important; }
-  </style>
+    <style>
+        /* PRELOADER STYLES */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #007bff, #17a2b8); /* Sfumatura accattivante */
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        .preloader-logo {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            animation: pulseLogo 2s infinite ease-in-out;
+            box-shadow: 0 0 30px rgba(255,255,255,0.5);
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.1);
+            padding: 10px;
+        }
+
+        @keyframes pulseLogo {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        .loading-text {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 20px;
+            animation: fadeInText 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes fadeInText {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* DARK MODE STYLES */
+        body { transition: background-color 0.3s ease, color 0.3s ease; }
+        body.dark-mode {
+            background-color: #212529; /* Scuro */
+            color: #e2e6ea; /* Testo chiaro */
+        }
+        .dark-mode .navbar {
+            background-color: #343a40 !important; /* Navbar scura */
+        }
+        .dark-mode .navbar-brand, .dark-mode .nav-link, .dark-mode .dropdown-header {
+            color: #e2e6ea !important;
+        }
+        .dark-mode .form-control {
+            background-color: #495057;
+            color: #e2e6ea;
+            border-color: #6c757d;
+        }
+        .dark-mode .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+        .dark-mode .btn-success {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .dark-mode .btn-primary {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+        .dark-mode footer {
+            background-color: #0056b3 !important; /* Blu scuro per il footer */
+        }
+        .dark-mode .btn-outline-light {
+            color: #e2e6ea !important;
+            border-color: #e2e6ea !important;
+        }
+        .dark-mode .btn-outline-light:hover {
+            background-color: #e2e6ea !important;
+            color: #212529 !important;
+        }
+        
+        /* Specific styles for this page */
+        main { flex: 1; }
+        .back-link { 
+            display:inline-flex; 
+            align-items:center; 
+            margin-bottom:1rem; 
+            color:#0055aa; 
+            text-decoration:none; 
+            font-weight:500; 
+            transition: color 0.3s ease;
+        }
+        .dark-mode .back-link {
+            color: #8ab4f8; /* Colore chiaro per il link in dark mode */
+        }
+        .back-link i { margin-right:6px; }
+        .card-material { 
+            margin-bottom:2rem; 
+            border:none; 
+            background-color: #fff;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .dark-mode .card-material {
+            background-color: #343a40; /* Sfondo scuro per la card */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .card-material img { 
+            width:100%; 
+            border-radius:8px 0 0 8px; /* Solo angoli a sinistra */
+            box-shadow:0 0 15px rgba(0,0,0,0.05); /* Ombra più leggera */
+            height: 100%;
+            object-fit: cover;
+        }
+        @media (max-width: 767.98px) {
+            .card-material img {
+                border-radius: 8px 8px 0 0; /* Angoli in alto per mobile */
+            }
+        }
+        .card-material h3 { 
+            color:#003366; 
+            margin-bottom:.5rem; 
+            transition: color 0.3s ease;
+        }
+        .dark-mode .card-material h3 {
+            color: #e2e6ea; /* Colore chiaro per il titolo in dark mode */
+        }
+        .card-material p { 
+            color:#444; 
+            line-height:1.6; 
+            transition: color 0.3s ease;
+        }
+        .dark-mode .card-material p {
+            color: #c9d0d6; /* Colore chiaro per il paragrafo in dark mode */
+        }
+        footer.bg-primary { background-color:#003366 !important; }
+
+        #payment-button-container .btn {
+            width: 100%;
+            margin-top: 15px;
+        }
+        .paypal-buttons-tagline { display: none !important; } /* Nasconde la tagline di PayPal */
+    </style>
 </head>
-<body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">
-        <img src="../assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
-        aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavHome">
-        <ul class="navbar-nav ml-auto" id="nav-links">
-          <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="../materials.html">Materiali</a></li>
-          <li class="nav-item"><a class="nav-link" href="../about.html">Chi Siamo</a></li>
-          <li class="nav-item"><a class="nav-link" href="../contact.html">Contatti</a></li>
-          <li class="nav-item"><a class="nav-link" href="../faq.html">FAQ</a></li>
-        </ul>
-        <!-- area-login / dropdown utente -->
-      <div id="auth-area" class="ml-3"></div>
-      <!-- notifiche -->
-      <div id="notifWrapper" class="nav-item dropdown ml-2">
-        <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-bell"></i>
-          <span id="notifCount" class="badge badge-danger position-absolute" style="top:0; right:0; font-size:.7rem; display:none">0</span>
-        </button>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notifBell" style="min-width:280px">
-          <h6 class="dropdown-header">Notifiche</h6>
-          <div id="notifList" style="max-height:300px; overflow-y:auto">
-            <div class="dropdown-item text-muted">Nessuna Notifica</div>
-          </div>
-        </div>
-      </div>
+<body class="d-flex flex-column min-vh-100">
+    <div id="preloader">
+        <img src="../assets/img/logo.png" alt="ClayRon Logo" class="preloader-logo">
+        <p class="loading-text">Caricamento...</p>
     </div>
-  </div>
-</nav>
 
-  <main class="container py-5">
-    <a href="../materials.html" class="back-link">
-      <i class="fas fa-arrow-left"></i> Torna ai Materiali
-    </a>
-    <h2 class="mb-4">Lingua e Lettere Italiane</h2>
-
-    <div class="card card-material">
-      <div class="row no-gutters">
-        <div class="col-md-4">
-          <img id="mat-img" src="../assets/img/Progetto senza titolo (1).png" alt="Prima Guerra Mondiale">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <img src="../assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
+                aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavHome">
+                <ul class="navbar-nav ml-auto" id="nav-links">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../materials.html">Materiali</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../about.html">Chi Siamo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../contact.html">Contatti</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../faq.html">FAQ</a></li>
+                </ul>
+                <div id="auth-area" class="ml-3"></div>
+                <div id="notifWrapper" class="nav-item dropdown ml-2">
+                    <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-bell"></i>
+                        <span id="notifCount" class="badge badge-danger position-absolute" style="top:0; right:0; font-size:.7rem; display:none">0</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notifBell" style="min-width:280px">
+                        <h6 class="dropdown-header">Notifiche</h6>
+                        <div id="notifList" style="max-height:300px; overflow-y:auto">
+                            <div class="dropdown-item text-muted">Nessuna Notifica</div>
+                        </div>
+                    </div>
+                </div>
+                <button id="darkModeToggle" class="btn btn-outline-light ml-2" title="Modalità Scura">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
         </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h3 id="mat-title">I VERBI NELLA LINGUA ITALIANA</h3>
-            <p id="mat-desc">
-              Scopri come sono composti i verbi della Lingua Italiana.
-            </p>
-            <div id="payment-button-container"></div>
-          </div>
+    </nav>
+
+    <main class="container py-5">
+        <a href="../materials.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> Torna ai Materiali
+        </a>
+        <h2 class="mb-4">Appunti di Storia</h2>
+
+        <div class="card card-material">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img id="mat-img" src="../assets/img/Progetto senza titolo (1).png" alt="Storia">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h3 id="mat-title">LA PRIMA GUERRA MONDIALE</h3>
+                        <p id="mat-desc">
+                            Appunti dettagliati sulla Prima Guerra Mondiale, dalle cause agli eventi chiave, fino alle conseguenze globali.
+                        </p>
+                        <div id="payment-button-container"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </main>
+    </main>
 
-  <footer class="bg-primary text-white py-4 mt-auto">
-    <div class="container text-center">
-      <div class="social-icons mb-2">
-        <a href="https://www.instagram.com/clayronhelp/" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.facebook.com/..." class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.tiktok.com/..." class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
-      </div>
-      <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
-      <small>
-        <a href="../terms.html" class="text-white">Termini &amp; Condizioni</a> –
-        <a href="../cookie.html" class="text-white">Cookie Policy</a>
-      </small>
-    </div>
-  </footer>
+    <footer class="bg-primary text-white py-4 mt-auto">
+        <div class="container text-center">
+            <div class="social-icons mb-2">
+                <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
+            <small>
+                <a href="../terms.html" class="text-white">Termini &amp; Condizioni</a> –
+                <a href="../cookie.html" class="text-white">Cookie Policy</a>
+            </small>
+        </div>
+    </footer>
 
-  <!-- Scripts -->
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-  <script>
-    // Configura qui
-    const price = 0;
-    const fileUrl = "../assets/uploads/I Verbi in Italiano.docx";
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Applica la preferenza del dark mode al caricamento della pagina
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                // Aggiorna l'icona del toggle se il dark mode è abilitato
+                const darkModeToggle = document.getElementById('darkModeToggle');
+                if (darkModeToggle) {
+                    darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                    darkModeToggle.title = 'Modalità Chiara';
+                }
+            }
 
-    $(async function(){
-      // 1) Navbar dinamica
-      const { data:{ session } } = await supabase.auth.getSession();
-      $('#auth-area').html(
-        session
-          ? `<a href="../area.html" class="btn btn-light">Area Personale</a>`
-          : `<a href="../login.html" class="btn btn-light">Accedi/Registrati</a>`
-      );
+            // Gestione del preloader
+            document.body.style.overflow = 'hidden'; // Blocco lo scroll durante il preloading
 
-      // 2) Login obbligatorio
-      const container = $('#payment-button-container')[0];
-      if (!session) {
-        container.innerHTML = `<a href="../login.html" class="btn btn-warning">
-          <i class="fas fa-sign-in-alt mr-2"></i> Devi accedere
-        </a>`;
-        return;
-      }
+            // Nascondi il preloader dopo che tutto è caricato e pronto
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+                document.body.style.overflow = ''; // Riabilita lo scroll
+            }, 800); // Puoi regolare questo timeout
 
-      // 3) Download o PayPal
-      if (price === 0) {
-        container.innerHTML = `<a href="${fileUrl}" class="btn btn-success" id="downloadBtn">
-          <i class="fas fa-download mr-2"></i> Scarica
-        </a>`;
-        $('#downloadBtn').on('click', async () => {
-          // upsert in Supabase
-          await supabase.from('downloaded_materials').upsert([{
-            user_id: session.user.id,
-            title: $('#mat-title').text(),
-            link: fileUrl,
-            page: window.location.pathname
-          }], { onConflict: ['user_id', 'page'] });
-          window.location = fileUrl;
+            // Configura qui: **AGGIORNA QUESTI VALORI PER QUESTO SPECIFICO MATERIALE**
+            const price = 0; // Imposta 0 per download gratuito, altrimenti il prezzo
+            const fileUrl = "../assets/uploads/Appunti-Prima-Guerra-Mondiale.docx"; // Percorso del file reale
+            const materialTitle = "LA PRIMA GUERRA MONDIALE"; // Titolo specifico di questo materiale
+
+            // 1) Gestione della Navbar dinamica e autenticazione
+            // Assicurati che auth.js sia caricato e che la funzione updateNavbar esista
+            const { data:{ session } } = await supabase.auth.getSession();
+            await updateNavbar(); // Funzione di auth.js per popolare auth-area e notifBell
+
+            // Aggiorna titolo e descrizione della pagina basandosi sui dati del materiale
+            $('#mat-title').text(materialTitle);
+            // Assicurati che 'mat-desc' sia presente e aggiorna la descrizione se necessario
+            // $('#mat-desc').text("Qui va la descrizione specifica della Prima Guerra Mondiale."); 
+            // In questo caso, la descrizione è già nell'HTML e non ha bisogno di essere aggiornata via JS.
+
+
+            // 2) Logica per il download/pagamento
+            const container = $('#payment-button-container')[0];
+            if (!session) {
+                // Utente non loggato, mostra pulsante per accedere
+                container.innerHTML = `
+                    <div class="alert alert-info text-center animate__animated animate__fadeIn mt-3" role="alert">
+                        Per scaricare questo materiale, devi prima <a href="../login.html" class="alert-link">accedere</a> o <a href="../register.html" class="alert-link">registrarti</a>.
+                    </div>
+                    <a href="../login.html" class="btn btn-warning btn-lg btn-block mt-3">
+                        <i class="fas fa-sign-in-alt mr-2"></i> Accedi o Registrati
+                    </a>
+                `;
+                return; // Esci dalla funzione, non c'è bisogno di configurare PayPal o download
+            }
+
+            // 3) Download o PayPal
+            if (price === 0) {
+                // Materiale gratuito
+                container.innerHTML = `
+                    <a href="${fileUrl}" class="btn btn-success btn-lg btn-block animate__animated animate__pulse" id="downloadBtn">
+                        <i class="fas fa-download mr-2"></i> Scarica Gratuitamente
+                    </a>
+                `;
+                $('#downloadBtn').on('click', async (e) => {
+                    e.preventDefault(); // Impedisce il download immediato per permettere la registrazione
+                    // upsert in Supabase per registrare il download
+                    await supabase.from('downloaded_materials').upsert([{
+                        user_id: session.user.id,
+                        title: materialTitle, // Usa il titolo dinamico
+                        link: fileUrl,
+                        page: window.location.pathname
+                    }], { onConflict: ['user_id', 'page'] });
+                    // Avvia il download
+                    window.location.href = fileUrl;
+                });
+            } else {
+                // Materiale a pagamento, configura PayPal
+                paypal.Buttons({
+                    style: { layout: 'vertical', color: 'blue', shape: 'rect', label: 'paypal' },
+                    createOrder: (data, actions) => actions.order.create({
+                        purchase_units:[{ amount:{ value: price.toFixed(2) }, description: materialTitle }] // Usa il titolo dinamico
+                    }),
+                    onApprove: (data, actions) => actions.order.capture().then(details => {
+                        if (details.status === 'COMPLETED') {
+                            // Registra il download dopo il pagamento completato
+                            supabase.from('downloaded_materials').upsert([{
+                                user_id: session.user.id,
+                                title: materialTitle, // Usa il titolo dinamico
+                                link: fileUrl,
+                                page: window.location.pathname
+                            }], { onConflict: ['user_id','page'] });
+                            // Avvia il download
+                            window.location.href = fileUrl;
+                            alert('Pagamento completato! Il download è iniziato.');
+                        } else {
+                            alert('Pagamento non completato.');
+                        }
+                    }),
+                    onError: err => {
+                        console.error("Errore con PayPal:", err);
+                        alert('Si è verificato un errore durante il processo di pagamento. Riprova più tardi.');
+                    }
+                }).render('#payment-button-container');
+            }
+
+            // Toggle Dark Mode (spostato qui per essere gestito dopo il caricamento completo)
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            if (darkModeToggle) { // Assicurati che l'elemento esista
+                darkModeToggle.addEventListener('click', function() {
+                    document.body.classList.toggle('dark-mode');
+                    if (document.body.classList.contains('dark-mode')) {
+                        localStorage.setItem('darkMode', 'enabled');
+                        this.innerHTML = '<i class="fas fa-sun"></i>';
+                        this.title = 'Modalità Chiara';
+                    } else {
+                        localStorage.setItem('darkMode', 'disabled');
+                        this.innerHTML = '<i class="fas fa-moon"></i>';
+                        this.title = 'Modalità Scura';
+                    }
+                });
+            }
         });
-      } else {
-        paypal.Buttons({
-          style: { layout: 'vertical', color: 'blue', shape: 'rect', label: 'paypal' },
-          createOrder: (data, actions) => actions.order.create({
-            purchase_units:[{ amount:{ value: price.toFixed(2) }, description: $('#mat-title').text() }]
-          }),
-          onApprove: (data, actions) => actions.order.capture().then(details => {
-            if (details.status==='COMPLETED') {
-              supabase.from('downloaded_materials').upsert([{
-                user_id: session.user.id,
-                title: $('#mat-title').text(),
-                link: fileUrl,
-                page: window.location.pathname
-              }], { onConflict: ['user_id','page'] });
-              window.location = fileUrl;
-            } else alert('Pagamento non completato');
-          }),
-          onError: err => { console.error(err); alert('Errore con PayPal'); }
-        }).render('#payment-button-container');
-      }
-    });
-  </script>
+    </script>
 </body>
 </html>

@@ -3,217 +3,848 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title data-i18n="title">Impostazioni – ClayRon</title>
-  <link rel="icon" href="assets/img/logo.png">
-  <!-- Bootstrap & FontAwesome & style.css -->
+  <title>Impostazioni – ClayRon</title>
+  <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
+
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-  <!-- Bootstrap, Animate.css, FontAwesome -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <!-- Supabase + Auth -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+  
+  <style>
+    /* GLOBAL CSS VARIABLES */
+    :root {
+      --primary-color: #0055aa;
+      --primary-hover-color: #004085;
+      --primary-darker-color: #003366;
+      --secondary-color: #007bff;
+
+      --body-bg: #f8f9fa;
+      --body-color: #212529;
+      --card-bg: #ffffff;
+      --card-border-color: rgba(0,0,0,.08);
+      --card-shadow: 0 6px 18px rgba(0,0,0,.07);
+      --card-hover-shadow: 0 10px 25px rgba(0,0,0,.1);
+      --card-title-color: var(--primary-color);
+
+      --input-bg: #fff;
+      --input-border-color: #ced4da;
+      --input-focus-border-color: #80bdff;
+      --input-focus-box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+      --input-color: #495057;
+      --input-placeholder-color: #6c757d;
+
+      --link-color: var(--primary-color);
+      --link-hover-color: var(--primary-hover-color);
+
+      --text-muted-color: #6c757d;
+      --text-success-color: #28a745;
+      --text-danger-color: #dc3545;
+
+      --font-family-base: 'Montserrat', sans-serif;
+      --border-radius-base: .3rem;
+      --border-radius-card: .6rem;
+
+      --preloader-bg: linear-gradient(135deg, #0055aa, #003366);
+      --preloader-text-color: #fff;
+      --preloader-logo-shadow: 0 0 25px rgba(255,255,255,0.4);
+      --preloader-logo-bg: rgba(255,255,255,0.1);
+
+      --dm-toggle-bg: rgba(255, 255, 255, 0.15);
+      --dm-toggle-border: 1px solid rgba(255, 255, 255, 0.4);
+      --dm-toggle-color: white;
+      --dm-toggle-hover-bg: rgba(255, 255, 255, 0.25);
+      --dm-toggle-hover-border: 1px solid rgba(255, 255, 255, 0.6);
+
+      --navbar-bg: var(--primary-color);
+      --navbar-link-color: rgba(255,255,255,.85);
+      --navbar-link-hover-color: #fff;
+      --navbar-brand-color: #fff;
+
+      --footer-bg: var(--primary-darker-color);
+      --footer-text-color: #fff;
+      --footer-link-color: #b0d4ff;
+      
+      --primary-color-rgb: 0, 85, 170;
+      --dm-link-hover-color-rgb: 169, 201, 255; 
+    }
+
+    body.dark-mode {
+      --body-bg: #1a1d20;
+      --body-color: #e2e6ea;
+      --card-bg: #252a2e;
+      --card-border-color: rgba(255,255,255,.12);
+      --card-shadow: 0 6px 18px rgba(0,0,0,.25);
+      --card-hover-shadow: 0 10px 25px rgba(0,0,0,.3);
+      --card-title-color: #87b6ff;
+
+      --input-bg: #2c3238;
+      --input-border-color: #454c54;
+      --input-focus-border-color: #6c9eff;
+      --input-focus-box-shadow: 0 0 0 0.2rem rgba(108,158,255,.35);
+      --input-color: #e2e6ea;
+      --input-placeholder-color: #868e96;
+
+      --link-color: #87b6ff;
+      --link-hover-color: #a9c9ff;
+
+      --text-muted-color: #868e96;
+      --text-success-color: #34c354;
+      --text-danger-color: #ff4d4f;
+
+      --preloader-bg: linear-gradient(135deg, #1e2a3a, #101520);
+      --preloader-logo-shadow: 0 0 25px rgba(0,0,0,0.4);
+
+      --dm-toggle-bg: rgba(0, 0, 0, 0.15);
+      --dm-toggle-border: 1px solid rgba(0, 0, 0, 0.4);
+      --dm-toggle-color: var(--body-color);
+      --dm-toggle-hover-bg: rgba(0, 0, 0, 0.25);
+      --dm-toggle-hover-border: 1px solid rgba(0, 0, 0, 0.6);
+
+      --navbar-bg: #1c1f23;
+      --navbar-link-color: rgba(255,255,255,.7);
+      --navbar-link-hover-color: #fff;
+      --navbar-brand-color: #fff;
+
+      --footer-bg: #101214;
+      --footer-text-color: #adb5bd;
+      --footer-link-color: #87b6ff;
+    }
+
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--preloader-bg);
+      z-index: 99999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      overflow: hidden;
+      transition: opacity 0.7s ease-out, visibility 0.7s ease-out;
+    }
+    .preloader-logo {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      animation: pulseLogo 2s infinite ease-in-out;
+      box-shadow: var(--preloader-logo-shadow);
+      border-radius: 50%;
+      background-color: var(--preloader-logo-bg);
+      padding: 8px;
+      margin-bottom: 20px;
+    }
+    @keyframes pulseLogo {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .loading-text {
+      color: var(--preloader-text-color);
+      font-size: 1.3rem;
+      font-weight: 700;
+      animation: subtleFade 2s ease-in-out infinite alternate;
+    }
+    @keyframes subtleFade {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    #darkModeToggle {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 1031;
+      background-color: var(--dm-toggle-bg);
+      border: var(--dm-toggle-border);
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dm-toggle-color);
+      transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+      font-size: 1.2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    #darkModeToggle:hover {
+      background-color: var(--dm-toggle-hover-bg);
+      border-color: var(--dm-toggle-hover-border);
+      transform: scale(1.1);
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    body {
+      font-family: var(--font-family-base);
+      background-color: var(--body-bg);
+      color: var(--body-color);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    main {
+      flex: 1;
+      padding-top: 2.5rem;
+      padding-bottom: 2.5rem;
+    }
+    h2 {
+      text-align: center;
+      color: var(--body-color);
+      margin-bottom: 2rem;
+      font-weight: 700;
+    }
+
+    .navbar {
+        background-color: var(--navbar-bg) !important;
+        transition: background-color 0.3s ease;
+    }
+    .navbar-brand, .nav-link {
+        color: var(--navbar-link-color) !important;
+        transition: color 0.2s ease;
+    }
+    .navbar-brand {
+        font-weight: 700;
+        color: var(--navbar-brand-color) !important;
+    }
+    .navbar-brand .logo {
+      height: 40px;
+      margin-right: 10px;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+    }
+    .nav-link:hover, .nav-link:focus {
+        color: var(--navbar-link-hover-color) !important;
+    }
+    .navbar-toggler {
+        border-color: rgba(255,255,255,0.2);
+    }
+    .navbar-toggler-icon {
+        filter: invert(1) brightness(2);
+    }
+    
+    .card {
+      border-radius: var(--border-radius-card);
+      border: 1px solid var(--card-border-color);
+      background-color: var(--card-bg);
+      color: var(--body-color);
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--card-hover-shadow);
+    }
+    .card-title {
+      font-weight: 700;
+      color: var(--card-title-color);
+      margin-bottom: 1.25rem;
+    }
+    body.dark-mode .card {
+      background-color: var(--card-bg) !important;
+      border-color: var(--card-border-color) !important;
+      color: var(--body-color) !important;
+    }
+    body.dark-mode .card-title {
+      color: var(--card-title-color) !important;
+    }
+
+    .form-group label {
+      font-weight: 500;
+      color: var(--body-color);
+      margin-bottom: .5rem;
+    }
+    .form-control, .custom-select {
+      border-radius: var(--border-radius-base);
+      padding: 0.75rem 1rem;
+      background-color: var(--input-bg);
+      color: var(--input-color);
+      border: 1px solid var(--input-border-color);
+      transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out, background-color 0.3s ease, color 0.3s ease;
+    }
+    /* Specifica per gli input password per fare spazio all'icona */
+    #oldPwd, #newPwd {
+        padding-right: 3rem; /* Spazio per l'icona toggle */
+    }
+    .form-control:focus, .custom-select:focus {
+      border-color: var(--input-focus-border-color);
+      background-color: var(--input-bg);
+      color: var(--input-color);
+      box-shadow: var(--input-focus-box-shadow);
+    }
+    .form-control::placeholder {
+      color: var(--input-placeholder-color);
+      opacity: 1;
+    }
+    body.dark-mode .form-control, body.dark-mode .custom-select {
+      background-color: var(--input-bg) !important;
+      color: var(--input-color) !important;
+      border-color: var(--input-border-color) !important;
+    }
+    body.dark-mode .form-control::placeholder {
+      color: var(--input-placeholder-color) !important;
+    }
+
+    .password-requirements {
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    .requirement {
+      font-size: 0.85rem;
+      color: var(--text-danger-color);
+      margin-bottom: 0.3rem;
+      list-style: none;
+      position: relative;
+      padding-left: 1.5em;
+      transition: color 0.3s ease;
+    }
+    .requirement:before {
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      content: "\f00d";
+      color: var(--text-danger-color);
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: color 0.3s ease;
+    }
+    .requirement.valid {
+      color: var(--text-success-color);
+    }
+    .requirement.valid:before {
+      content: "\f00c";
+      color: var(--text-success-color);
+    }
+    
+    /* Stile corretto per l'icona occhio */
+    .password-toggle {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%; /* Occupa l'intera altezza del .form-group o dell'input se il .form-group non ha altezza extra */
+        width: 3rem; /* Larghezza per l'icona e area cliccabile */
+        display: flex;
+        align-items: center; /* Centra verticalmente l'icona <i> */
+        justify-content: center; /* Centra orizzontalmente l'icona <i> */
+        cursor: pointer;
+        color: var(--text-muted-color);
+        transition: color 0.2s ease;
+        z-index: 4; /* Per stare sopra il bordo dell'input */
+    }
+    .password-toggle:hover {
+        color: var(--link-hover-color);
+    }
+    .form-group.position-relative {
+      position: relative;
+    }
+
+    .btn-primary {
+      border-radius: var(--border-radius-base);
+      padding: 0.65rem 1.6rem;
+      font-weight: 600;
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      color: #fff;
+      transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.15s ease-out, box-shadow 0.2s ease;
+    }
+    .btn-primary:hover {
+      background-color: var(--primary-hover-color);
+      border-color: var(--primary-hover-color);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 85, 170, 0.25);
+    }
+    .btn-primary:focus, .btn-primary.focus {
+      box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), .5);
+    }
+    .btn-primary:active, .btn-primary.active {
+      transform: translateY(0px);
+      box-shadow: 0 2px 5px rgba(0, 85, 170, 0.2);
+    }
+    .btn-primary:disabled, .btn-primary.disabled {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        opacity: 0.65;
+        transform: translateY(0px);
+        box-shadow: none;
+    }
+    
+    .alert {
+      margin-top: 1rem;
+      border-radius: var(--border-radius-base);
+      font-size: 0.9rem;
+      padding: 0.85rem 1.25rem;
+      border-width: 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .alert-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    body.dark-mode .alert-danger {
+      background-color: #4a2327 !important;
+      color: #f8d7da !important;
+    }
+    body.dark-mode .alert-success {
+      background-color: #1e4e24 !important;
+      color: #d4edda !important;
+    }
+
+    #notifWrapper {
+      display: flex;
+      align-items: center;
+    }
+    #notifBell {
+      position: relative;
+      background-color: transparent;
+      border: none;
+      color: var(--navbar-link-color);
+      font-size: 1.3rem;
+      padding: 0.5rem;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    #notifBell:hover {
+      color: var(--navbar-link-hover-color);
+    }
+    #notifCount {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      padding: 0.2em 0.55em;
+      border-radius: 50%;
+      background-color: var(--text-danger-color);
+      color: white;
+      font-size: 0.6rem;
+      font-weight: bold;
+      line-height: 1;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+    .dropdown-menu {
+      max-height: 350px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      border-radius: var(--border-radius-base);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      border: 1px solid var(--card-border-color);
+      background-color: var(--card-bg);
+    }
+    .dropdown-header {
+      font-weight: 700;
+      color: var(--card-title-color);
+      padding: .75rem 1rem;
+    }
+    .dropdown-item {
+      padding: 0.7rem 1.2rem;
+      white-space: normal;
+      color: var(--body-color);
+      transition: background-color 0.15s ease;
+    }
+    .dropdown-item:hover, .dropdown-item:focus {
+        background-color: rgba(var(--primary-color-rgb), 0.1);
+        color: var(--link-hover-color);
+    }
+    .dropdown-item.text-muted {
+        color: var(--text-muted-color) !important;
+    }
+    body.dark-mode .dropdown-menu {
+        background-color: var(--card-bg);
+        border-color: var(--card-border-color);
+    }
+    body.dark-mode .dropdown-header {
+        color: var(--card-title-color);
+    }
+    body.dark-mode .dropdown-item {
+        color: var(--body-color);
+    }
+    body.dark-mode .dropdown-item:hover, body.dark-mode .dropdown-item:focus {
+        background-color: rgba(var(--dm-link-hover-color-rgb), 0.15);
+        color: var(--link-hover-color);
+    }
+    body.dark-mode .dropdown-item.text-muted {
+        color: var(--text-muted-color) !important;
+    }
+
+    footer {
+      background-color: var(--footer-bg);
+      padding: 2rem 1rem;
+      color: var(--footer-text-color);
+      transition: background-color 0.3s ease;
+    }
+    footer .text-white a, footer a.text-white {
+      color: var(--footer-link-color) !important;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+    footer .text-white a:hover, footer a.text-white:hover {
+      color: #fff !important;
+      text-decoration: underline;
+    }
+    .social-icons a {
+      font-size: 1.5rem;
+      transition: transform 0.2s ease-out, color 0.2s ease;
+    }
+    .social-icons a:hover {
+        transform: scale(1.2);
+        color: #fff !important;
+    }
+    footer p {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    footer small {
+      display: block;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 767.98px) {
+      .navbar-brand { font-size: 1.1rem; }
+      .navbar-nav { text-align: center; margin-top: 10px; }
+      .nav-item { margin-bottom: 8px; }
+      main { padding: 1.5rem 0.8rem; }
+      h2 { font-size: 1.6rem; }
+      .card { margin-bottom: 1.5rem !important; }
+      .form-group label { font-size: 0.9rem; }
+      .form-control, .custom-select { padding: 0.65rem 0.9rem; font-size: 0.9rem; }
+      #oldPwd, #newPwd { padding-right: 2.8rem; } /* Adatta padding per mobile */
+      .password-toggle { width: 2.8rem; } /* Adatta larghezza toggle per mobile */
+      .btn-primary { width: 100%; padding: 0.75rem; font-size: 0.95rem; }
+      #darkModeToggle { top: 10px; right: 10px; width: 40px; height: 40px; font-size: 1.1rem; }
+      .card-title { font-size: 1.15rem; }
+    }
+
+    @media (max-width: 575.98px) {
+      h2 { font-size: 1.4rem; }
+      footer { padding: 1.5rem 1rem; }
+      footer p, footer small, footer .text-white a { font-size: 0.8rem; }
+      .social-icons a { font-size: 1.3rem; }
+    }
+  </style>
+
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
-    const SUPABASE_URL='https://nptawehzfamaghytkmbk.supabase.co',
-          SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…';
+    const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
   </script>
   <script src="assets/js/auth.js"></script>
-  <style>
-    body { display:flex; flex-direction:column; min-height:100vh; }
-    main { flex:1; }
-    .requirement { font-size:0.9rem; color:red; }
-    .requirement.valid { color:green; }
-  </style>
 </head>
-<body>
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
-  <div class="container">
-    <a class="navbar-brand" href="index.html">
-      <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
-      aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+<body class="d-flex flex-column min-vh-100">
 
-    <div class="collapse navbar-collapse" id="navbarNavHome">
-      <!-- 1) i link di navigazione -->
-      <ul class="navbar-nav ml-auto" id="nav-links">
-        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
-        <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
-        <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
-        <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
-      </ul>
+<div id="preloader">
+  <img src="assets/img/logo.png" alt="ClayRon Logo" class="preloader-logo">
+  <p class="loading-text">Caricamento impostazioni...</p>
+</div>
 
-      <!-- 2) area autenticazione -->
-      <div id="auth-area">
-        <!-- qui auth.js inietta "Accedi/Registrati" oppure il dropdown utente -->
-      </div>
+<button id="darkModeToggle" class="btn btn-outline-light" title="Modalità Scura">
+  <i class="fas fa-moon"></i>
+</button>
 
-      <!-- 3) campanella notifiche, ORA DOPO auth-area -->
-      <div class="nav-item dropdown ml-3">
-        <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown">
-          <i class="fas fa-bell"></i>
-          <span id="notifCount" class="badge badge-danger position-absolute"
-                style="top:0;right:0;font-size:.7rem;display:none">0</span>
-        </button>
-        <div class="dropdown-menu dropdown-menu-right" style="min-width:300px">
-          <h6 class="dropdown-header">Notifiche</h6>
-          <div id="notifList" style="max-height:300px;overflow-y:auto">
-            <div class="dropdown-item text-muted">Nessuna Notifica</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
+        aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNavHome">
+        <ul class="navbar-nav ml-auto" id="nav-links">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
+          <li class="nav-item active"><a class="nav-link" href="contact.html">Contatti <span class="sr-only">(current)</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+        </ul>
+
+        <div id="auth-area" class="ml-3"></div>
+
+        <div id="notifWrapper" class="nav-item dropdown ml-2">
+          <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown" title="Notifiche">
+            <i class="fas fa-bell"></i>
+            <span id="notifCount" class="badge badge-danger position-absolute" style="top:0; right:0; font-size:.7rem; display:none">0</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notifBell" style="min-width:280px">
+            <h6 class="dropdown-header">Notifiche</h6>
+            <div id="notifList" style="max-height:300px; overflow-y:auto">
+              <div class="dropdown-item text-muted">Nessuna Notifica</div>
+            </div>
           </div>
         </div>
+        <button id="darkModeToggle" class="btn btn-outline-light ml-2" title="Modalità Scura">
+          <i class="fas fa-moon"></i>
+        </button>
       </div>
+    </div>
+  </nav>
 
+<main class="container py-5 animate__animated animate__fadeIn" data-aos="fade-up" data-aos-duration="1000">
+  <h2 class="mb-4">Impostazioni</h2>
+
+  <div class="card shadow-sm mb-4" data-aos="fade-up" data-aos-delay="100">
+    <div class="card-body">
+      <h5 class="card-title"><i class="fas fa-user-circle mr-2"></i> Il Mio Profilo</h5>
+      <div id="userProfileInfo">
+        <p><strong>Email:</strong> <span id="userEmail"></span></p>
+      </div>
     </div>
   </div>
-</nav>
 
-  <!-- Main content -->
-  <main class="container py-5">
-    <h2 class="mb-4" data-i18n="settings.title">Impostazioni</h2>
-
-    <!-- Selettore lingua
-    <div class="form-group row">
-      <label for="langSelect" class="col-sm-3 col-form-label" data-i18n="settings.language">Lingua</label>
-      <div class="col-sm-4">
-        <select id="langSelect" class="form-control">
-          <option value="it">Italiano</option>
-          <option value="en">English</option>
-        </select>
-      </div>
-    </div> -->
-
-    <!-- Cambio password -->
-    <div class="card shadow-sm mb-4">
-      <div class="card-body">
-        <h5 class="card-title" data-i18n="settings.changePwd">Cambia Password</h5>
-        <form id="pwdForm">
-          <div class="form-group">
-            <label for="oldPwd" data-i18n="settings.oldPwd">Password Attuale</label>
-            <input type="password" id="oldPwd" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="newPwd" data-i18n="settings.newPwd">Nuova Password</label>
-            <input type="password" id="newPwd" class="form-control" required>
-          </div>
-          <ul class="pl-3">
-            <li id="reqLength" class="requirement" data-i18n="settings.reqLength">Almeno 5 caratteri</li>
-            <li id="reqUpper" class="requirement" data-i18n="settings.reqUpper">Almeno 1 maiuscola</li>
-            <li id="reqSpecial" class="requirement" data-i18n="settings.reqSpecial">Almeno 1 simbolo</li>
-          </ul>
-          <button type="submit" class="btn btn-primary mt-2" data-i18n="settings.btnConfirm">Conferma</button>
-          <div id="pwdMsg" class="mt-3"></div>
-        </form>
-      </div>
+  <div class="card shadow-sm mb-4" data-aos="fade-up" data-aos-delay="400">
+    <div class="card-body">
+      <h5 class="card-title"><i class="fas fa-lock mr-2"></i> Cambia Password</h5>
+      <form id="pwdForm">
+        <div class="form-group position-relative">
+          <label for="oldPwd">Password Attuale</label>
+          <input type="password" id="oldPwd" class="form-control" required autocomplete="current-password">
+          <span class="password-toggle" data-target="oldPwd"><i></i></span>
+        </div>
+        <div class="form-group position-relative">
+          <label for="newPwd">Nuova Password</label>
+          <input type="password" id="newPwd" class="form-control" required autocomplete="new-password">
+          <span class="password-toggle" data-target="newPwd"><i></i></span>
+        </div>
+        <ul class="pl-0 list-unstyled password-requirements">
+          <li id="reqLength" class="requirement">Almeno 5 caratteri</li>
+          <li id="reqUpper" class="requirement">Almeno 1 maiuscola</li>
+          <li id="reqSpecial" class="requirement">Almeno 1 simbolo</li>
+        </ul>
+        <button type="submit" class="btn btn-primary mt-3">
+            <i class="fas fa-save mr-2"></i><span>Conferma</span>
+        </button>
+        <div id="pwdMsg" class="mt-3"></div>
+      </form>
     </div>
-  </main>
+  </div>
+</main>
 
-  <!-- Footer -->
-  <footer class="py-4 text-white text-center">
-    <div class="container">
-      <div class="social-icons mb-3">
-        <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+<footer class="py-4 text-white text-center">
+      <div class="container">
+        <div class="social-icons mb-3">
+          <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+        </div>
+        <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
+        <small>
+          <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
+          <a href="cookie.html" class="text-white">Cookie Policy</a>
+        </small>
       </div>
-      <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
-      <small>
-        <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
-        <a href="cookie.html" class="text-white">Cookie Policy</a>
-      </small>
-    </div>
-  </footer>
+    </footer>
 
-  <!-- JS -->
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // map di traduzioni
-    const translations = {
-      it: {
-        title: "Impostazioni – ClayRon",
-        "nav.home": "Home", "nav.materials":"Materiali", "nav.about":"Chi Siamo", "nav.contact":"Contatti",
-        "nav.terms":"Termini & Condizioni","nav.cookies":"Cookie Policy",
-        "settings.title":"Impostazioni","settings.language":"Lingua",
-        "settings.changePwd":"Cambia Password","settings.oldPwd":"Password Attuale",
-        "settings.newPwd":"Nuova Password","settings.reqLength":"Almeno 5 caratteri",
-        "settings.reqUpper":"Almeno 1 maiuscola","settings.reqSpecial":"Almeno 1 simbolo",
-        "settings.btnConfirm":"Conferma"
-      },
-      en: {
-        title: "Settings – ClayRon",
-        "nav.home":"Home","nav.materials":"Materials","nav.about":"About","nav.contact":"Contact",
-        "nav.terms":"Terms & Conditions","nav.cookies":"Cookie Policy",
-        "settings.title":"Settings","settings.language":"Language",
-        "settings.changePwd":"Change Password","settings.oldPwd":"Current Password",
-        "settings.newPwd":"New Password","settings.reqLength":"At least 5 characters",
-        "settings.reqUpper":"At least 1 uppercase","settings.reqSpecial":"At least 1 symbol",
-        "settings.btnConfirm":"Confirm"
-      }
-    };
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
 
-    // applica traduzioni
-    function applyLang(lang) {
-      document.documentElement.lang = lang;
-      localStorage.setItem('lang', lang);
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (translations[lang][key]) el.textContent = translations[lang][key];
-      });
-      document.title = translations[lang].title;
+  $(async () => {
+    AOS.init({
+      duration: 800,
+      once: true
+    });
+
+    const preloader = document.getElementById('preloader');
+    setTimeout(() => {
+        preloader.style.opacity = '0';
+        preloader.style.visibility = 'hidden';
+        $(preloader).on('transitionend', () => preloader.remove());
+        document.body.style.overflow = '';
+    }, 500);
+
+    const darkModeButton = document.getElementById('darkModeToggle');
+    function updateDarkModeButtonTitle() {
+        if (document.body.classList.contains('dark-mode')) {
+            darkModeButton.title = 'Modalità Chiara';
+        } else {
+            darkModeButton.title = 'Modalità Scura';
+        }
     }
 
-    // al caricamento
-    $(async () => {
-      // auth + navbar
-      await updateNavbar();
-      const { data:{ session } } = await supabase.auth.getSession();
-      if (!session) return window.location.href='login.html';
-
-      // lingua
-      const lang = localStorage.getItem('lang') || 'it';
-      $('#langSelect').val(lang);
-      applyLang(lang);
-      $('#langSelect').change(()=> applyLang($('#langSelect').val()));
-
-      // validazione password
-      $('#newPwd').on('input', function(){
-        const v = this.value;
-        $('#reqLength').toggleClass('valid', v.length>=5);
-        $('#reqUpper').toggleClass('valid', /[A-Z]/.test(v));
-        $('#reqSpecial').toggleClass('valid', /[^A-Za-z0-9]/.test(v));
-      });
-
-      // submit cambio pwd
-      $('#pwdForm').submit(async e=> {
-        e.preventDefault();
-        const oldPwd = $('#oldPwd').val(), newPwd = $('#newPwd').val();
-        // verifica vecchia password
-        const { data, error: signErr } = await supabase.auth.signInWithPassword({
-          email: session.user.email,
-          password: oldPwd
-        });
-        if (signErr) {
-          $('#pwdMsg').html('<div class="alert alert-danger">Password attuale errata.</div>');
-          return;
-        }
-        // aggiorna nuova
-        const { error:updateErr } = await supabase.auth.updateUser({ password: newPwd });
-        if (updateErr) {
-          $('#pwdMsg').html(`<div class="alert alert-danger">${updateErr.message}</div>`);
-        } else {
-          $('#pwdMsg').html('<div class="alert alert-success">Password aggiornata!</div>');
-          $('#oldPwd,#newPwd').val('');
-        }
-      });
+    darkModeButton.addEventListener('click', function() {
+      document.body.classList.toggle('dark-mode');
+      if (document.body.classList.contains('dark-mode')) {
+        localStorage.setItem('darkMode', 'enabled');
+        this.innerHTML = '<i class="fas fa-sun"></i>';
+      } else {
+        localStorage.setItem('darkMode', 'disabled');
+        this.innerHTML = '<i class="fas fa-moon"></i>';
+      }
+      updateDarkModeButtonTitle();
     });
-  </script>
+
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.body.classList.add('dark-mode');
+      darkModeButton.innerHTML = '<i class="fas fa-sun"></i>';
+    } else {
+        darkModeButton.innerHTML = '<i class="fas fa-moon"></i>';
+    }
+    updateDarkModeButtonTitle(); // Imposta il titolo iniziale
+
+    await updateNavbar(); 
+    const { data:{ session } } = await supabase.auth.getSession();
+    if (!session) {
+        window.location.href='login.html';
+        return;
+    }
+
+    if (session.user && session.user.email) {
+        $('#userEmail').text(session.user.email);
+    }
+
+    $('#newPwd').on('input', function(){
+      const v = this.value;
+      $('#reqLength').toggleClass('valid', v.length>=5);
+      $('#reqUpper').toggleClass('valid', /[A-Z]/.test(v));
+      $('#reqSpecial').toggleClass('valid', /[^A-Za-z0-9]/.test(v));
+    });
+
+    $('#pwdForm').submit(async e=> {
+      e.preventDefault();
+      const oldPwd = $('#oldPwd').val();
+      const newPwd = $('#newPwd').val();
+      const pwdMsgEl = $('#pwdMsg');
+      const confirmButton = $(e.target).find('button[type="submit"]');
+      const originalButtonContent = confirmButton.html();
+
+      pwdMsgEl.empty();
+
+      const isLengthValid = newPwd.length >= 5;
+      const isUpperValid = /[A-Z]/.test(newPwd);
+      const isSpecialValid = /[^A-Za-z0-9]/.test(newPwd);
+
+      if (!isLengthValid || !isUpperValid || !isSpecialValid) {
+        pwdMsgEl.html(`<div class="alert alert-danger">La nuova password non soddisfa tutti i requisiti.</div>`);
+        return;
+      }
+
+      confirmButton.prop('disabled', true).html(
+        `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Salvataggio...`
+      );
+
+      const { error: signErr } = await supabase.auth.signInWithPassword({
+        email: session.user.email,
+        password: oldPwd
+      });
+
+      if (signErr) {
+        console.error("Errore di re-autenticazione:", signErr);
+        pwdMsgEl.html(`<div class="alert alert-danger">Password attuale errata.</div>`);
+        confirmButton.prop('disabled', false).html(originalButtonContent);
+        return;
+      }
+
+      const { error: updateErr } = await supabase.auth.updateUser({ password: newPwd });
+
+      if (updateErr) {
+        console.error("Errore aggiornamento password:", updateErr);
+        pwdMsgEl.html(`<div class="alert alert-danger">Errore durante l'aggiornamento della password: ${updateErr.message}.</div>`);
+      } else {
+        pwdMsgEl.html(`<div class="alert alert-success">Password aggiornata con successo!</div>`);
+        $('#oldPwd').val('');
+        $('#newPwd').val('');
+        $('#reqLength, #reqUpper, #reqSpecial').removeClass('valid');
+      }
+      confirmButton.prop('disabled', false).html(originalButtonContent);
+    });
+
+    const bellCountEl = document.getElementById('notifCount');
+    const notifListEl = document.getElementById('notifList');
+    let totalNotifs   = 0;
+
+    function addNotification(htmlContent, isNew = true) {
+        if (isNew && totalNotifs === 0 && notifListEl.querySelector('.text-muted')) {
+             notifListEl.innerHTML = '';
+        }
+        const div = document.createElement('div');
+        div.className = 'dropdown-item';
+        div.innerHTML = htmlContent;
+        notifListEl.prepend(div);
+
+        if (isNew) {
+            totalNotifs++;
+            bellCountEl.innerText = totalNotifs > 9 ? '9+' : totalNotifs;
+            bellCountEl.style.display = 'inline-block';
+        }
+    }
+    
+    const dom = new Date();
+    dom.setDate(dom.getDate() + 1);
+    const isoD = dom.toISOString().slice(0,10);
+    let { data: evs, error: eventsError } = await supabase
+      .from('events')
+      .select('title')
+      .eq('user_id', session.user.id)
+      .eq('start', isoD);
+
+    if (eventsError) {
+        console.error("Errore nel recupero degli eventi:", eventsError);
+    } else {
+        if (evs && evs.length > 0) {
+            if (totalNotifs === 0 && notifListEl.querySelector('.text-muted')) {
+                notifListEl.innerHTML = '';
+            }
+            evs.forEach(e =>
+                addNotification(`📅 Domani hai: <strong>${e.title}</strong>`)
+            );
+        } else if (totalNotifs === 0) {
+            notifListEl.innerHTML = `<div class="dropdown-item text-muted">Nessuna Notifica</div>`;
+        }
+    }
+
+    supabase
+      .channel('notif-channel')
+      .on('postgres_changes',{
+        event:'INSERT', schema:'public', table:'messages',
+        filter:`room=eq.generale`
+      }, ({ new: m }) => {
+        if (m.user_id !== session.user.id) {
+            addNotification(`💬 <strong>${m.user_name}</strong> ha scritto: "${m.content.slice(0,50)}${m.content.length > 50 ? '...' : ''}"`);
+        }
+      })
+      .subscribe();
+
+     document.getElementById('notifBell').addEventListener('click', () => {
+        if (!$('#notifWrapper').hasClass('show')) { // Se il dropdown sta per aprirsi
+            if (totalNotifs > 0) {
+                 setTimeout(() => {
+                    totalNotifs = 0;
+                    bellCountEl.innerText = '0';
+                    bellCountEl.style.display = 'none';
+                 }, 1500);
+            }
+        }
+    });
+  });
+  <div class="dropdown">
+  <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    ${session.user.email}
+  </button>
+  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+    <h6 class="dropdown-header">Benvenuto, ${session.user.email}</h6>
+    <a class="dropdown-item" href="area.html"><i class="fas fa-user-circle mr-2"></i> Area Personale</a>
+    <a class="dropdown-item" href="settings.html"><i class="fas fa-cog mr-2"></i> Impostazioni</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
+  </div>
+</div>
+</script>
 </body>
 </html>

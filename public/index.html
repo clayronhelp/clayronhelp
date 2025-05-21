@@ -1,519 +1,760 @@
 <!DOCTYPE html>
 <html lang="it">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home - Clayron</title>
+    <title>Home - ClayRon</title>
     <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
     <link rel="stylesheet" href="assets/css/style.css">
 
     <style>
-      /* ===== Sponsor Marquee Seamless ===== */
-      #sponsors { background: #f8f9fa; padding: 3rem 0; }
-      #sponsors .section-title {
-        font-size: 2rem; font-weight: 700; margin-bottom: 2rem;
-      }
-      .sponsor-track {
-        position: relative;
-        overflow: hidden;
-      }
-      .sponsor-track-inner {
-        display: flex;
-        flex-wrap: nowrap;
-      }
-      @keyframes infinite-scroll {
-        from { transform: translateX(0); }
-        to   { transform: translateX(-50%); }
-      }
+        /* Dark Mode Styles */
+        body { transition: background-color 0.3s ease, color 0.3s ease; }
+        body.dark-mode {
+            background-color: #212529; /* Scuro */
+            color: #e2e6ea; /* Testo chiaro */
+        }
+        .dark-mode .navbar {
+            background-color: #343a40 !important; /* Navbar scura */
+        }
+        .dark-mode .navbar-brand, .dark-mode .nav-link, .dark-mode .dropdown-header {
+            color: #e2e6ea !important;
+        }
+        .dark-mode .hero .overlay {
+            background-color: rgba(0, 0, 0, 0.6); /* Overlay più scuro */
+        }
+        .dark-mode .features, .dark-mode #sponsors, .dark-mode .pricing {
+            background-color: #2c3034 !important; /* Sfondo scuro per sezioni */
+            color: #e2e6ea;
+        }
+        .dark-mode .feature-box, .dark-mode .pricing .card {
+            background-color: #343a40 !important; /* Card scure */
+            border-color: #495057 !important; /* Bordi card scuri */
+            color: #e2e6ea;
+            box-shadow: 0 4px 15px rgba(255,255,255,0.05); /* Ombra leggera */
+        }
+        .dark-mode .feature-box i {
+            color: #007bff; /* Colore primario per icone */
+        }
+        .dark-mode .list-group-item {
+            background-color: #343a40 !important;
+            border-color: rgba(255,255,255,0.1);
+            color: #e2e6ea;
+        }
+        .dark-mode .sponsor-item {
+            background: #343a40;
+            box-shadow: 0 4px 15px rgba(255,255,255,0.05);
+        }
+        .dark-mode .sponsor-caption {
+            color: #e2e6ea;
+        }
+        .dark-mode footer {
+            background-color: #1a1d20 !important;
+        }
+        /* Ensure text is readable */
+        .dark-mode .card-header {
+            color: #fff !important; /* Ensure headers remain white on dark background */
+        }
+        .dark-mode #hero-cta {
+            background-color: #007bff !important;
+            border-color: #007bff !important;
+        }
+        .dark-mode .btn-outline-light {
+            color: #e2e6ea !important;
+            border-color: #e2e6ea !important;
+        }
+        .dark-mode .btn-outline-light:hover {
+            background-color: #e2e6ea !important;
+            color: #212529 !important;
+        }
+        .dark-mode .stats .stat-item h3 {
+            color: #17a2b8; /* Colore primario più brillante in dark mode */
+        }
+        .dark-mode .stats .stat-item p {
+            color: #adb5bd;
+        }
+        .dark-mode .popular-badge {
+            background-color: #17a2b8; /* Colore più adatto per dark mode */
+            color: #fff;
+        }
+        .dark-mode .form-control {
+            background-color: #495057;
+            color: #e2e6ea;
+            border-color: #6c757d;
+        }
+        .dark-mode .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+        .dark-mode .btn-outline-light {
+            color: #e2e6ea !important;
+            border-color: #e2e6ea !important;
+        }
+        .dark-mode .btn-outline-light:hover {
+            background-color: #e2e6ea !important;
+            color: #212529 !important;
+        }
 
-      /* Quadrate, no hover-scale, caption */
-      .sponsor-item {
-        flex: 0 0 180px;
-        height: 180px;
-        margin: 0 1.5rem;
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
-      .sponsor-item img {
-        width: 100%;
-        height: 70%;
-        object-fit: contain;
-      }
-      .sponsor-caption {
-        margin: 0.5rem 0 0;
-        font-size: 0.85rem;
-        color: #333;
-      }
+        /* Hero Section - Video Background */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            min-height: 80vh; /* Aumenta l'altezza per far risaltare il video */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .hero video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            background-size: cover;
+        }
+        .hero .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4); /* Overlay scuro per leggibilità testo */
+            z-index: 0;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Ombra per leggibilità */
+        }
+        .scroll-down {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+            z-index: 2;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Stats Section */
+        .stats .stat-item {
+            margin-bottom: 2rem;
+        }
+        .stats .stat-item i {
+            color: var(--primary); /* Usa la variabile Bootstrap per il colore primario */
+        }
+        .stats .stat-item h3 {
+            font-size: 3.5rem; /* Aumenta la dimensione del font per i numeri */
+            color: #007bff; /* Colore primario per i numeri */
+        }
+        .stats .stat-item p {
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+
+        /* Sponsor Marquee Seamless */
+        #sponsors {
+            background: #f8f9fa;
+            padding: 3rem 0;
+            position: relative;
+            overflow: hidden; /* Nasconde ciò che esce dai bordi */
+        }
+        #sponsors .section-title {
+            font-size: 2rem; font-weight: 700; margin-bottom: 2rem;
+        }
+        .sponsor-track {
+            white-space: nowrap; /* Impedisce il wrap delle immagini */
+            animation: marquee 30s linear infinite; /* Velocità e loop */
+            display: inline-block; /* Consente l'animazione di scorrimento */
+        }
+
+        .sponsor-item {
+            display: inline-flex; /* Allinea gli elementi in linea */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 180px; /* Larghezza fissa per ogni sponsor */
+            height: 180px;
+            margin: 0 1.5rem;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            vertical-align: middle; /* Allinea verticalmente nel marquee */
+        }
+        .sponsor-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .sponsor-item img {
+            width: 100%;
+            height: 70%;
+            object-fit: contain;
+            padding: 10px; /* Aggiungi padding per non far toccare i bordi */
+        }
+        .sponsor-caption {
+            margin: 0.5rem 0 0;
+            font-size: 0.85rem;
+            color: #333;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); } /* Scorre del 50% per un loop continuo con contenuto duplicato */
+        }
+
+        /* Modern card hover effect */
+        .pricing .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative; /* Per il badge "Più Popolare" */
+        }
+        .pricing .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        /* Button always at bottom */
+        .pricing .card.d-flex { display: flex; flex-direction: column; }
+        .pricing .card-body { flex-grow: 1; }
+        .pricing .card-footer { background: transparent; border-top: none; padding-top: 0; margin-top: auto; }
+        .btn-current { pointer-events: none; opacity: 0.7; }
+
+        /* Badge "Più Popolare" */
+        .popular-badge {
+            position: absolute;
+            top: -15px; /* Sposta il badge leggermente sopra la card */
+            right: 15px;
+            background-color: #ffc107; /* Colore giallo di warning */
+            color: #343a40;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            animation: pulse 1.5s infinite; /* Animazione leggera */
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
     </style>
 
     <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
     <script>
-      const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
-      const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
-      window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+        const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
+        const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+        window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
     </script>
     <script src="assets/js/auth.js"></script>
-    <script src="https://www.paypal.com/sdk/js?client-id=Ad3Up0PLcvijOaaaI5_tLI49rILy1cPgJpB4k6XuDjiUOoi0QSv6ZK6nqEZihQ-xo6euC-1MhWnja_qt&currency=EUR"></script>
-  </head>
+    <script src="https://www.paypal.com/sdk/js?client-id=AQRZuIiWMhmluXy4yrwyt0BN2jXErr-Yfzm0tcl2q8K9Ls0hHcXUart7VRiC--rUvmJg4VdZah8vWNmB&vault=true&intent=subscription&currency=EUR"></script>
+</head>
+<body>
 
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-      <div class="container">
-        <a class="navbar-brand" href="index.html">
-          <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
-          aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavHome">
-          <ul class="navbar-nav ml-auto" id="nav-links">
-            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
-            <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
-            <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
-            <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
-          </ul>
-          <div id="auth-area" class="ml-3"></div>
-          <div id="notifWrapper" class="nav-item dropdown ml-2">
-            <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown">
-              <i class="fas fa-bell"></i>
-              <span id="notifCount" class="badge badge-danger position-absolute" style="top:0; right:0; font-size:.7rem; display:none">0</span>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notifBell" style="min-width:280px">
-              <h6 class="dropdown-header">Notifiche</h6>
-              <div id="notifList" style="max-height:300px; overflow-y:auto">
-                <div class="dropdown-item text-muted">Nessuna Notifica</div>
-              </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
+        aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNavHome">
+        <ul class="navbar-nav ml-auto" id="nav-links">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
+          <li class="nav-item active"><a class="nav-link" href="contact.html">Contatti <span class="sr-only">(current)</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+        </ul>
+
+        <div id="auth-area" class="ml-3"></div>
+
+        <div id="notifWrapper" class="nav-item dropdown ml-2">
+          <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown" title="Notifiche">
+            <i class="fas fa-bell"></i>
+            <span id="notifCount" class="badge badge-danger position-absolute" style="top:0; right:0; font-size:.7rem; display:none">0</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notifBell" style="min-width:280px">
+            <h6 class="dropdown-header">Notifiche</h6>
+            <div id="notifList" style="max-height:300px; overflow-y:auto">
+              <div class="dropdown-item text-muted">Nessuna Notifica</div>
             </div>
           </div>
         </div>
+        <button id="darkModeToggle" class="btn btn-outline-light ml-2" title="Modalità Scura">
+          <i class="fas fa-moon"></i>
+        </button>
       </div>
-    </nav>
+    </div>
+</nav>
 
     <section class="hero d-flex align-items-center">
-      <div class="overlay"></div>
-      <div class="container text-center hero-content">
-        <h1 class="display-4 animate__animated animate__fadeInDown">"Il tuo percorso, il nostro supporto."</h1>
-        <p class="lead animate__animated animate__fadeInUp animate__delay-1s">Supporto personalizzato per studenti con DSA e PDP.</p>
-        <a href="login.html"
-           class="btn btn-primary btn-lg mt-3 animate__animated animate__fadeInUp animate__delay-2s"
-           id="hero-cta">Accedi o Registrati</a>
-        <script>
-          document.addEventListener('DOMContentLoaded', async () => {
-            const { data:{ session } } = await supabase.auth.getSession();
-            const cta = document.getElementById('hero-cta');
-            if (session) {
-              cta.textContent = 'Area Personale';
-              cta.setAttribute('href', 'area.html');
-            }
-          });
-        </script>
-      </div>
+        <video autoplay muted loop playsinline>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-students-walking-in-a-university-campus-2983-large.mp4" type="video/mp4">
+            Il tuo browser non supporta il tag video.
+        </video>
+        <div class="overlay"></div>
+        <div class="container text-center hero-content" data-aos="fade-up" data-aos-duration="1000">
+            <h1 class="display-4 animate__animated animate__fadeInDown">"Il tuo percorso, il nostro supporto."</h1>
+            <p class="lead animate__animated animate__fadeInUp animate__delay-1s">Supporto personalizzato per studenti con DSA e PDP, per un futuro più luminoso.</p>
+            <a href="login.html"
+               class="btn btn-primary btn-lg mt-3 animate__animated animate__fadeInUp animate__delay-2s"
+               id="hero-cta">Accedi o Registrati</a>
+            <script>
+                // Questo script viene eseguito dopo il caricamento del DOM
+                document.addEventListener('DOMContentLoaded', async () => {
+                    const { data:{ session } } = await supabase.auth.getSession();
+                    const cta = document.getElementById('hero-cta');
+                    if (session) {
+                        cta.textContent = 'Area Personale';
+                        cta.setAttribute('href', 'area.html');
+                    }
+                });
+            </script>
+        </div>
+        <a href="#features-section" class="scroll-down" aria-label="Scorri per scoprire di più">
+            <i class="fas fa-chevron-down"></i>
+        </a>
     </section>
 
-    <section class="features py-5">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-4">
-            <div class="feature-box text-center animate__animated animate__fadeInUp">
-              <i class="fas fa-book fa-3x"></i>
-              <h3 class="mt-3">Materiali di Qualità</h3>
-              <p>Contenuti preparati da docenti e tutor per supportare il tuo studio.</p>
+    <section id="features-section" class="features py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-box text-center">
+                        <i class="fas fa-book fa-3x"></i>
+                        <h3 class="mt-3">Materiali di Qualità</h3>
+                        <p>Contenuti preparati da docenti e tutor per supportare il tuo studio.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-box text-center">
+                        <i class="fas fa-calendar-alt fa-3x"></i>
+                        <h3 class="mt-3">Calendario Interattivo</h3>
+                        <p>Pianifica verifiche, interrogazioni e appuntamenti in modo intelligente.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-box text-center">
+                        <i class="fas fa-users fa-3x"></i>
+                        <h3 class="mt-3">Community</h3>
+                        <p>Interagisci con studenti simili e cresci insieme nella conoscenza.</p>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="feature-box text-center animate__animated animate__fadeInUp animate__delay-1s">
-              <i class="fas fa-calendar-alt fa-3x"></i>
-              <h3 class="mt-3">Calendario Interattivo</h3>
-              <p>Pianifica verifiche, interrogazioni e appuntamenti in modo intelligente.</p>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="feature-box text-center animate__animated animate__fadeInUp animate__delay-2s">
-              <i class="fas fa-users fa-3x"></i>
-              <h3 class="mt-3">Community</h3>
-              <p>Interagisci con studenti simili e cresci insieme nella conoscenza.</p>
-            </div>
-          </div>
         </div>
-      </div>
     </section>
 
-<style>
-  /* Modern card hover effect */
-  .pricing .card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-  }
-  .pricing .card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-  }
-  /* Button always at bottom */
-  .pricing .card.d-flex { display: flex; flex-direction: column; }
-  .pricing .card-body { flex-grow: 1; }
-  .pricing .card-footer { background: transparent; border-top: none; padding-top: 0; margin-top: auto; }
-  .btn-current { pointer-events: none; opacity: 0.7; }
-</style>
-
-<section id="pricing" class="pricing py-5">
-  <div class="container">
-    <h2 class="text-center mb-4 animate__animated animate__fadeInUp">Scegli il tuo piano</h2>
-    <div class="row">
-      <div class="col-md-3 mb-4 animate__animated animate__fadeInUp animate__delay-1s">
-        <div class="card h-100 border-primary d-flex">
-          <div class="card-header text-center bg-primary text-white">
-            <h3>Free</h3>
-            <p class="h4 mb-0">Gratuito</p>
-          </div>
-          <div class="card-body">
-            <ul class="list-group list-group-flush mb-3">
-              <li class="list-group-item">Accesso immediato</li>
-              <li class="list-group-item">Materiali selezionati</li>
-              <li class="list-group-item">Forum community</li>
-              <li class="list-group-item">Minigiochi educativi</li>
-            </ul>
-          </div>
-          <div class="card-footer text-center">
-            <a href="#" class="btn btn-outline-primary btn-block btn-action" data-plan="free" data-price="0">Registrati</a>
-          </div>
+    <section class="stats py-5 bg-light">
+        <div class="container text-center">
+            <h2 class="mb-5" data-aos="fade-up">I nostri numeri parlano chiaro</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="stat-item" data-aos="zoom-in" data-aos-delay="100">
+                        <i class="fas fa-user-graduate fa-4x mb-3"></i>
+                        <h3 class="display-4 font-weight-bold" data-target="1500">0</h3>
+                        <p class="lead">Studenti Aiutati</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-item" data-aos="zoom-in" data-aos-delay="200">
+                        <i class="fas fa-file-alt fa-4x mb-3"></i>
+                        <h3 class="display-4 font-weight-bold" data-target="300">0</h3>
+                        <p class="lead">Materiali Disponibili</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-item" data-aos="zoom-in" data-aos-delay="300">
+                        <i class="fas fa-smile fa-4x mb-3"></i>
+                        <h3 class="display-4 font-weight-bold" data-target="98">0%</h3>
+                        <p class="lead">Soddisfazione Utenti</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="col-md-3 mb-4 animate__animated animate__fadeInUp animate__delay-2s">
-        <div class="card h-100 border-success d-flex">
-          <div class="card-header text-center bg-success text-white">
-            <h3>Basic</h3>
-            <p class="h4 mb-0">4,99 €/mese</p>
-          </div>
-          <div class="card-body">
-            <ul class="list-group list-group-flush mb-3">
-              <li class="list-group-item">Tutto da Free</li>
-              <li class="list-group-item">Import/export calendario</li>
-              <li class="list-group-item">Materiale extra e quiz</li>
-              <li class="list-group-item">Consulenze personalizzate</li>
-            </ul>
-          </div>
-          <div class="card-footer text-center">
-            <div id="paypal-button-container-basic"></div>
-            <a href="#" class="btn btn-success btn-block btn-action" data-plan="basic" data-price="4.99" style="display:none;">Passa a Basic</a>
-          </div>
+    </section>
+
+    <section id="pricing" class="pricing py-5">
+        <div class="container">
+            <h2 class="text-center mb-4" data-aos="fade-up">Scegli il tuo piano</h2>
+            <div class="row">
+                <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card h-100 border-primary d-flex">
+                        <div class="card-header text-center bg-primary text-white">
+                            <h3>Free</h3>
+                            <p class="h4 mb-0">Gratuito</p>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item" data-toggle="tooltip" title="Accesso base alla piattaforma.">Accesso immediato</li>
+                                <li class="list-group-item" data-toggle="tooltip" title="Una selezione di materiali di studio gratuiti.">Materiali selezionati</li>
+                                <li class="list-group-item" data-toggle="tooltip" title="Partecipa alle discussioni e chiedi aiuto alla community.">Forum community</li>
+                                <li class="list-group-item" data-toggle="tooltip" title="Gioca per imparare in modo divertente.">Minigiochi educativi</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="#" class="btn btn-outline-primary btn-block btn-action" data-plan="free" data-price="0">Registrati</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card h-100 border-success d-flex">
+                        <span class="popular-badge">Più Popolare</span>
+                        <div class="card-header text-center bg-success text-white">
+                            <h3>Basic</h3>
+                            <p class="h4 mb-0">4,99 €/mese</p>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item">Tutto da Free</li>
+                                <li class="list-group-item" data-toggle="tooltip" title="Sincronizza e gestisci il tuo calendario di studio.">Import/export calendario</li>
+                                <li class="list-group-item" data-toggle="tooltip" title="Accedi a una libreria più ampia di risorse e quiz di verifica.">Materiale extra e quiz</li>
+                                <li class="list-group-item" data-toggle="tooltip" title="Consulenze one-to-one per supporto specifico.">Consulenze personalizzate</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer text-center">
+                            <div id="paypal-button-container-basic"></div>
+                            <a href="#" class="btn btn-success btn-block btn-action" data-plan="basic" data-price="4.99" style="display:none;">Passa a Basic</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card h-100 border-info d-flex">
+                        <div class="card-header text-center bg-info text-white">
+                            <h3>Standard</h3>
+                            <p class="h4 mb-0">6,99 €/mese</p>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item">Tutto da Basic</li>
+                                <li class="list-group-item" data-toggle="tooltip" title="Risposte più veloci dal nostro team di supporto.">Supporto prioritario</li>
+                                <li class="list-group-item" data-toggle="tooltip" title="Partecipa a sessioni di gruppo o individuali con i nostri tutor.">Sessioni live con tutor</li>
+                                <li class="list-group-item" data-toggle="tooltip" title="Assistenza avanzata tramite intelligenza artificiale.">Supporto IA</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer text-center">
+                            <div id="paypal-button-container-standard"></div>
+                            <a href="#" class="btn btn-info btn-block btn-action" data-plan="standard" data-price="6.99" style="display:none;">Passa a Standard</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="card h-100 border-warning d-flex">
+                        <div class="card-header text-center bg-warning text-white">
+                            <h3>Premium</h3>
+                            <p class="h4 mb-0">9,99 €/mese</p>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item">Tutto da Standard</li>
+                                <li class="list-group-item" data-toggle="tooltip" title="Esporta i tuoi progressi e dati in vari formati.">Export avanzato (CSV/PDF)</li>
+                                <li class="list-group-item" data-toggle="tooltip" title="Mostra il tuo status di membro esclusivo.">Badge esclusivo</li>
+                                <li class="list-group-item" data-toggle="tooltip" title="Accesso a giochi educativi esclusivi e avanzati.">Minigiochi esclusivi</li>
+                                <li class="list-group-item" data-toggle="tooltip" title="Consulenze one-to-one per supporto specifico.">Consulenze personalizzate</li>
+                                <li class="list-group-item" data-toggle="tooltip" title="Assistenza avanzata tramite intelligenza artificiale.">Supporto IA</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer text-center">
+                            <div id="paypal-button-container-premium"></div>
+                            <a href="#" class="btn btn-warning btn-block btn-action" data-plan="premium" data-price="9.99" style="display:none;">Passa a Premium</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="col-md-3 mb-4 animate__animated animate__fadeInUp animate__delay-3s">
-        <div class="card h-100 border-info d-flex">
-          <div class="card-header text-center bg-info text-white">
-            <h3>Standard</h3>
-            <p class="h4 mb-0">6,99 €/mese</p>
-          </div>
-          <div class="card-body">
-            <ul class="list-group list-group-flush mb-3">
-              <li class="list-group-item">Tutto da Basic</li>
-              <li class="list-group-item">Supporto prioritario</li>
-              <li class="list-group-item">Sessioni live con tutor</li>
-              <li class="list-group-item">Supporto IA</li>
-            </ul>
-          </div>
-          <div class="card-footer text-center">
-            <div id="paypal-button-container-standard"></div>
-            <a href="#" class="btn btn-info btn-block btn-action" data-plan="standard" data-price="6.99" style="display:none;">Passa a Standard</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 mb-4 animate__animated animate__fadeInUp animate__delay-4s">
-        <div class="card h-100 border-warning d-flex">
-          <div class="card-header text-center bg-warning text-white">
-            <h3>Premium</h3>
-            <p class="h4 mb-0">9,99 €/mese</p>
-          </div>
-          <div class="card-body">
-            <ul class="list-group list-group-flush mb-3">
-              <li class="list-group-item">Tutto da Standard</li>
-              <li class="list-group-item">Export avanzato (CSV/PDF)</li>
-              <li class="list-group-item">Badge esclusivo</li>
-              <li class="list-group-item">Minigiochi esclusivi</li>
-              <li class="list-group-item">Consulenze personalizzate</li>
-              <li class="list-group-item">Supporto IA</li>
-            </ul>
-          </div>
-          <div class="card-footer text-center">
-            <div id="paypal-button-container-premium"></div>
-            <a href="#" class="btn btn-warning btn-block btn-action" data-plan="premium" data-price="9.99" style="display:none;">Passa a Premium</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<script>
-  // Mappa i piani ai loro product ID e plan ID di PayPal (devono essere creati nel tuo account PayPal Developer)
-  const PAYPAL_PLANS = {
-    basic: {
-      product_id: 'ABBASIC', // Sostituisci con il Product ID di PayPal per il piano Basic
-      plan_id: 'P-19X60149BT681154RNAXBDRI'    // Sostituisci con il Plan ID di PayPal per il piano Basic
-    },
-    standard: {
-      product_id: 'PROD-ZZZZZZZZZZZ', // Sostituisci con il Product ID di PayPal per il piano Standard
-      plan_id: 'PLAN-WWWWWWWWWWWW'   // Sostituisci con il Plan ID di PayPal per il piano Standard
-    },
-    premium: {
-      product_id: 'PROD-KKKKKKKKKKK', // Sostituisci con il Product ID di PayPal per il piano Premium
-      plan_id: 'PLAN-LLLLLLLLLLLLL'  // Sostituisci con il Plan ID di PayPal per il piano Premium
-    }
-  };
-
-  document.addEventListener('DOMContentLoaded', async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    const btns = document.querySelectorAll('.btn-action');
-
-    // Funzione per aggiornare lo stato del piano nel database di Supabase
-    async function updateSubscriptionInSupabase(userId, plan, subscriptionId, status, expiresAt = null) {
-      const { data, error } = await supabase
-        .from('subscriptions')
-        .upsert({
-          user_id: userId,
-          plan: plan,
-          paypal_subscription_id: subscriptionId,
-          status: status,
-          expires_at: expiresAt
-        }, { onConflict: 'user_id' });
-
-      if (error) {
-        console.error('Errore durante l\'aggiornamento dell\'abbonamento su Supabase:', error);
-        alert('Si è verificato un errore durante l\'aggiornamento del tuo abbonamento. Contatta il supporto.');
-        return false;
-      }
-      return true;
-    }
-
-    // Funzione per renderizzare i pulsanti PayPal
-    const renderPayPalButtons = (plan, containerId, planDetails) => {
-      paypal.Buttons({
-        style: {
-          layout: 'vertical',
-          color: 'blue',
-          shape: 'rect',
-          label: 'subscribe'
-        },
-        createSubscription: (data, actions) => {
-          return actions.subscription.create({
-            plan_id: planDetails.plan_id
-          });
-        },
-        onApprove: async (data, actions) => {
-          const subscriptionId = data.subscriptionID;
-          const { data: { session } } = await supabase.auth.getSession();
-
-          if (session) {
-            // Verifica lo stato dell'abbonamento con PayPal (server-side per produzione)
-            // Per scopi di test/competizione, assumiamo che onApprove indichi successo
-            const success = await updateSubscriptionInSupabase(session.user.id, plan, subscriptionId, 'active', new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()); // 30 giorni
-            if (success) {
-              alert(`Abbonamento ${plan} attivato con successo!`);
-              location.reload(); // Ricarica la pagina per aggiornare lo stato dei bottoni
-            }
-          } else {
-            alert('Devi essere loggato per sottoscrivere un abbonamento.');
-            location.href = 'login.html';
-          }
-        },
-        onError: err => {
-          console.error('Errore PayPal:', err);
-          alert('Si è verificato un errore con PayPal. Riprova più tardi.');
-        }
-      }).render(`#${containerId}`);
-    };
-
-    if (!session) {
-      btns.forEach(btn => {
-        const plan = btn.dataset.plan;
-        if (plan !== 'free') {
-          btn.textContent = 'Accedi per abbonarti';
-          btn.setAttribute('href', 'login.html');
-          btn.style.display = ''; // Mostra i bottoni normali
-          const paypalContainer = document.getElementById(`paypal-button-container-${plan}`);
-          if (paypalContainer) paypalContainer.style.display = 'none'; // Nascondi i bottoni PayPal
-        } else {
-          btn.textContent = 'Registrati';
-          btn.setAttribute('href', 'signup.html');
-          btn.style.display = '';
-        }
-      });
-      return;
-    }
-
-    // Recupera lo stato dell'abbonamento dell'utente
-    const { data: subscriptionData, error: subError } = await supabase
-      .from('subscriptions')
-      .select('plan, expires_at')
-      .eq('user_id', session.user.id)
-      .single();
-
-    let userPlan = 'free';
-    let subscriptionExpiresAt = null;
-
-    if (subError && subError.code !== 'PGRST116') { // PGRST116 è "nessun risultato trovato"
-      console.error('Errore nel recupero dell\'abbonamento:', subError);
-      alert('Errore nel caricamento del tuo abbonamento. Contatta il supporto.');
-    } else if (subscriptionData) {
-      userPlan = subscriptionData.plan;
-      subscriptionExpiresAt = subscriptionData.expires_at ? new Date(subscriptionData.expires_at) : null;
-
-      // Se l'abbonamento è scaduto, resetta a "free"
-      if (subscriptionExpiresAt && subscriptionExpiresAt < new Date()) {
-        userPlan = 'free';
-        await updateSubscriptionInSupabase(session.user.id, 'free', null, 'inactive', null);
-      }
-    }
-
-    btns.forEach(btn => {
-      const plan = btn.dataset.plan;
-      const price = parseFloat(btn.dataset.price);
-      const paypalContainerId = `paypal-button-container-${plan}`;
-      const paypalContainer = document.getElementById(paypalContainerId);
-
-      if (plan === userPlan) {
-        btn.textContent = 'Attuale';
-        btn.classList.add('btn-current');
-        btn.setAttribute('href', 'area.html');
-        btn.style.display = ''; // Mostra il bottone "Attuale"
-        if (paypalContainer) paypalContainer.style.display = 'none'; // Nascondi i bottoni PayPal
-      } else {
-        if (plan === 'free') {
-          btn.textContent = 'Area Personale';
-          btn.className = 'btn btn-outline-primary btn-block';
-          btn.setAttribute('href', 'area.html');
-          btn.style.display = ''; // Mostra il bottone "Area Personale"
-        } else {
-          // Nascondi il bottone HTML e mostra il container PayPal
-          btn.style.display = 'none';
-          if (paypalContainer) {
-            paypalContainer.style.display = '';
-            renderPayPalButtons(plan, paypalContainerId, PAYPAL_PLANS[plan]);
-          }
-        }
-      }
-    });
-  });
-</script>
-
+    </section>
 
     <section id="sponsors" class="text-center">
-      <h2 class="section-title animate__animated animate__fadeInUp">I Nostri Sponsor</h2>
-      <div class="sponsor-track" id="sponsor-track">
-        <div class="sponsor-track-inner" id="sponsor-track-inner">
-          <div class="sponsor-item">
-            <img src="assets/sponsor/Al Galletto Rosso.jpg" alt="Sponsor 1">
-            <p class="sponsor-caption">Al Galletto Rosso</p>
-          </div>
-          <div class="sponsor-item">
-            <img src="assets/sponsor/Room Cafè.jpg" alt="Sponsor 2">
-            <p class="sponsor-caption">Room Cafè and More</p>
-          </div>
-          <div class="sponsor-item">
-            <img src="assets/sponsor/Nellottica.jpg" alt="Sponsor 3">
-            <p class="sponsor-caption">Nellottica</p>
-          </div>
-          <div class="sponsor-item">
-            <img src="assets/sponsor/Duto.jpg" alt="Sponsor 4">
-            <p class="sponsor-caption">Autocarrozzeria Du.to</p>
-          </div>
-          <div class="sponsor-item">
-            <img src="assets/sponsor/Idea Eventi.jpg" alt="Sponsor 5">
-            <p class="sponsor-caption">IDEA Eventi 4.0</p>
-          </div>
-          <div class="sponsor-item">
-            <img src="assets/sponsor/Logo Opium.jpeg" alt="Sponsor 6">
-            <p class="sponsor-caption">Opium Fitness</p>
-          </div>
-          <div class="sponsor-item">
-            <img src="assets/sponsor/Petrella.png" alt="Sponsor 7">
-            <p class="sponsor-caption">Pasticceria Petrella</p>
-          </div>
-          <div class="sponsor-item">
-            <img src="assets/sponsor/Migliorisi.png" alt="Sponsor 8">
-            <p class="sponsor-caption">VisionOttica Migliorisi</p>
-          </div>
-          <div class="sponsor-item">
-            <img src="assets/sponsor/Paninando.jpg" alt="Sponsor 9">
-            <p class="sponsor-caption">Paninando</p>
-          </div>
-          <div class="sponsor-item">
-            <img src="assets/sponsor/Ellerre Costruzioni.png" alt="Sponsor 10">
-            <p class="sponsor-caption">Ellerre Costruzioni</p>
-          </div>
-          <div class="sponsor-item">
-            <img src="assets/sponsor/yesstore.jpg" alt="Sponsor 11">
-            <p class="sponsor-caption">YesStore Messina</p>
-          </div>
-          <div class="sponsor-item">
-            <img src="assets/sponsor/Bernava.jpg" alt="Sponsor 12">
-            <p class="sponsor-caption">Bernava</p>
-          </div>
-          </div>
-      </div>
+        <h2 class="section-title" data-aos="fade-up">I Nostri Sponsor</h2>
+        <div class="sponsor-track-outer">
+            <div class="sponsor-track" id="sponsor-track">
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Al Galletto Rosso.jpg" alt="Sponsor Al Galletto Rosso">
+                    <p class="sponsor-caption">Al Galletto Rosso</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Room Cafè.jpg" alt="Sponsor Room Cafè and More">
+                    <p class="sponsor-caption">Room Cafè and More</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Nellottica.jpg" alt="Sponsor Nellottica">
+                    <p class="sponsor-caption">Nellottica</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Duto.jpg" alt="Sponsor Autocarrozzeria Du.to">
+                    <p class="sponsor-caption">Autocarrozzeria Du.to</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Idea Eventi.jpg" alt="Sponsor IDEA Eventi 4.0">
+                    <p class="sponsor-caption">IDEA Eventi 4.0</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Logo Opium.jpeg" alt="Sponsor Opium Fitness">
+                    <p class="sponsor-caption">Opium Fitness</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Petrella.png" alt="Sponsor Pasticceria Petrella">
+                    <p class="sponsor-caption">Pasticceria Petrella</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Migliorisi.png" alt="Sponsor VisionOttica Migliorisi">
+                    <p class="sponsor-caption">VisionOttica Migliorisi</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Paninando.jpg" alt="Sponsor Paninando">
+                    <p class="sponsor-caption">Paninando</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Ellerre Costruzioni.png" alt="Sponsor Ellerre Costruzioni">
+                    <p class="sponsor-caption">Ellerre Costruzioni</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/yesstore.jpg" alt="Sponsor YesStore Messina">
+                    <p class="sponsor-caption">YesStore Messina</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Bernava.jpg" alt="Sponsor Bernava">
+                    <p class="sponsor-caption">Bernava</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Al Galletto Rosso.jpg" alt="Sponsor Al Galletto Rosso">
+                    <p class="sponsor-caption">Al Galletto Rosso</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Room Cafè.jpg" alt="Sponsor Room Cafè and More">
+                    <p class="sponsor-caption">Room Cafè and More</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Nellottica.jpg" alt="Sponsor Nellottica">
+                    <p class="sponsor-caption">Nellottica</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Duto.jpg" alt="Sponsor Autocarrozzeria Du.to">
+                    <p class="sponsor-caption">Autocarrozzeria Du.to</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Idea Eventi.jpg" alt="Sponsor IDEA Eventi 4.0">
+                    <p class="sponsor-caption">IDEA Eventi 4.0</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Logo Opium.jpeg" alt="Sponsor Opium Fitness">
+                    <p class="sponsor-caption">Opium Fitness</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Petrella.png" alt="Sponsor Pasticceria Petrella">
+                    <p class="sponsor-caption">Pasticceria Petrella</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Migliorisi.png" alt="Sponsor VisionOttica Migliorisi">
+                    <p class="sponsor-caption">VisionOttica Migliorisi</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Paninando.jpg" alt="Sponsor Paninando">
+                    <p class="sponsor-caption">Paninando</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Ellerre Costruzioni.png" alt="Sponsor Ellerre Costruzioni">
+                    <p class="sponsor-caption">Ellerre Costruzioni</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/yesstore.jpg" alt="Sponsor YesStore Messina">
+                    <p class="sponsor-caption">YesStore Messina</p>
+                </div>
+                <div class="sponsor-item" data-aos="fade-right" data-aos-offset="50" data-aos-duration="1000">
+                    <img src="assets/sponsor/Bernava.jpg" alt="Sponsor Bernava">
+                    <p class="sponsor-caption">Bernava</p>
+                </div>
+            </div>
+        </div>
     </section>
 
+<footer class="py-4 text-white text-center">
+      <div class="container">
+        <div class="social-icons mb-3">
+          <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+        </div>
+        <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
+        <small>
+          <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
+          <a href="cookie.html" class="text-white">Cookie Policy</a>
+        </small>
+      </div>
+    </footer>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const track = document.getElementById('sponsor-track');
-        const inner = document.getElementById('sponsor-track-inner');
 
-        // Misura larghezza della sequenza unica
-        const singleWidth = inner.getBoundingClientRect().width;
 
-        // Clona finché non copre almeno 2 volte il container
-        while (inner.scrollWidth < track.clientWidth * 2) {
-          inner.innerHTML += inner.innerHTML;
+
+        AOS.init();
+        
+        
+
+        // Dark Mode Toggle
+        document.getElementById('darkModeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            // Salva la preferenza in localStorage
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+
+        // Applica la preferenza del dark mode al caricamento della pagina
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
         }
 
-        // Genera dinamicamente keyframe per scroll continuo
-        const styleSheet = document.createElement('style');
-        styleSheet.innerHTML = `
-          @keyframes infinite-scroll {
-            from { transform: translateX(0); }
-            to   { transform: translateX(-${singleWidth}px); }
-          }
-          #sponsor-track-inner {
-            animation: infinite-scroll ${singleWidth / 50}s linear infinite;
-          }
-        `;
-        document.head.appendChild(styleSheet);
-      });
+        // Counter Animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const counters = document.querySelectorAll('.stat-item h3');
+            const speed = 200; // The lower the slower
+
+            const animateCounter = (counter) => {
+                const target = +counter.getAttribute('data-target');
+                let count = 0;
+                const updateCount = () => {
+                    const increment = target / speed;
+                    if (count < target) {
+                        count = Math.ceil(count + increment);
+                        if (target === 98) { // Special case for percentage
+                            counter.innerText = count + '%';
+                        } else {
+                            counter.innerText = count;
+                        }
+                        setTimeout(updateCount, 1);
+                    } else {
+                        if (target === 98) {
+                            counter.innerText = target + '%';
+                        } else {
+                            counter.innerText = target;
+                        }
+                    }
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            updateCount();
+                            observer.unobserve(counter); // Stop observing once animated
+                        }
+                    });
+                }, { threshold: 0.5 }); // Trigger when 50% of the element is visible
+
+                observer.observe(counter);
+            };
+
+            counters.forEach(animateCounter);
+
+            // Duplicate sponsor track for seamless marquee effect
+            const sponsorTrack = document.getElementById('sponsor-track');
+            sponsorTrack.innerHTML += sponsorTrack.innerHTML; // Duplicate the content
+        });
+
+        // Bootstrap Tooltips
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
+        document.addEventListener('DOMContentLoaded', async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  const authArea = document.getElementById('auth-area');
+  const notifWrapper = document.getElementById('notifWrapper'); // Assicurati che questo esista anche nelle altre pagine se lo usi
+  const loginPrompt = document.getElementById('loginPrompt'); // Questo è specifico per la pagina "contatti", potresti volerlo o meno altrove
+
+  if (session) {
+    authArea.innerHTML = `
+      <div class="dropdown">
+        <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          ${session.user.email}
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+          <h6 class="dropdown-header">Benvenuto, ${session.user.email}</h6>
+          <a class="dropdown-item" href="area.html"><i class="fas fa-user-circle mr-2"></i> Area Personale</a>
+          <a class="dropdown-item" href="settings.html"><i class="fas fa-cog mr-2"></i> Impostazioni</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+      e.preventDefault();
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Errore logout:', error.message);
+      } else {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userPlan');
+        window.location.href = 'index.html'; // Reindirizza dopo il logout
+      }
+    });
+
+    // Se hai anche il sistema di notifiche e il "loginPrompt", dovrai adattare la logica
+    // Esempio per le notifiche, se presente anche nelle altre pagine:
+    // if (notifWrapper) {
+    //   notifWrapper.style.display = 'block'; // O il display originale
+    //   await fetchNotifications(session.user.id);
+    // }
+    // if (loginPrompt) {
+    //   loginPrompt.classList.add('d-none');
+    // }
+  } else {
+    // Se non loggato, mostra il pulsante di accesso
+    authArea.innerHTML = `<a href="login.html" class="btn btn-outline-light">Accedi / Registrati</a>`;
+    // Se hai il sistema di notifiche, nascondilo se l'utente non è loggato
+    if (notifWrapper) {
+      notifWrapper.style.display = 'none';
+    }
+    // Se hai il "loginPrompt", mostralo se l'utente non è loggato
+    // if (loginPrompt) {
+    //   loginPrompt.classList.remove('d-none');
+    //   $(contactForm).find(':input').prop('disabled', true); // Disabilita il form se specifico per la pagina
+    // }
+  }
+
+  // La funzione fetchNotifications() è specifica per la pagina "contatti" e le notifiche.
+  // Se la vuoi anche in altre pagine, dovrai copiare anche quella e assicurarti che il div notifWrapper esista.
+  // async function fetchNotifications(userId) { /* ... codice della funzione ... */ }
+});
+        
     </script>
-
-<footer class="py-4 text-white text-center">
-  <div class="container">
-    <div class="social-icons mb-3">
-      <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-      <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-      <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
-    </div>
-    <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
-    <small>
-      <a href="terms.html" class="text-white">Termini & Condizioni</a> –
-      <a href="cookie.html" class="text-white">Cookie Policy</a>
-    </small>
-  </div>
-</footer>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
+</body>
 </html>

@@ -1,194 +1,488 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Memory – ClayRon</title>
-  <link rel="icon" href="assets/img/logo.png">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-  <!-- Bootstrap, Animate.css, FontAwesome -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <!--SCRIPT PER MENU' A TENDINA-->
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-  <!--SCRIPT PER MENU' A TENDINA-->
-  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
-  <script>
-    const SUPABASE_URL  = 'https://nptawehzfamaghytkmbk.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
-    window.supabase     = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-  </script>
-  <script src="assets/js/auth.js"></script>
-  <style>
-    #grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; max-width:420px; margin:auto; }
-    .card { background:#0055aa; color:#fff; font-size:2.5rem; height:100px;
-      display:flex; align-items:center; justify-content:center; cursor:pointer;
-      border-radius:8px; transition:transform .2s; }
-    .card.flipped { background:#fff; color:#0055aa; transform: rotateY(180deg); }
-    .card.matched { background:#00aa00; cursor:default; }
-    #memBoard { max-width:300px; margin:auto; display:none; text-align:left; }
-    #memBoard li { padding:.3rem 0; border-bottom:1px solid #ccc; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Memory – ClayRon</title>
+    <link rel="icon" href="assets/img/logo.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
+    <script>
+        const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
+        const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+        window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    </script>
+    <script src="assets/js/auth.js"></script>
+    <style>
+        /* PRELOADER STYLES */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #007bff, #17a2b8); /* Sfumatura accattivante */
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        .preloader-logo {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            animation: pulseLogo 2s infinite ease-in-out;
+            box-shadow: 0 0 30px rgba(255,255,255,0.5);
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.1);
+            padding: 10px;
+        }
+
+        @keyframes pulseLogo {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        .loading-text {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 20px;
+            animation: fadeInText 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes fadeInText {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* DARK MODE STYLES */
+        body.dark-mode {
+            background-color: #212529; /* Scuro */
+            color: #e2e6ea; /* Testo chiaro */
+        }
+        .dark-mode .navbar {
+            background-color: #343a40 !important; /* Navbar scura */
+        }
+        .dark-mode .navbar-brand, .dark-mode .nav-link, .dark-mode .dropdown-header {
+            color: #e2e6ea !important;
+        }
+        .dark-mode .form-control {
+            background-color: #495057;
+            color: #e2e6ea;
+            border-color: #6c757d;
+        }
+        .dark-mode .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+        .dark-mode .btn-success {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .dark-mode .btn-primary {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+        .dark-mode #memBoard {
+            background-color: #343a40;
+            border-color: #495057;
+            color: #e2e6ea;
+        }
+        .dark-mode #memBoard li {
+            border-bottom-color: #6c757d;
+        }
+        .dark-mode footer {
+            background-color: #0056b3 !important; /* Blu scuro per il footer */
+        }
+        .dark-mode .btn-outline-light {
+            color: #e2e6ea !important;
+            border-color: #e2e6ea !important;
+        }
+        .dark-mode .btn-outline-light:hover {
+            background-color: #e2e6ea !important;
+            color: #212529 !important;
+        }
+
+        /* Stili specifici del gioco Memory */
+        #grid { 
+            display:grid; 
+            grid-template-columns:repeat(4,1fr); 
+            gap:10px; 
+            max-width:420px; 
+            margin:auto; 
+        }
+        .card { 
+            background:#0055aa; 
+            color:#fff; 
+            font-size:2.5rem; 
+            height:100px;
+            display:flex; 
+            align-items:center; 
+            justify-content:center; 
+            cursor:pointer;
+            border-radius:8px; 
+            transition:transform .2s, background-color .2s; 
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .card.flipped { 
+            background:#fff; 
+            color:#0055aa; 
+            transform: rotateY(180deg);
+        }
+        .card.matched { 
+            background:#00aa00; 
+            cursor:default; 
+        }
+        .card.flipped .inner-card, .card.matched .inner-card {
+            transform: rotateY(180deg);
+        }
+        .card .inner-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backface-visibility: hidden;
+        }
+        .card .front-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background-color: #0055aa; /* Colore della carta coperta */
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff; /* Colore del punto interrogativo */
+            font-size: 2.5rem;
+        }
+        .card .back-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background-color: #fff; /* Colore della carta scoperta */
+            color: #0055aa; /* Colore del simbolo scoperto */
+            border-radius: 8px;
+            transform: rotateY(180deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        /* Dark mode per le carte */
+        .dark-mode .card {
+            background: #4a4a4a; /* Sfondo scuro per le carte coperte */
+            color: #fff;
+        }
+        .dark-mode .card.flipped {
+            background: #777; /* Sfondo per le carte scoperte in dark mode */
+            color: #fff;
+        }
+        .dark-mode .card.matched {
+            background: #008800; /* Sfondo per le carte abbinate in dark mode */
+        }
+        .dark-mode .card .front-face {
+            background-color: #4a4a4a;
+            color: #eee;
+        }
+        .dark-mode .card .back-face {
+            background-color: #777;
+            color: #eee;
+        }
+
+
+        #memBoard { 
+            max-width:300px; 
+            margin:auto; 
+            display:none; 
+            text-align:left;
+            list-style: none; /* Rimuove i puntini */
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            margin-top: 20px;
+        }
+        #memBoard li { 
+            padding:.5rem 0; 
+            border-bottom:1px solid #eee; 
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #memBoard li:last-child {
+            border-bottom: none;
+        }
+    </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
-  <div class="container">
-    <a class="navbar-brand" href="index.html">
-      <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
-      aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <div id="preloader">
+        <img src="assets/img/logo.png" alt="ClayRon Logo" class="preloader-logo">
+        <p class="loading-text">Caricamento gioco...</p>
+    </div>
 
-    <div class="collapse navbar-collapse" id="navbarNavHome">
-      <!-- 1) i link di navigazione -->
-      <ul class="navbar-nav ml-auto" id="nav-links">
-        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
-        <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
-        <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
-        <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
-      </ul>
+   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
+        aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-      <!-- 2) area autenticazione -->
-      <div id="auth-area">
-        <!-- qui auth.js inietta "Accedi/Registrati" oppure il dropdown utente -->
-      </div>
+      <div class="collapse navbar-collapse" id="navbarNavHome">
+        <ul class="navbar-nav ml-auto" id="nav-links">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
+          <li class="nav-item active"><a class="nav-link" href="contact.html">Contatti <span class="sr-only">(current)</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+        </ul>
 
-      <!-- 3) campanella notifiche, ORA DOPO auth-area -->
-      <div class="nav-item dropdown ml-3">
-        <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown">
-          <i class="fas fa-bell"></i>
-          <span id="notifCount" class="badge badge-danger position-absolute"
-                style="top:0;right:0;font-size:.7rem;display:none">0</span>
-        </button>
-        <div class="dropdown-menu dropdown-menu-right" style="min-width:300px">
-          <h6 class="dropdown-header">Notifiche</h6>
-          <div id="notifList" style="max-height:300px;overflow-y:auto">
-            <div class="dropdown-item text-muted">Nessuna Notifica</div>
+        <div id="auth-area" class="ml-3"></div>
+
+        <div id="notifWrapper" class="nav-item dropdown ml-2">
+          <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown" title="Notifiche">
+            <i class="fas fa-bell"></i>
+            <span id="notifCount" class="badge badge-danger position-absolute" style="top:0; right:0; font-size:.7rem; display:none">0</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notifBell" style="min-width:280px">
+            <h6 class="dropdown-header">Notifiche</h6>
+            <div id="notifList" style="max-height:300px; overflow-y:auto">
+              <div class="dropdown-item text-muted">Nessuna Notifica</div>
+            </div>
           </div>
         </div>
+        <button id="darkModeToggle" class="btn btn-outline-light ml-2" title="Modalità Scura">
+          <i class="fas fa-moon"></i>
+        </button>
       </div>
-
     </div>
-  </div>
-</nav>
+  </nav>
 
-  <main class="container text-center flex-fill py-4">
-    <h2>Memory</h2>
-    <button id="startMem" class="btn btn-success mb-3">Start</button>
-    <button id="showBoard" class="btn btn-primary mb-3">Classifica</button>
-    <div id="grid"></div>
-    <div class="mt-3"><strong>Best Score:</strong> <span id="bestMem">0</span></div>
-    <ol id="memBoard" class="mx-auto text-left mt-3"></ol>
-  </main>
+    <main class="container text-center flex-fill py-4">
+        <h2 class="mb-4">Memory</h2>
+        <button id="startMem" class="btn btn-success mb-3">Start</button>
+        <button id="showBoard" class="btn btn-primary mb-3">Classifica</button>
+        <div id="grid" class="my-4"></div>
+        <div class="mt-3"><strong>Best Score:</strong> <span id="bestMem">0</span></div>
+        <ol id="memBoard" class="mx-auto text-left mt-3"></ol>
+    </main>
 
-  <!-- Footer -->
-  <footer class="py-4 text-white text-center">
-    <div class="container">
-      <div class="social-icons mb-3">
-        <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+<footer class="py-4 text-white text-center">
+      <div class="container">
+        <div class="social-icons mb-3">
+          <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+        </div>
+        <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
+        <small>
+          <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
+          <a href="cookie.html" class="text-white">Cookie Policy</a>
+        </small>
       </div>
-      <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
-      <small>
-        <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
-        <a href="cookie.html" class="text-white">Cookie Policy</a>
-      </small>
-    </div>
-  </footer>
+    </footer>
 
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script>
-  document.addEventListener('DOMContentLoaded', async() => {
-    const { data:{ session } } = await supabase.auth.getSession();
-    if(!session) return location.href='login.html';
-    await updateNavbar();
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Applica la preferenza del dark mode al caricamento della pagina
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                // Aggiorna l'icona del toggle se il dark mode è abilitato
+                const darkModeToggle = document.getElementById('darkModeToggle');
+                if (darkModeToggle) {
+                    darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                    darkModeToggle.title = 'Modalità Chiara';
+                }
+            }
 
-    const uid = session.user.id;
-    const md  = session.user.user_metadata;
-    const un  = md.firstName ? `${md.firstName} ${md.lastName}` : session.user.email;
+            // Gestione del preloader
+            document.body.style.overflow = 'hidden'; // Blocco lo scroll durante il preloading
 
-    let symbols, firstCard, secondCard, lock=false, score=0, best=0;
-    const pool = ['🍎','🍌','🍇','🍓','🍒','🍍','🥝','🍉','🍎','🍌','🍇','🍓','🍒','🍍','🥝','🍉'];
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                location.href = 'login.html';
+                return;
+            }
+            await updateNavbar();
 
-    async function loadBest(){
-      let { data } = await supabase
-        .from('game_scores')
-        .select('score')
-        .eq('game','memory').eq('user_id',uid)
-        .order('score',{ascending:false}).limit(1);
-      best = data[0]?.score||0;
-      $('#bestMem').text(best);
-    }
-    async function loadBoard(){
-      let { data } = await supabase
-        .from('game_scores')
-        .select('user_name,score')
-        .eq('game','memory').order('score',{ascending:false})
-        .limit(10);
-      $('#memBoard').empty();
-      data.forEach(r=>$('#memBoard').append(`<li>${r.user_name}: ${r.score}</li>`));
-    }
+            // Nascondi il preloader dopo che tutto è caricato e pronto
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+                document.body.style.overflow = ''; // Riabilita lo scroll
+            }, 800); // Puoi regolare questo timeout
 
-    function shuffle(){
-      symbols = [...pool].sort(()=>0.5-Math.random());
-      $('#grid').empty();
-      symbols.forEach((_,i)=>{
-        $('#grid').append(`<div class="card" data-i="${i}"></div>`);
-      });
-      score=0; firstCard=null; secondCard=null; lock=false;
-    }
-    function flip(){
-      if(lock||$(this).hasClass('matched')||this===firstCard) return;
-      const i = $(this).data('i');
-      $(this).addClass('flipped').text(symbols[i]);
-      if(!firstCard) firstCard=this;
-      else {
-        secondCard=this; lock=true;
-        const s1 = symbols[$(firstCard).data('i')], s2 = symbols[$(secondCard).data('i')];
-        if(s1===s2){
-          score++; $(firstCard).addClass('matched'); $(secondCard).addClass('matched');
-        } else {
-          score = Math.max(0, score-1);
-          setTimeout(()=>{
-            $(firstCard).removeClass('flipped').text('');
-            $(secondCard).removeClass('flipped').text('');
-          },600);
-        }
-        $('#bestMem').text(score>best?score:best);
-        setTimeout(()=>{
-          firstCard=secondCard=null; lock=false; if($('.matched').length===16) finish();
-        },700);
-      }
-    }
-    async function finish(){
-      if(score>best){
-        best=score;
-        await supabase
-          .from('game_scores')
-          .upsert(
-            {user_id:uid,user_name:un,game:'memory',score:best},
-            { onConflict:['user_id','game'] }
-          )
-          .select();
-      }
-      await loadBoard();
-      alert(`Hai vinto! Score: ${score}`);
-    }
+            // Logica del gioco Memory
+            const uid = session.user.id;
+            const md = session.user.user_metadata;
+            const un = md.firstName ? `${md.firstName} ${md.lastName}` : session.user.email;
 
-    $('#startMem').click(()=>{ shuffle(); $('.card').click(flip); });
-    $('#showBoard').click(()=>$('#memBoard').toggle());
-    await loadBest(); await loadBoard(); shuffle();
-  });
-  </script>
+            let symbols, firstCard = null, secondCard = null, lock = false, score = 0, best = 0;
+            const pool = ['🍎', '🍌', '🍇', '🍓', '🍒', '🍍', '🥝', '🍉', '🍎', '🍌', '🍇', '🍓', '🍒', '🍍', '🥝', '🍉'];
+
+            async function loadBest() {
+                let { data } = await supabase
+                    .from('game_scores')
+                    .select('score')
+                    .eq('game', 'memory').eq('user_id', uid)
+                    .order('score', { ascending: false }).limit(1);
+                best = data[0]?.score || 0;
+                $('#bestMem').text(best);
+            }
+
+            async function loadBoard() {
+                let { data } = await supabase
+                    .from('game_scores')
+                    .select('user_name,score')
+                    .eq('game', 'memory').order('score', { ascending: false })
+                    .limit(10);
+                $('#memBoard').empty();
+                if (data.length === 0) {
+                    $('#memBoard').append('<li>Nessun punteggio disponibile.</li>');
+                } else {
+                    data.forEach((r, index) => {
+                        const rankEmoji = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '';
+                        $('#memBoard').append(`<li>${rankEmoji}${r.user_name}: <span>${r.score}</span></li>`);
+                    });
+                }
+            }
+
+            function shuffle() {
+                symbols = [...pool].sort(() => 0.5 - Math.random());
+                $('#grid').empty();
+                symbols.forEach((symbol, i) => {
+                    $('#grid').append(`
+                        <div class="card animate__animated animate__flipInY" data-i="${i}">
+                            <div class="inner-card">
+                                <div class="front-face">?</div>
+                                <div class="back-face">${symbol}</div>
+                            </div>
+                        </div>
+                    `);
+                });
+                score = 0;
+                firstCard = null;
+                secondCard = null;
+                lock = false;
+                // Rimuovi le classi flipped/matched da tutte le carte all'inizio di un nuovo gioco
+                $('.card').removeClass('flipped matched');
+                $('#memBoard').hide(); // Nascondi la classifica all'inizio del gioco
+            }
+
+            function flip() {
+                if (lock || $(this).hasClass('matched') || this === firstCard) return;
+
+                const cardElement = this;
+                $(cardElement).addClass('flipped');
+
+                if (!firstCard) {
+                    firstCard = cardElement;
+                } else {
+                    secondCard = cardElement;
+                    lock = true; // Blocca il gioco
+
+                    const s1 = symbols[$(firstCard).data('i')];
+                    const s2 = symbols[$(secondCard).data('i')];
+
+                    if (s1 === s2) {
+                        score++;
+                        $(firstCard).addClass('matched animate__animated animate__bounceOut');
+                        $(secondCard).addClass('matched animate__animated animate__bounceOut');
+                        // Rimuovi le carte dal DOM dopo l'animazione matched
+                        setTimeout(() => {
+                            $(firstCard).css('visibility', 'hidden'); // Nasconde per evitare clic
+                            $(secondCard).css('visibility', 'hidden');
+                            checkWin(); // Controlla la vittoria dopo l'animazione di scomparsa
+                        }, 800); // Durata dell'animazione + un piccolo ritardo
+                    } else {
+                        score = Math.max(0, score - 1); // Non scendere sotto zero
+                        setTimeout(() => {
+                            $(firstCard).removeClass('flipped');
+                            $(secondCard).removeClass('flipped');
+                        }, 1000); // Tempo per visualizzare le carte prima di girarle di nuovo
+                    }
+
+                    $('#bestMem').text(score > best ? score : best); // Aggiorna il punteggio attuale
+
+                    setTimeout(() => {
+                        firstCard = null;
+                        secondCard = null;
+                        lock = false; // Sblocca il gioco
+                    }, 1200); // Attendere che le carte si siano girate o abbinate prima di sbloccare
+                }
+            }
+            
+            function checkWin() {
+                if ($('.card.matched').length === pool.length) {
+                    finish();
+                }
+            }
+
+            async function finish() {
+                if (score > best) {
+                    best = score;
+                    const { data: existingScore, error: fetchError } = await supabase
+                        .from('game_scores')
+                        .select('score')
+                        .eq('user_id', uid)
+                        .eq('game', 'memory')
+                        .single();
+
+                    if (fetchError && fetchError.code !== 'PGRST116') {
+                        console.error('Errore nel recupero del punteggio esistente:', fetchError.message);
+                    }
+
+                    if (!existingScore || score > existingScore.score) {
+                        const { error: upsertError } = await supabase
+                            .from('game_scores')
+                            .upsert(
+                                { user_id: uid, user_name: un, game: 'memory', score: best },
+                                { onConflict: ['user_id', 'game'] }
+                            );
+                        if (upsertError) {
+                            console.error('Errore nell\'upsert del punteggio:', upsertError.message);
+                        }
+                    }
+                }
+                await loadBoard();
+                $('#grid').html(`<div class="alert alert-success animate__animated animate__fadeIn">Complimenti! Hai completato il Memory con un punteggio di: <strong>${score}</strong>. Il tuo miglior punteggio è: <strong>${best}</strong>.</div>`);
+            }
+
+            $('#startMem').click(() => {
+                shuffle();
+                $('#grid').on('click', '.card', flip); // Delega l'evento click
+            });
+            $('#showBoard').click(() => $('#memBoard').toggle());
+
+            await loadBest();
+            await loadBoard();
+            shuffle(); // Carica il tabellone all'avvio
+        });
+    </script>
 </body>
 </html>
