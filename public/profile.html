@@ -262,7 +262,8 @@
     </nav>
 
     <main class="container py-5 flex-fill">
-        <div class="card profile-card p-4 shadow-sm d-none"> <h2 class="card-title text-center mb-4">Il tuo Profilo</h2>
+        <div class="card profile-card p-4 shadow-sm d-none"> 
+            <h2 class="card-title text-center mb-4">Il tuo Profilo</h2>
             <form id="profileForm">
                 <div class="text-center mb-4">
                     <img id="avatarPreview" src="assets/img/default-profile.png" class="rounded-circle mb-3" alt="Avatar">
@@ -279,21 +280,27 @@
                     <input type="email" id="email" class="form-control" disabled>
                 </div>
 
-                <div id="changeNotice" class="alert alert-info d-none animate__animated"></div>
-                
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="firstName">Nome</label>
-                        <input type="text" id="firstName" class="form-control" required>
+                        <input type="text" id="firstName" class="form-control" disabled>
                         <div class="invalid-feedback">Inserisci un nome valido.</div>
                     </div>
 
                     <div class="form-group col-md-6">
                         <label for="lastName">Cognome</label>
-                        <input type="text" id="lastName" class="form-control" required>
+                        <input type="text" id="lastName" class="form-control" disabled>
                         <div class="invalid-feedback">Inserisci un cognome valido.</div>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="form-control" required>
+                    <div class="invalid-feedback">Inserisci un username valido.</div>
+                </div>
+
+                <div id="usernameChangeNotice" class="alert alert-info d-none animate__animated"></div>
                 
                 <button type="submit" id="saveBtn" class="btn btn-primary btn-block animate__animated animate__pulse">
                     Salva Modifiche <i class="fas fa-save ml-2"></i>
@@ -364,13 +371,12 @@
             // Imposta lo scroll bloccato mentre il preloader è attivo
             document.body.style.overflow = 'hidden';
             
-            // 1) Recupera sessione e riempi form
+            // Recupera sessione
             const { data:{ session }, error: sessionError } = await supabase.auth.getSession();
 
             if (sessionError) {
                 console.error("Errore nel recupero della sessione:", sessionError);
-                // Reindirizza o mostra un messaggio di errore critico
-                location.href = 'login.html'; // Fallback in caso di errore sessione
+                location.href = 'login.html'; 
                 return;
             }
 
@@ -380,40 +386,41 @@
             }
             
             // Chiamata a updateNavbar dalla tua auth.js
-            // Assicurati che auth.js sia caricato e che updateNavbar sia disponibile globalmente
             if (typeof updateNavbar === 'function') {
                 await updateNavbar();
             } else {
-                console.warn("Funzione 'updateNavbar' non trovata in assets/js/auth.js. Assicurati che sia definita globalmente o chiamata diversamente.");
+                console.warn("Funzione 'updateNavbar' non trovata in assets/js/auth.js.");
             }
 
             const user = session.user;
             $('#email').val(user.email);
-            // Leggi i metadati salvati (ora in camelCase)
+            
+            // Leggi Nome, Cognome e Username dai metadati
             $('#firstName').val(user.user_metadata.firstName || '');
             $('#lastName').val(user.user_metadata.lastName || '');
+            const currentUsername = user.user_metadata.username || '';
+            $('#username').val(currentUsername);
 
             // Carica l'avatar esistente se presente
             if (user.user_metadata.avatar_url) {
                 $('#avatarPreview').attr('src', user.user_metadata.avatar_url);
             }
 
-            // 2) Controllo 14 giorni per il cambio nome/cognome
-            const lastChanged = user.user_metadata.name_changed_at;
-            let canChangeName = true;
-            if (lastChanged) {
-                const diffMs = Date.now() - new Date(lastChanged).getTime();
+            // Controllo 14 giorni per il cambio username
+            const lastUsernameChanged = user.user_metadata.username_changed_at;
+            let canChangeUsername = true;
+            if (lastUsernameChanged) {
+                const diffMs = Date.now() - new Date(lastUsernameChanged).getTime();
                 const diffDays = diffMs / (1000 * 60 * 60 * 24);
                 if (diffDays < 14) {
-                    canChangeName = false;
-                    const next = new Date(new Date(lastChanged).getTime() + 14 * 24 * 60 * 60 * 1000);
-                    showMessage('changeNotice', `Hai modificato il nome l’ultima volta il ${new Date(lastChanged).toLocaleDateString('it-IT')}, potrai cambiarlo nuovamente dal ${next.toLocaleDateString('it-IT')}.`, 'info');
-                    $('#firstName, #lastName').prop('disabled', true);
-                    $('#saveBtn').prop('disabled', true); // Disabilita il pulsante se i campi non sono modificabili
+                    canChangeUsername = false;
+                    const nextChangeDate = new Date(new Date(lastUsernameChanged).getTime() + 14 * 24 * 60 * 60 * 1000);
+                    showMessage('usernameChangeNotice', `Hai modificato il tuo username l’ultima volta il ${new Date(lastUsernameChanged).toLocaleDateString('it-IT')}, potrai cambiarlo nuovamente dal ${nextChangeDate.toLocaleDateString('it-IT')}.`, 'info');
+                    $('#username').prop('disabled', true); // Disabilita il campo username
                 }
             }
 
-            // 3) Gestione cambio avatar
+            // 3) Gestione cambio avatar (logica invariata)
             $('#avatarFile').on('change', function(e) {
                 const file = e.target.files[0];
                 if (file) {
@@ -432,11 +439,11 @@
 
             $('#avatarCropModal').on('shown.bs.modal', function () {
                 if (cropper) {
-                    cropper.destroy(); // Distruggi l'istanza precedente se esiste
+                    cropper.destroy(); 
                 }
                 cropper = new Cropper(document.getElementById('cropImage'), {
-                    aspectRatio: 1, // Imposta un rapporto di aspetto quadrato per l'avatar
-                    viewMode: 1, // Permette di vedere l'immagine completa ma non di rimpicciolirla oltre i suoi limiti
+                    aspectRatio: 1, 
+                    viewMode: 1, 
                     dragMode: 'move',
                     background: false,
                     cropBoxMovable: true,
@@ -446,10 +453,9 @@
                 });
             }).on('hidden.bs.modal', function () {
                 if (cropper) {
-                    cropper.destroy(); // Distruggi l'istanza quando il modal è chiuso
+                    cropper.destroy(); 
                     cropper = null;
                 }
-                // Resetta l'input file per permettere la selezione dello stesso file dopo un annullamento
                 $('#avatarFile').val(''); 
             });
 
@@ -460,13 +466,12 @@
                     return;
                 }
 
-                // Disabilita il pulsante di salvataggio durante l'upload
                 const originalSaveBtnHtml = $('#saveBtn').html();
                 $('#saveBtn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Caricamento...');
 
                 try {
                     const canvas = cropper.getCroppedCanvas({
-                        width: 256, // Dimensione dell'avatar finale
+                        width: 256, 
                         height: 256,
                     });
 
@@ -480,107 +485,118 @@
                         const file = new File([blob], `avatar-${user.id}.png`, { type: 'image/png' });
                         
                         const { data, error } = await supabase.storage
-                            .from('avatars') // Il tuo bucket di storage
+                            .from('avatars') 
                             .upload(`${user.id}/avatar.png`, file, {
                                 cacheControl: '3600',
-                                upsert: true // Se esiste, lo aggiorna
+                                upsert: true 
                             });
 
                         if (error) {
                             console.error("Errore Supabase Storage:", error);
                             showMessage('profileMsg', `<div class="alert alert-danger">Errore nel caricamento dell'avatar: ${error.message}</div>`, 'danger');
                         } else {
-                            // Aggiorna l'URL dell'avatar nel profilo utente
                             const publicUrl = supabase.storage.from('avatars').getPublicUrl(`${user.id}/avatar.png`).data.publicUrl;
                             const { error: updateError } = await supabase.auth.updateUser({
                                 data: { avatar_url: publicUrl }
                             });
 
                             if (updateError) {
-                                console.error("Errore aggiornamento user metadata:", updateError);
+                                console.error("Errore aggiornamento user metadata (avatar_url):", updateError);
                                 showMessage('profileMsg', `<div class="alert alert-danger">Errore nell'aggiornamento dell'URL avatar: ${updateError.message}</div>`, 'danger');
                             } else {
-                                $('#avatarPreview').attr('src', publicUrl + '?t=' + new Date().getTime()); // Aggiungi timestamp per evitare cache
+                                $('#avatarPreview').attr('src', publicUrl + '?t=' + new Date().getTime()); 
                                 showMessage('profileMsg', `<div class="alert alert-success">Avatar caricato e aggiornato!</div>`, 'success');
                             }
                         }
-                    }, 'image/png'); // Forza il formato PNG per coerenza
+                    }, 'image/png'); 
                 } catch (err) {
                     console.error("Errore generale durante l'upload dell'avatar:", err);
                     showMessage('profileMsg', `<div class="alert alert-danger">Si è verificato un errore inatteso durante il caricamento dell'avatar.</div>`, 'danger');
                 } finally {
-                    $('#saveBtn').prop('disabled', false).html(originalSaveBtnHtml); // Riabilita il pulsante
+                    $('#saveBtn').prop('disabled', false).html(originalSaveBtnHtml); 
                 }
             });
 
 
-            // 4) Submit con conferma + salvataggio metadata
+            // 4) Submit del form per salvare Nome, Cognome e Username
             $('#profileForm').on('submit', async e => {
                 e.preventDefault();
 
-                // Validazione client-side
                 const firstName = $('#firstName').val().trim();
                 const lastName = $('#lastName').val().trim();
+                const newUsername = $('#username').val().trim();
 
-                if (firstName === '') {
-                    $('#firstName').addClass('is-invalid');
-                    showMessage('profileMsg', `<div class="alert alert-danger">Il campo Nome è obbligatorio.</div>`, 'danger');
-                    return;
-                } else {
-                    $('#firstName').removeClass('is-invalid');
+                let updates = {};
+                let requiresUpdate = false;
+                let usernameChangedFlag = false;
+
+                // Controlla modifiche a Nome e Cognome
+                if (firstName !== user.user_metadata.firstName) {
+                    updates.firstName = firstName;
+                    requiresUpdate = true;
+                }
+                if (lastName !== user.user_metadata.lastName) {
+                    updates.lastName = lastName;
+                    requiresUpdate = true;
                 }
 
-                if (lastName === '') {
-                    $('#lastName').addClass('is-invalid');
-                    showMessage('profileMsg', `<div class="alert alert-danger">Il campo Cognome è obbligatorio.</div>`, 'danger');
-                    return;
-                } else {
-                    $('#lastName').removeClass('is-invalid');
+                // Controlla modifiche a Username e la restrizione dei 14 giorni
+                if (newUsername !== currentUsername) {
+                    if (newUsername === '') {
+                        $('#username').addClass('is-invalid');
+                        showMessage('profileMsg', `<div class="alert alert-danger">Il campo Username è obbligatorio.</div>`, 'danger');
+                        return;
+                    } else {
+                        $('#username').removeClass('is-invalid');
+                    }
+
+                    if (!canChangeUsername) {
+                        showMessage('profileMsg', '<div class="alert alert-warning">Non puoi cambiare username prima di 14 giorni dall\'ultima modifica.</div>', 'warning');
+                        return;
+                    }
+
+                    if (!confirm('Sei sicuro di voler cambiare il tuo username? Potrai farlo nuovamente solo fra 14 giorni.')) {
+                        return;
+                    }
+                    updates.username = newUsername;
+                    updates.username_changed_at = new Date().toISOString(); // Aggiorna il timestamp
+                    requiresUpdate = true;
+                    usernameChangedFlag = true;
                 }
-                
-                if (!canChangeName) {
-                    // Il messaggio è già mostrato da showMessage('changeNotice', ...) all'inizio
-                    // Potresti aggiungere un messaggio di avviso qui se l'utente tenta di salvare senza poterlo fare
-                    showMessage('profileMsg', '<div class="alert alert-warning">Non puoi cambiare nome e cognome prima di 14 giorni dall\'ultima modifica.</div>', 'warning');
+
+                if (!requiresUpdate) {
+                    showMessage('profileMsg', `<div class="alert alert-info">Nessuna modifica da salvare.</div>`, 'info');
                     return;
                 }
 
-                // Solo se canChangeName è true, chiedi conferma
-                if (canChangeName && !confirm('Sei sicuro di voler cambiare nome e cognome? Potrai farlo nuovamente solo fra 14 giorni.')) {
-                    return;
-                }
-
-                // Disabilita il pulsante di salvataggio durante il submit
                 const originalSaveBtnHtml = $('#saveBtn').html();
                 $('#saveBtn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Salvataggio...');
 
-                const changeAt = new Date().toISOString();
-
                 try {
                     const { error } = await supabase.auth.updateUser({
-                        data: { 
-                            firstName: firstName, 
-                            lastName: lastName, 
-                            name_changed_at: changeAt 
-                        }
+                        data: updates
                     });
 
                     if (error) {
                         console.error("Errore Supabase Auth updateUser:", error);
-                        showMessage('profileMsg', `<div class="alert alert-danger">Errore salvataggio: ${error.message}</div>`, 'danger');
+                        showMessage('profileMsg', `<div class="alert alert-danger">Errore salvataggio profilo: ${error.message}</div>`, 'danger');
                     } else {
                         showMessage('profileMsg', `<div class="alert alert-success">Profilo aggiornato!</div>`, 'success');
-                        // Aggiorna lo stato per disabilitare i campi e il pulsante per 14 giorni
-                        canChangeName = false;
-                        $('#firstName, #lastName').prop('disabled', true);
-                        const next = new Date(new Date(changeAt).getTime() + 14 * 24 * 60 * 60 * 1000);
-                        showMessage('changeNotice', `Hai modificato il nome l’ultima volta il ${new Date(changeAt).toLocaleDateString('it-IT')}, potrai cambiarlo nuovamente dal ${next.toLocaleDateString('it-IT')}.`, 'info');
+                        // Se l'username è stato cambiato, disabilita il campo per 14 giorni
+                        if (usernameChangedFlag) {
+                            canChangeUsername = false; // Aggiorna lo stato locale
+                            $('#username').prop('disabled', true);
+                            const nextChangeDate = new Date(new Date(updates.username_changed_at).getTime() + 14 * 24 * 60 * 60 * 1000);
+                            showMessage('usernameChangeNotice', `Hai modificato il tuo username l’ultima volta il ${new Date(updates.username_changed_at).toLocaleDateString('it-IT')}, potrai cambiarlo nuovamente dal ${nextChangeDate.toLocaleDateString('it-IT')}.`, 'info');
+                        }
+                        // Forziamo un refresh della sessione per avere i metadati più aggiornati
+                        await supabase.auth.refreshSession();
                     }
                 } catch (err) {
                     console.error("Errore generale durante il salvataggio del profilo:", err);
                     showMessage('profileMsg', `<div class="alert alert-danger">Si è verificato un errore inatteso durante il salvataggio del profilo.</div>`, 'danger');
                 } finally {
-                    $('#saveBtn').prop('disabled', false).html(originalSaveBtnHtml); // Riabilita il pulsante
+                    $('#saveBtn').prop('disabled', false).html(originalSaveBtnHtml); 
                 }
             });
 
@@ -591,60 +607,8 @@
                 preloader.style.visibility = 'hidden';
                 document.body.style.overflow = ''; // Riabilita lo scroll
                 $('.profile-card').removeClass('d-none').addClass('animate__fadeInDown'); // Mostra e anima la card
-            }, 800); // Piccolo ritardo per l'effetto di transizione
+            }, 800); 
         });
-
-        // Questo blocco di codice sembra duplicato e può essere gestito in auth.js per essere riutilizzabile.
-        // Se `auth.js` gestisce già il caricamento della navbar e lo stato di autenticazione,
-        // puoi rimuovere questo `DOMContentLoaded` listener da `profile.html`.
-        // Assumiamo che `updateNavbar()` in `auth.js` faccia già questo lavoro.
-        /*
-        document.addEventListener('DOMContentLoaded', async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            const authArea = document.getElementById('auth-area');
-            const notifWrapper = document.getElementById('notifWrapper');
-            // loginPrompt non è presente in questa pagina, quindi non gestirlo qui
-
-            if (session) {
-                authArea.innerHTML = `
-                    <div class="dropdown">
-                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            ${session.user.email}
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                            <h6 class="dropdown-header">Benvenuto, ${session.user.email}</h6>
-                            <a class="dropdown-item" href="area.html"><i class="fas fa-user-circle mr-2"></i> Area Personale</a>
-                            <a class="dropdown-item" href="settings.html"><i class="fas fa-cog mr-2"></i> Impostazioni</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
-                        </div>
-                    </div>
-                `;
-
-                document.getElementById('logoutBtn').addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    const { error } = await supabase.auth.signOut();
-                    if (error) {
-                        console.error('Errore logout:', error.message);
-                    } else {
-                        localStorage.removeItem('token');
-                        localStorage.removeItem('userPlan');
-                        window.location.href = 'index.html';
-                    }
-                });
-
-                if (notifWrapper) {
-                    notifWrapper.style.display = 'block';
-                    // await fetchNotifications(session.user.id); // Abilita se hai questa funzione
-                }
-            } else {
-                authArea.innerHTML = `<a href="login.html" class="btn btn-outline-light">Accedi / Registrati</a>`;
-                if (notifWrapper) {
-                    notifWrapper.style.display = 'none';
-                }
-            }
-        });
-        */
     </script>
 </body>
 </html>
