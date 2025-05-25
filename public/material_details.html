@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dettagli Materiale - ClayRon</title>
+    <link rel="icon" href="assets/img/logo.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <script src="https://www.paypal.com/sdk/js?client-id=Ad3Up0PLcvijOaaaI5_tLI49rILy1cPgJpB4k6XuDjiUOoi0QSv6ZK6nqEZihQ-xo6euC-1MhWnja_qt&currency=EUR"></script> 
+    <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
+    <script>
+        const SUPABASE_URL = 'https://nptawehzfamaghytkmbk.supabase.co';
+        const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8';
+        window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    </script>
+
+    <style>
+        /* PRELOADER STYLES */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #007bff, #17a2b8);
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        .preloader-logo {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            animation: pulseLogo 2s infinite ease-in-out;
+            box-shadow: 0 0 30px rgba(255,255,255,0.5);
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.1);
+            padding: 10px;
+        }
+
+        @keyframes pulseLogo {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        .loading-text {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 20px;
+            animation: fadeInText 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes fadeInText {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* DARK MODE STYLES */
+        body { transition: background-color 0.3s ease, color 0.3s ease; }
+        body.dark-mode {
+            background-color: #212529;
+            color: #e2e6ea;
+        }
+        .dark-mode .navbar {
+            background-color: #343a40 !important;
+        }
+        .dark-mode .navbar-brand, .dark-mode .nav-link, .dark-mode .dropdown-header {
+            color: #e2e6ea !important;
+        }
+        .dark-mode .form-control {
+            background-color: #495057;
+            color: #e2e6ea;
+            border-color: #6c757d;
+        }
+        .dark-mode .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+        .dark-mode .btn-success {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .dark-mode .btn-primary {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+        .dark-mode footer {
+            background-color: #0056b3 !important;
+        }
+        .dark-mode .btn-outline-light {
+            color: #e2e6ea !important;
+            border-color: #e2e6ea !important;
+        }
+        .dark-mode .btn-outline-light:hover {
+            background-color: #e2e6ea !important;
+            color: #212529 !important;
+        }
+        
+        /* Specific styles for this page */
+        body { /* Aggiunto per sticky footer */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        main { /* Aggiunto per sticky footer */
+            flex: 1;
+        }
+        .back-link { 
+            display:inline-flex; 
+            align-items:center; 
+            margin-bottom:1rem; 
+            color:#0055aa; 
+            text-decoration:none; 
+            font-weight:500; 
+            transition: color 0.3s ease;
+        }
+        .dark-mode .back-link {
+            color: #8ab4f8;
+        }
+        .back-link i { margin-right:6px; }
+        .card-material { 
+            margin-bottom:2rem; 
+            border:none; 
+            background-color: #fff;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .dark-mode .card-material {
+            background-color: #343a40;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .card-material img { 
+            width:100%; 
+            border-radius:8px 0 0 8px;
+            box-shadow:0 0 15px rgba(0,0,0,0.05);
+            height: 100%;
+            object-fit: cover;
+        }
+        @media (max-width: 767.98px) {
+            .card-material img {
+                border-radius: 8px 8px 0 0;
+            }
+        }
+        .card-material h3 { 
+            color:#003366; 
+            margin-bottom:.5rem; 
+            transition: color 0.3s ease;
+        }
+        .dark-mode .card-material h3 {
+            color: #e2e6ea;
+        }
+        .card-material p { 
+            color:#444; 
+            line-height:1.6; 
+            transition: color 0.3s ease;
+        }
+        .dark-mode .card-material p {
+            color: #c9d0d6;
+        }
+        footer.bg-primary { background-color:#003366 !important; }
+
+        #payment-button-container .btn {
+            width: 100%;
+            margin-top: 15px;
+        }
+        .paypal-buttons-tagline { display: none !important; }
+
+        /* Prezzo dinamico in alto */
+        .price-display {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+            color: #343a40;
+            transition: color 0.3s ease;
+        }
+        .dark-mode .price-display {
+            color: #e2e6ea;
+        }
+        .price-tag {
+            background: linear-gradient(90deg, #0055aa, #003366);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <img src="assets/img/logo.png" alt="ClayRon Logo" class="preloader-logo">
+        <p class="loading-text">Caricamento...</p>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
+                aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNavHome">
+                <ul class="navbar-nav ml-auto" id="nav-links">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contatti</a></li>
+                    <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+                </ul>
+
+                <div id="auth-area">
+                </div>
+
+                <div class="nav-item dropdown ml-3">
+                    <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown">
+                        <i class="fas fa-bell"></i>
+                        <span id="notifCount" class="badge badge-danger position-absolute"
+                                style="top:0;right:0;font-size:.7rem;display:none">0</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" style="min-width:300px">
+                        <h6 class="dropdown-header">Notifiche</h6>
+                        <div id="notifList" style="max-height:300px;overflow-y:auto">
+                            <div class="dropdown-item text-muted">Nessuna Notifica</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="darkModeToggle" class="btn btn-outline-light ml-2" title="Modalità Scura">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-5 flex-fill">
+        <a href="materials.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> Torna ai Materiali
+        </a>
+        <h2 id="page-title" class="mb-4">Caricamento materiale...</h2>
+
+        <div class="price-display">
+            <span>Prezzo:</span>
+            <span class="price-tag" id="price-tag-value">Caricamento...</span>
+        </div>
+
+        <div class="card card-material mb-5">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img id="mat-img" src="assets/img/default-material.jpg" alt="Immagine Materiale">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h3 id="mat-title"></h3>
+                        <p id="mat-desc"></p>
+                        <div id="payment-button-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="materialNotFound" class="alert alert-danger" style="display:none;">
+            Materiale non trovato o errore nel caricamento.
+        </div>
+    </main>
+
+    <footer class="bg-primary text-white py-4 mt-auto">
+        <div class="container text-center">
+            <div class="social-icons mb-2">
+                <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
+            <small>
+                <a href="terms.html" class="text-white">Termini &amp; Condizioni</a> –
+                <a href="cookie.html" class="text-white">Cookie Policy</a>
+            </small>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Funzione per aggiornare la navbar con lo stato di autenticazione e notifiche
+        async function updateNavbar() {
+            const { data: { session } } = await supabase.auth.getSession();
+            const authArea = document.getElementById('auth-area');
+            const notifWrapper = document.getElementById('notifWrapper');
+
+            if (session) {
+                authArea.innerHTML = `
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            ${session.user.email}
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                            <h6 class="dropdown-header">Benvenuto, ${session.user.email}</h6>
+                            <a class="dropdown-item" href="area.html"><i class="fas fa-user-circle mr-2"></i> Area Personale</a>
+                            <a class="dropdown-item" href="settings.html"><i class="fas fa-cog mr-2"></i> Impostazioni</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const { error } = await supabase.auth.signOut();
+                    if (error) {
+                        console.error('Errore logout:', error.message);
+                    } else {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('userPlan');
+                        window.location.href = 'index.html';
+                    }
+                });
+
+                if (notifWrapper) notifWrapper.style.display = 'block';
+                await fetchNotifications(session.user.id);
+            } else {
+                authArea.innerHTML = `<a href="login.html" class="btn btn-outline-light">Accedi / Registrati</a>`;
+                if (notifWrapper) notifWrapper.style.display = 'none';
+            }
+        }
+
+        // Funzione per recuperare e visualizzare le notifiche (placeholder)
+        async function fetchNotifications(userId) {
+            const notifList = document.getElementById('notifList');
+            const notifCount = document.getElementById('notifCount');
+            if (!notifList || !notifCount) return;
+
+            notifList.innerHTML = '';
+
+            const { data, error } = await supabase
+                .from('notifications')
+                .select('*')
+                .eq('user_id', userId)
+                .order('created_at', { ascending: false })
+                .limit(5);
+
+            if (error) {
+                console.error('Errore nel recupero notifiche:', error);
+                notifList.innerHTML = '<div class="dropdown-item text-danger">Errore nel caricamento notifiche.</div>';
+                notifCount.style.display = 'none';
+                return;
+            }
+
+            if (data.length === 0) {
+                notifList.innerHTML = '<div class="dropdown-item text-muted">Nessuna Notifica</div>';
+                notifCount.style.display = 'none';
+            } else {
+                let unreadCount = 0;
+                data.forEach(notif => {
+                    const notifItem = document.createElement('a');
+                    notifItem.classList.add('dropdown-item');
+                    notifItem.href = notif.link || '#';
+                    notifItem.innerHTML = `<i class="${notif.icon || 'fas fa-info-circle'} mr-2"></i> ${notif.message}`;
+                    if (!notif.read) {
+                        notifItem.classList.add('font-weight-bold');
+                        notifItem.style.backgroundColor = '#e9ecef';
+                        unreadCount++;
+                    }
+                    notifList.appendChild(notifItem);
+                });
+                if (unreadCount > 0) {
+                    notifCount.textContent = unreadCount;
+                    notifCount.style.display = 'block';
+                } else {
+                    notifCount.style.display = 'none';
+                }
+            }
+        }
+
+        async function loadMaterialDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const materialId = urlParams.get('id');
+
+            if (!materialId) {
+                $('#materialNotFound').text('ID materiale non specificato nell\'URL. Torna alla pagina dei materiali.').show();
+                $('#page-title, .price-display, .card-material').hide();
+                return;
+            }
+
+            const { data: material, error: materialError } = await supabase
+                .from('materials')
+                .select('*')
+                .eq('id', materialId)
+                .single();
+
+            if (materialError || !material) {
+                console.error('Errore nel recupero del materiale:', materialError || 'Materiale non trovato');
+                $('#materialNotFound').text('Materiale non trovato o errore nel caricamento dei dati.').show();
+                $('#page-title, .price-display, .card-material').hide();
+                return;
+            }
+
+            document.title = material.title + ' – ClayRon';
+            $('#page-title').text(material.title);
+            $('#mat-title').text(material.title);
+            $('#mat-desc').text(material.description);
+            // L'URL dell'immagine è relativo alla root del sito, quindi non serve '../'
+            $('#mat-img').attr('src', material.image_url || 'assets/img/default-material.jpg'); 
+            $('#price-tag-value').text(`€${material.price.toFixed(2)}`);
+
+            const { data: { session } } = await supabase.auth.getSession();
+            await updateNavbar();
+
+            const paymentButtonContainer = $('#payment-button-container')[0];
+
+            if (!session) {
+                paymentButtonContainer.innerHTML = `
+                    <div class="alert alert-info text-center animate__animated animate__fadeIn mt-3" role="alert">
+                        Per scaricare questo materiale, devi prima <a href="login.html" class="alert-link">accedere</a> o <a href="register.html" class="alert-link">registrarti</a>.
+                    </div>
+                    <a href="login.html" class="btn btn-warning btn-lg btn-block mt-3">
+                        <i class="fas fa-sign-in-alt mr-2"></i> Accedi o Registrati
+                    </a>
+                `;
+                return;
+            }
+
+            const { data: purchaseData, error: purchaseError } = await supabase
+                .from('user_purchases')
+                .select('id')
+                .eq('user_id', session.user.id)
+                .eq('material_id', materialId);
+
+            if (purchaseError) {
+                console.error('Errore nella verifica dell\'acquisto:', purchaseError);
+                displayPaymentOptions(paymentButtonContainer, session, material.price, material.file_url, material.id, material.title, false);
+            } else {
+                const hasPurchased = purchaseData && purchaseData.length > 0;
+                displayPaymentOptions(paymentButtonContainer, session, material.price, material.file_url, material.id, material.title, hasPurchased);
+            }
+        }
+
+        async function displayPaymentOptions(container, session, price, fileUrl, materialId, materialTitle, hasPurchased) {
+            if (hasPurchased) {
+                container.innerHTML = `
+                    <a href="${fileUrl}" class="btn btn-success btn-lg btn-block animate__animated animate__pulse" id="downloadBtn">
+                        <i class="fas fa-download mr-2"></i> Scarica Materiale
+                    </a>
+                `;
+            } else if (price === 0) {
+                container.innerHTML = `
+                    <a href="${fileUrl}" class="btn btn-success btn-lg btn-block animate__animated animate__pulse" id="downloadBtn">
+                        <i class="fas fa-download mr-2"></i> Scarica Gratuitamente
+                    </a>
+                `;
+                $('#downloadBtn').on('click', async (e) => {
+                    e.preventDefault();
+                    const { error: insertError } = await supabase.from('user_purchases').insert([
+                        {
+                            user_id: session.user.id,
+                            material_id: materialId,
+                            price_paid: 0,
+                            purchase_date: new Date().toISOString()
+                        }
+                    ]);
+                    if (insertError) {
+                        console.error('Errore nel registrare il download gratuito:', insertError.message);
+                        alert('Errore nel processare il download. Riprova.');
+                    } else {
+                        window.location.href = fileUrl;
+                    }
+                });
+            } else {
+                // Materiale a pagamento e non acquistato: mostra pulsante PayPal
+                paypal.Buttons({
+                    style: { layout: 'vertical', color: 'blue', shape: 'rect', label: 'paypal' },
+                    createOrder: (data, actions) => actions.order.create({
+                        purchase_units: [{ amount: { value: price.toFixed(2) }, description: materialTitle }]
+                    }),
+                    onApprove: (data, actions) => actions.order.capture().then(async details => {
+                        if (details.status === 'COMPLETED') {
+                            const { error: insertError } = await supabase.from('user_purchases').insert([
+                                {
+                                    user_id: session.user.id,
+                                    material_id: materialId,
+                                    price_paid: price,
+                                    purchase_date: new Date().toISOString()
+                                }
+                            ]);
+
+                            if (insertError) {
+                                console.error('Errore nel registrare l\'acquisto:', insertError.message);
+                                alert('Pagamento completato, ma c\'è stato un problema nella registrazione dell\'acquisto. Contatta il supporto.');
+                            } else {
+                                alert('Pagamento completato! Il download è iniziato.');
+                                window.location.href = fileUrl;
+                            }
+                        } else {
+                            alert('Pagamento non completato.');
+                        }
+                    }),
+                    onError: err => {
+                        console.error("Errore con PayPal:", err);
+                        alert('Si è verificato un errore durante il processo di pagamento. Riprova più tardi.');
+                    }
+                }).render(container);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await updateNavbar();
+            await loadMaterialDetails();
+            
+            document.body.style.overflow = 'hidden';
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+                document.body.style.overflow = '';
+            }, 800);
+
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener('click', function() {
+                    document.body.classList.toggle('dark-mode');
+                    if (document.body.classList.contains('dark-mode')) {
+                        localStorage.setItem('darkMode', 'enabled');
+                        this.innerHTML = '<i class="fas fa-sun"></i>';
+                        this.title = 'Modalità Chiara';
+                    } else {
+                        localStorage.setItem('darkMode', 'disabled');
+                        this.innerHTML = '<i class="fas fa-moon"></i>';
+                        this.title = 'Modalità Scura';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

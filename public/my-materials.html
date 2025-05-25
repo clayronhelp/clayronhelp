@@ -1,330 +1,329 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>I miei materiali - ClayRon</title>
-  <link rel="icon" href="assets/img/logo.png">
-  
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&amp;display=swap" rel="stylesheet">
-  
-  <style>
-    /* GLOBAL CSS VARIABLES (Identiche alla pagina Impostazioni) */
-    :root {
-      --primary-color: #0055aa;
-      --primary-hover-color: #004085;
-      --primary-darker-color: #003366;
-      --secondary-color: #007bff;
-
-      --body-bg: #f8f9fa;
-      --body-color: #212529;
-      --card-bg: #ffffff;
-      --card-border-color: rgba(0,0,0,.08);
-      --card-shadow: 0 6px 18px rgba(0,0,0,.07);
-      --card-hover-shadow: 0 10px 25px rgba(0,0,0,.1);
-      --card-title-color: var(--primary-color);
-
-      --input-bg: #fff;
-      --input-border-color: #ced4da;
-      --input-focus-border-color: #80bdff;
-      --input-focus-box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-      --input-color: #495057;
-      --input-placeholder-color: #6c757d;
-
-      --link-color: var(--primary-color);
-      --link-hover-color: var(--primary-hover-color);
-
-      --text-muted-color: #6c757d;
-      --text-success-color: #28a745;
-      --text-danger-color: #dc3545;
-
-      --font-family-base: 'Montserrat', sans-serif;
-      --border-radius-base: .3rem;
-      --border-radius-card: .6rem;
-
-      --preloader-bg: linear-gradient(135deg, #0055aa, #003366);
-      --preloader-text-color: #fff;
-      --preloader-logo-shadow: 0 0 25px rgba(255,255,255,0.4);
-      --preloader-logo-bg: rgba(255,255,255,0.1);
-
-      --dm-toggle-bg: rgba(255, 255, 255, 0.15);
-      --dm-toggle-border: 1px solid rgba(255, 255, 255, 0.4);
-      --dm-toggle-color: white;
-      --dm-toggle-hover-bg: rgba(255, 255, 255, 0.25);
-      --dm-toggle-hover-border: 1px solid rgba(255, 255, 255, 0.6);
-
-      --navbar-bg: var(--primary-color);
-      --navbar-link-color: rgba(255,255,255,.85);
-      --navbar-link-hover-color: #fff;
-      --navbar-brand-color: #fff;
-
-      --footer-bg: var(--primary-darker-color);
-      --footer-text-color: #fff;
-      --footer-link-color: #b0d4ff;
-      
-      --primary-color-rgb: 0, 85, 170;
-      --dm-link-hover-color-rgb: 169, 201, 255; 
-    }
-
-    body.dark-mode {
-      --body-bg: #1a1d20;
-      --body-color: #e2e6ea;
-      --card-bg: #252a2e;
-      --card-border-color: rgba(255,255,255,.12);
-      --card-shadow: 0 6px 18px rgba(0,0,0,.25);
-      --card-hover-shadow: 0 10px 25px rgba(0,0,0,.3);
-      --card-title-color: #87b6ff;
-
-      --input-bg: #2c3238;
-      --input-border-color: #454c54;
-      --input-focus-border-color: #6c9eff;
-      --input-focus-box-shadow: 0 0 0 0.2rem rgba(108,158,255,.35);
-      --input-color: #e2e6ea;
-      --input-placeholder-color: #868e96;
-
-      --link-color: #87b6ff;
-      --link-hover-color: #a9c9ff;
-
-      --text-muted-color: #868e96;
-      --text-success-color: #34c354;
-      --text-danger-color: #ff4d4f;
-
-      --preloader-bg: linear-gradient(135deg, #1e2a3a, #101520);
-      --preloader-logo-shadow: 0 0 25px rgba(0,0,0,0.4);
-
-      --dm-toggle-bg: rgba(0, 0, 0, 0.15);
-      --dm-toggle-border: 1px solid rgba(0, 0, 0, 0.4);
-      --dm-toggle-color: var(--body-color);
-      --dm-toggle-hover-bg: rgba(0, 0, 0, 0.25);
-      --dm-toggle-hover-border: 1px solid rgba(0, 0, 0, 0.6);
-
-      --navbar-bg: #1c1f23;
-      --navbar-link-color: rgba(255,255,255,.7);
-      --navbar-link-hover-color: #fff;
-      --navbar-brand-color: #fff;
-
-      --footer-bg: #101214;
-      --footer-text-color: #adb5bd;
-      --footer-link-color: #87b6ff;
-    }
-
-    /* PRELOADER, DARK MODE TOGGLE, GENERAL, NAVBAR, CARD, FORMS, BUTTONS, ALERTS, FOOTER styles */
-    /* (Questi sono identici alla pagina Impostazioni per coerenza, li ometto qui per brevità ma sono inclusi nel file finale) */
-    #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--preloader-bg); z-index: 99999; display: flex; justify-content: center; align-items: center; flex-direction: column; overflow: hidden; transition: opacity 0.7s ease-out, visibility 0.7s ease-out; }
-    .preloader-logo { width: 100px; height: 100px; object-fit: contain; animation: pulseLogo 2s infinite ease-in-out; box-shadow: var(--preloader-logo-shadow); border-radius: 50%; background-color: var(--preloader-logo-bg); padding: 8px; margin-bottom: 20px; }
-    @keyframes pulseLogo { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
-    .loading-text { color: var(--preloader-text-color); font-size: 1.3rem; font-weight: 700; animation: subtleFade 2s ease-in-out infinite alternate; }
-    @keyframes subtleFade { 0% { opacity: 0.6; } 100% { opacity: 1; } }
-    #darkModeToggle { position: fixed; top: 15px; right: 15px; z-index: 1031; background-color: var(--dm-toggle-bg); border: var(--dm-toggle-border); border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; color: var(--dm-toggle-color); transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease; font-size: 1.2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    #darkModeToggle:hover { background-color: var(--dm-toggle-hover-bg); border-color: var(--dm-toggle-hover-border); transform: scale(1.1); }
-    html, body { height: 100%; margin: 0; overflow-x: hidden; }
-    body { font-family: var(--font-family-base); background-color: var(--body-bg); color: var(--body-color); display: flex; flex-direction: column; min-height: 100vh; transition: background-color 0.3s ease, color 0.3s ease; }
-    main { flex: 1; padding-top: 2.5rem; padding-bottom: 2.5rem; }
-    h2 { text-align: center; color: var(--body-color); margin-bottom: 2rem; font-weight: 700; }
-    .navbar { background-color: var(--navbar-bg) !important; transition: background-color 0.3s ease; }
-    .navbar-brand, .nav-link { color: var(--navbar-link-color) !important; transition: color 0.2s ease; }
-    .navbar-brand { font-weight: 700; color: var(--navbar-brand-color) !important; }
-    .navbar-brand .logo { height: 40px; margin-right: 10px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2)); }
-    .nav-link:hover, .nav-link:focus { color: var(--navbar-link-hover-color) !important; }
-    .navbar-toggler { border-color: rgba(255,255,255,0.2); }
-    .navbar-toggler-icon { filter: invert(1) brightness(2); }
-    .card { border-radius: var(--border-radius-card); border: 1px solid var(--card-border-color); background-color: var(--card-bg); color: var(--body-color); box-shadow: var(--card-shadow); transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease; }
-    .card:hover { transform: translateY(-5px); box-shadow: var(--card-hover-shadow); }
-    .card-title { font-weight: 700; color: var(--card-title-color); margin-bottom: 1.25rem; }
-    body.dark-mode .card { background-color: var(--card-bg) !important; border-color: var(--card-border-color) !important; color: var(--body-color) !important; }
-    body.dark-mode .card-title { color: var(--card-title-color) !important; }
-    .form-group label { font-weight: 500; color: var(--body-color); margin-bottom: .5rem; }
-    .form-control, .custom-select { border-radius: var(--border-radius-base); padding: 0.75rem 1rem; background-color: var(--input-bg); color: var(--input-color); border: 1px solid var(--input-border-color); transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out, background-color 0.3s ease, color 0.3s ease; }
-    .form-control:focus, .custom-select:focus { border-color: var(--input-focus-border-color); background-color: var(--input-bg); color: var(--input-color); box-shadow: var(--input-focus-box-shadow); }
-    .form-control::placeholder { color: var(--input-placeholder-color); opacity: 1; }
-    body.dark-mode .form-control, body.dark-mode .custom-select { background-color: var(--input-bg) !important; color: var(--input-color) !important; border-color: var(--input-border-color) !important; }
-    body.dark-mode .form-control::placeholder { color: var(--input-placeholder-color) !important; }
-    .btn-primary { border-radius: var(--border-radius-base); padding: 0.65rem 1.6rem; font-weight: 600; background-color: var(--primary-color); border-color: var(--primary-color); color: #fff; transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.15s ease-out, box-shadow 0.2s ease; }
-    .btn-primary:hover { background-color: var(--primary-hover-color); border-color: var(--primary-hover-color); color: #fff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 85, 170, 0.25); }
-    .btn-primary:focus, .btn-primary.focus { box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), .5); }
-    .btn-primary:active, .btn-primary.active { transform: translateY(0px); box-shadow: 0 2px 5px rgba(0, 85, 170, 0.2); }
-    .btn-primary:disabled, .btn-primary.disabled { background-color: var(--primary-color); border-color: var(--primary-color); opacity: 0.65; transform: translateY(0px); box-shadow: none; }
-    .alert { margin-top: 1rem; border-radius: var(--border-radius-base); font-size: 0.9rem; padding: 0.85rem 1.25rem; border-width: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-    .alert-danger { background-color: #f8d7da; color: #721c24; }
-    .alert-success { background-color: #d4edda; color: #155724; }
-    body.dark-mode .alert-danger { background-color: #4a2327 !important; color: #f8d7da !important; }
-    body.dark-mode .alert-success { background-color: #1e4e24 !important; color: #d4edda !important; }
-    footer { background-color: var(--footer-bg); padding: 2rem 1rem; color: var(--footer-text-color); transition: background-color 0.3s ease; }
-    footer .text-white a, footer a.text-white { color: var(--footer-link-color) !important; text-decoration: none; font-size: 0.9rem; transition: color 0.2s ease; }
-    footer .text-white a:hover, footer a.text-white:hover { color: #fff !important; text-decoration: underline; }
-    .social-icons a { font-size: 1.5rem; transition: transform 0.2s ease-out, color 0.2s ease; }
-    .social-icons a:hover { transform: scale(1.2); color: #fff !important; }
-    footer p { font-size: 0.95rem; margin-bottom: 0.5rem; }
-    footer small { display: block; font-size: 0.85rem; }
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>I miei materiali - ClayRon</title>
+    <link rel="icon" href="assets/img/logo.png">
     
-    /* NOTIFICATION BELL & DROPDOWN (identici alla pagina Impostazioni) */
-    #notifWrapper { display: flex; align-items: center; }
-    #notifBell { position: relative; background-color: transparent; border: none; color: var(--navbar-link-color); font-size: 1.3rem; padding: 0.5rem; cursor: pointer; transition: color 0.2s ease; }
-    #notifBell:hover { color: var(--navbar-link-hover-color); }
-    #notifCount { position: absolute; top: -2px; right: -2px; padding: 0.2em 0.55em; border-radius: 50%; background-color: var(--text-danger-color); color: white; font-size: 0.6rem; font-weight: bold; line-height: 1; box-shadow: 0 0 5px rgba(0,0,0,0.2); }
-    .dropdown-menu { max-height: 350px; overflow-y: auto; font-size: 0.9rem; border-radius: var(--border-radius-base); box-shadow: 0 5px 15px rgba(0,0,0,0.15); border: 1px solid var(--card-border-color); background-color: var(--card-bg); }
-    .dropdown-header { font-weight: 700; color: var(--card-title-color); padding: .75rem 1rem; }
-    .dropdown-item { padding: 0.7rem 1.2rem; white-space: normal; color: var(--body-color); transition: background-color 0.15s ease; }
-    .dropdown-item:hover, .dropdown-item:focus { background-color: rgba(var(--primary-color-rgb), 0.1); color: var(--link-hover-color); }
-    .dropdown-item.text-muted { color: var(--text-muted-color) !important; }
-    body.dark-mode .dropdown-menu { background-color: var(--card-bg); border-color: var(--card-border-color); }
-    body.dark-mode .dropdown-header { color: var(--card-title-color); }
-    body.dark-mode .dropdown-item { color: var(--body-color); }
-    body.dark-mode .dropdown-item:hover, body.dark-mode .dropdown-item:focus { background-color: rgba(var(--dm-link-hover-color-rgb), 0.15); color: var(--link-hover-color); }
-    body.dark-mode .dropdown-item.text-muted { color: var(--text-muted-color) !important; }
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&amp;display=swap" rel="stylesheet">
+    
+    <style>
+        /* GLOBAL CSS VARIABLES (Identiche alla pagina Impostazioni) */
+        :root {
+            --primary-color: #0055aa;
+            --primary-hover-color: #004085;
+            --primary-darker-color: #003366;
+            --secondary-color: #007bff;
 
-    /* Stili specifici per la lista dei materiali */
-    #myMaterials .list-group-item {
-        background-color: var(--card-bg);
-        border: 1px solid var(--card-border-color);
-        color: var(--body-color);
-        margin-bottom: 1rem; /* Spazio tra gli item */
-        border-radius: var(--border-radius-card); /* Usa lo stesso raggio delle card */
-        box-shadow: var(--card-shadow);
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease, border-color 0.3s ease;
-        padding: 1.25rem; /* Più padding interno */
-    }
-    #myMaterials .list-group-item:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--card-hover-shadow);
-    }
-    #myMaterials .list-group-item .material-info h5 { /* Titolo del materiale */
-        margin-bottom: 0.3rem; /* Meno spazio sotto il titolo del materiale */
-        color: var(--card-title-color);
-        font-size: 1.15rem; /* Dimensione titolo materiale */
-        font-weight: 600;
-    }
-     #myMaterials .list-group-item .material-info small {
-        font-size: 0.8rem;
-    }
-    #myMaterials .material-actions .btn {
-        font-size: 0.85rem; /* Bottoni leggermente più piccoli */
-        padding: 0.4rem 0.8rem;
-    }
-    #myMaterials .material-actions .btn i {
-        font-size: 0.8em; /* Icone più piccole nei bottoni */
-    }
-    #myMaterials .material-actions .btn-outline-primary {
-        border-color: var(--primary-color);
-        color: var(--primary-color);
-    }
-    #myMaterials .material-actions .btn-outline-primary:hover {
-        background-color: var(--primary-color);
-        color: #fff;
-    }
-    body.dark-mode #myMaterials .material-actions .btn-outline-primary {
-        border-color: var(--link-color);
-        color: var(--link-color);
-    }
-    body.dark-mode #myMaterials .material-actions .btn-outline-primary:hover {
-        background-color: var(--link-color);
-        color: var(--card-bg); 
-    }
-    #myMaterials .list-group-item.placeholder-item { /* Per messaggi di errore o nessun materiale */
-        text-align: center;
-        font-style: italic;
-        color: var(--text-muted-color);
-        padding: 2rem 1rem; /* Più padding per i placeholder */
-        box-shadow: none;
-    }
-     #myMaterials .list-group-item.placeholder-item:hover {
-        transform: none; /* Nessun effetto hover sui placeholder */
-    }
-    #materialsLoader {
-        color: var(--body-color); /* Colore testo loader */
-        padding: 2rem 0;
-    }
-    #materialsLoader .spinner-border {
-        width: 2.5rem; /* Spinner più grande */
-        height: 2.5rem;
-    }
+            --body-bg: #f8f9fa;
+            --body-color: #212529;
+            --card-bg: #ffffff;
+            --card-border-color: rgba(0,0,0,.08);
+            --card-shadow: 0 6px 18px rgba(0,0,0,.07);
+            --card-hover-shadow: 0 10px 25px rgba(0,0,0,.1);
+            --card-title-color: var(--primary-color);
 
-    /* MEDIA QUERIES (identiche alla pagina Impostazioni, omettendole qui ma presenti nel file finale) */
-    @media (max-width: 767.98px) {
-      .navbar-brand { font-size: 1.1rem; }
-      .navbar-nav { text-align: center; margin-top: 10px; }
-      .nav-item { margin-bottom: 8px; }
-      main { padding: 1.5rem 0.8rem; }
-      h2 { font-size: 1.6rem; }
-      .card { margin-bottom: 1.5rem !important; }
-      #myMaterials .list-group-item { flex-direction: column; align-items: flex-start !important;}
-      #myMaterials .material-info { margin-bottom: .75rem !important; }
-      #myMaterials .material-actions { text-align: left !important; width:100%;}
-      #myMaterials .material-actions .btn { margin-bottom: .5rem; width: auto;}
-      #myMaterials .material-actions .btn:last-child { margin-right: 0 !important; }
-      .btn-primary { width: 100%; padding: 0.75rem; font-size: 0.95rem; }
-      #darkModeToggle { top: 10px; right: 10px; width: 40px; height: 40px; font-size: 1.1rem; }
-    }
-    @media (max-width: 575.98px) {
-      h2 { font-size: 1.4rem; }
-      footer { padding: 1.5rem 1rem; }
-      footer p, footer small, footer .text-white a { font-size: 0.8rem; }
-      .social-icons a { font-size: 1.3rem; }
-    }
-  </style>
-  
-  <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
-  <script>
-    window.supabase = supabase.createClient(
-      'https://nptawehzfamaghytkmbk.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8'
-    );
-  </script>
-  <script src="assets/js/auth.js"></script> </head>
+            --input-bg: #fff;
+            --input-border-color: #ced4da;
+            --input-focus-border-color: #80bdff;
+            --input-focus-box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+            --input-color: #495057;
+            --input-placeholder-color: #6c757d;
+
+            --link-color: var(--primary-color);
+            --link-hover-color: var(--primary-hover-color);
+
+            --text-muted-color: #6c757d;
+            --text-success-color: #28a745;
+            --text-danger-color: #dc3545;
+
+            --font-family-base: 'Montserrat', sans-serif;
+            --border-radius-base: .3rem;
+            --border-radius-card: .6rem;
+
+            --preloader-bg: linear-gradient(135deg, #0055aa, #003366);
+            --preloader-text-color: #fff;
+            --preloader-logo-shadow: 0 0 25px rgba(255,255,255,0.4);
+            --preloader-logo-bg: rgba(255,255,255,0.1);
+
+            --dm-toggle-bg: rgba(255, 255, 255, 0.15);
+            --dm-toggle-border: 1px solid rgba(255, 255, 255, 0.4);
+            --dm-toggle-color: white;
+            --dm-toggle-hover-bg: rgba(255, 255, 255, 0.25);
+            --dm-toggle-hover-border: 1px solid rgba(255, 255, 255, 0.6);
+
+            --navbar-bg: var(--primary-color);
+            --navbar-link-color: rgba(255,255,255,.85);
+            --navbar-link-hover-color: #fff;
+            --navbar-brand-color: #fff;
+
+            --footer-bg: var(--primary-darker-color);
+            --footer-text-color: #fff;
+            --footer-link-color: #b0d4ff;
+            
+            --primary-color-rgb: 0, 85, 170;
+            --dm-link-hover-color-rgb: 169, 201, 255; 
+        }
+
+        body.dark-mode {
+            --body-bg: #1a1d20;
+            --body-color: #e2e6ea;
+            --card-bg: #252a2e;
+            --card-border-color: rgba(255,255,255,.12);
+            --card-shadow: 0 6px 18px rgba(0,0,0,.25);
+            --card-hover-shadow: 0 10px 25px rgba(0,0,0,.3);
+            --card-title-color: #87b6ff;
+
+            --input-bg: #2c3238;
+            --input-border-color: #454c54;
+            --input-focus-border-color: #6c9eff;
+            --input-focus-box-shadow: 0 0 0 0.2rem rgba(108,158,255,.35);
+            --input-color: #e2e6ea;
+            --input-placeholder-color: #868e96;
+
+            --link-color: #87b6ff;
+            --link-hover-color: #a9c9ff;
+
+            --text-muted-color: #868e96;
+            --text-success-color: #34c354;
+            --text-danger-color: #ff4d4f;
+
+            --preloader-bg: linear-gradient(135deg, #1e2a3a, #101520);
+            --preloader-logo-shadow: 0 0 25px rgba(0,0,0,0.4);
+
+            --dm-toggle-bg: rgba(0, 0, 0, 0.15);
+            --dm-toggle-border: 1px solid rgba(0, 0, 0, 0.4);
+            --dm-toggle-color: var(--body-color);
+            --dm-toggle-hover-bg: rgba(0, 0, 0, 0.25);
+            --dm-toggle-hover-border: 1px solid rgba(0, 0, 0, 0.6);
+
+            --navbar-bg: #1c1f23;
+            --navbar-link-color: rgba(255,255,255,.7);
+            --navbar-link-hover-color: #fff;
+            --navbar-brand-color: #fff;
+
+            --footer-bg: #101214;
+            --footer-text-color: #adb5bd;
+            --footer-link-color: #87b6ff;
+        }
+
+        /* PRELOADER, DARK MODE TOGGLE, GENERAL, NAVBAR, CARD, FORMS, BUTTONS, ALERTS, FOOTER styles */
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--preloader-bg); z-index: 99999; display: flex; justify-content: center; align-items: center; flex-direction: column; overflow: hidden; transition: opacity 0.7s ease-out, visibility 0.7s ease-out; }
+        .preloader-logo { width: 100px; height: 100px; object-fit: contain; animation: pulseLogo 2s infinite ease-in-out; box-shadow: var(--preloader-logo-shadow); border-radius: 50%; background-color: var(--preloader-logo-bg); padding: 8px; margin-bottom: 20px; }
+        @keyframes pulseLogo { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
+        .loading-text { color: var(--preloader-text-color); font-size: 1.3rem; font-weight: 700; animation: subtleFade 2s ease-in-out infinite alternate; }
+        @keyframes subtleFade { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+        #darkModeToggle { position: fixed; top: 15px; right: 15px; z-index: 1031; background-color: var(--dm-toggle-bg); border: var(--dm-toggle-border); border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; color: var(--dm-toggle-color); transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease; font-size: 1.2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        #darkModeToggle:hover { background-color: var(--dm-toggle-hover-bg); border-color: var(--dm-toggle-hover-border); transform: scale(1.1); }
+        html, body { height: 100%; margin: 0; overflow-x: hidden; }
+        body { font-family: var(--font-family-base); background-color: var(--body-bg); color: var(--body-color); display: flex; flex-direction: column; min-height: 100vh; transition: background-color 0.3s ease, color 0.3s ease; }
+        main { flex: 1; padding-top: 2.5rem; padding-bottom: 2.5rem; }
+        h2 { text-align: center; color: var(--body-color); margin-bottom: 2rem; font-weight: 700; }
+        .navbar { background-color: var(--navbar-bg) !important; transition: background-color 0.3s ease; }
+        .navbar-brand, .nav-link { color: var(--navbar-link-color) !important; transition: color 0.2s ease; }
+        .navbar-brand { font-weight: 700; color: var(--navbar-brand-color) !important; }
+        .navbar-brand .logo { height: 40px; margin-right: 10px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2)); }
+        .nav-link:hover, .nav-link:focus { color: var(--navbar-link-hover-color) !important; }
+        .navbar-toggler { border-color: rgba(255,255,255,0.2); }
+        .navbar-toggler-icon { filter: invert(1) brightness(2); }
+        .card { border-radius: var(--border-radius-card); border: 1px solid var(--card-border-color); background-color: var(--card-bg); color: var(--body-color); box-shadow: var(--card-shadow); transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease; }
+        .card:hover { transform: translateY(-5px); box-shadow: var(--card-hover-shadow); }
+        .card-title { font-weight: 700; color: var(--card-title-color); margin-bottom: 1.25rem; }
+        body.dark-mode .card { background-color: var(--card-bg) !important; border-color: var(--card-border-color) !important; color: var(--body-color) !important; }
+        body.dark-mode .card-title { color: var(--card-title-color) !important; }
+        .form-group label { font-weight: 500; color: var(--body-color); margin-bottom: .5rem; }
+        .form-control, .custom-select { border-radius: var(--border-radius-base); padding: 0.75rem 1rem; background-color: var(--input-bg); color: var(--input-color); border: 1px solid var(--input-border-color); transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out, background-color 0.3s ease, color 0.3s ease; }
+        .form-control:focus, .custom-select:focus { border-color: var(--input-focus-border-color); background-color: var(--input-bg); color: var(--input-color); box-shadow: var(--input-focus-box-shadow); }
+        .form-control::placeholder { color: var(--input-placeholder-color); opacity: 1; }
+        body.dark-mode .form-control, body.dark-mode .custom-select { background-color: var(--input-bg) !important; color: var(--input-color) !important; border-color: var(--input-border-color) !important; }
+        body.dark-mode .form-control::placeholder { color: var(--input-placeholder-color) !important; }
+        .btn-primary { border-radius: var(--border-radius-base); padding: 0.65rem 1.6rem; font-weight: 600; background-color: var(--primary-color); border-color: var(--primary-color); color: #fff; transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.15s ease-out, box-shadow 0.2s ease; }
+        .btn-primary:hover { background-color: var(--primary-hover-color); border-color: var(--primary-hover-color); color: #fff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 85, 170, 0.25); }
+        .btn-primary:focus, .btn-primary.focus { box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), .5); }
+        .btn-primary:active, .btn-primary.active { transform: translateY(0px); box-shadow: 0 2px 5px rgba(0, 85, 170, 0.2); }
+        .btn-primary:disabled, .btn-primary.disabled { background-color: var(--primary-color); border-color: var(--primary-color); opacity: 0.65; transform: translateY(0px); box-shadow: none; }
+        .alert { margin-top: 1rem; border-radius: var(--border-radius-base); font-size: 0.9rem; padding: 0.85rem 1.25rem; border-width: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .alert-danger { background-color: #f8d7da; color: #721c24; }
+        .alert-success { background-color: #d4edda; color: #155724; }
+        body.dark-mode .alert-danger { background-color: #4a2327 !important; color: #f8d7da !important; }
+        body.dark-mode .alert-success { background-color: #1e4e24 !important; color: #d4edda !important; }
+        footer { background-color: var(--footer-bg); padding: 2rem 1rem; color: var(--footer-text-color); transition: background-color 0.3s ease; }
+        footer .text-white a, footer a.text-white { color: var(--footer-link-color) !important; text-decoration: none; font-size: 0.9rem; transition: color 0.2s ease; }
+        footer .text-white a:hover, footer a.text-white:hover { color: #fff !important; text-decoration: underline; }
+        .social-icons a { font-size: 1.5rem; transition: transform 0.2s ease-out, color 0.2s ease; }
+        .social-icons a:hover { transform: scale(1.2); color: #fff !important; }
+        footer p { font-size: 0.95rem; margin-bottom: 0.5rem; }
+        footer small { display: block; font-size: 0.85rem; }
+        
+        /* NOTIFICATION BELL & DROPDOWN */
+        #notifWrapper { display: flex; align-items: center; }
+        #notifBell { position: relative; background-color: transparent; border: none; color: var(--navbar-link-color); font-size: 1.3rem; padding: 0.5rem; cursor: pointer; transition: color 0.2s ease; }
+        #notifBell:hover { color: var(--navbar-link-hover-color); }
+        #notifCount { position: absolute; top: -2px; right: -2px; padding: 0.2em 0.55em; border-radius: 50%; background-color: var(--text-danger-color); color: white; font-size: 0.6rem; font-weight: bold; line-height: 1; box-shadow: 0 0 5px rgba(0,0,0,0.2); }
+        .dropdown-menu { max-height: 350px; overflow-y: auto; font-size: 0.9rem; border-radius: var(--border-radius-base); box-shadow: 0 5px 15px rgba(0,0,0,0.15); border: 1px solid var(--card-border-color); background-color: var(--card-bg); }
+        .dropdown-header { font-weight: 700; color: var(--card-title-color); padding: .75rem 1rem; }
+        .dropdown-item { padding: 0.7rem 1.2rem; white-space: normal; color: var(--body-color); transition: background-color 0.15s ease; }
+        .dropdown-item:hover, .dropdown-item:focus { background-color: rgba(var(--primary-color-rgb), 0.1); color: var(--link-hover-color); }
+        .dropdown-item.text-muted { color: var(--text-muted-color) !important; }
+        body.dark-mode .dropdown-menu { background-color: var(--card-bg); border-color: var(--card-border-color); }
+        body.dark-mode .dropdown-header { color: var(--card-title-color); }
+        body.dark-mode .dropdown-item { color: var(--body-color); }
+        body.dark-mode .dropdown-item:hover, body.dark-mode .dropdown-item:focus { background-color: rgba(var(--dm-link-hover-color-rgb), 0.15); color: var(--link-hover-color); }
+        body.dark-mode .dropdown-item.text-muted { color: var(--text-muted-color) !important; }
+
+        /* Stili specifici per la lista dei materiali */
+        #myMaterials .list-group-item {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border-color);
+            color: var(--body-color);
+            margin-bottom: 1rem;
+            border-radius: var(--border-radius-card);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease, border-color 0.3s ease;
+            padding: 1.25rem;
+        }
+        #myMaterials .list-group-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--card-hover-shadow);
+        }
+        #myMaterials .list-group-item .material-info h5 {
+            margin-bottom: 0.3rem;
+            color: var(--card-title-color);
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+        #myMaterials .list-group-item .material-info small {
+            font-size: 0.8rem;
+        }
+        #myMaterials .material-actions .btn {
+            font-size: 0.85rem;
+            padding: 0.4rem 0.8rem;
+        }
+        #myMaterials .material-actions .btn i {
+            font-size: 0.8em;
+        }
+        #myMaterials .material-actions .btn-outline-primary {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        #myMaterials .material-actions .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        body.dark-mode #myMaterials .material-actions .btn-outline-primary {
+            border-color: var(--link-color);
+            color: var(--link-color);
+        }
+        body.dark-mode #myMaterials .material-actions .btn-outline-primary:hover {
+            background-color: var(--link-color);
+            color: var(--card-bg); 
+        }
+        #myMaterials .list-group-item.placeholder-item {
+            text-align: center;
+            font-style: italic;
+            color: var(--text-muted-color);
+            padding: 2rem 1rem;
+            box-shadow: none;
+        }
+        #myMaterials .list-group-item.placeholder-item:hover {
+            transform: none;
+        }
+        #materialsLoader {
+            color: var(--body-color);
+            padding: 2rem 0;
+        }
+        #materialsLoader .spinner-border {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        /* MEDIA QUERIES */
+        @media (max-width: 767.98px) {
+            .navbar-brand { font-size: 1.1rem; }
+            .navbar-nav { text-align: center; margin-top: 10px; }
+            .nav-item { margin-bottom: 8px; }
+            main { padding: 1.5rem 0.8rem; }
+            h2 { font-size: 1.6rem; }
+            .card { margin-bottom: 1.5rem !important; }
+            #myMaterials .list-group-item { flex-direction: column; align-items: flex-start !important;}
+            #myMaterials .material-info { margin-bottom: .75rem !important; }
+            #myMaterials .material-actions { text-align: left !important; width:100%;}
+            #myMaterials .material-actions .btn { margin-bottom: .5rem; width: auto;}
+            #myMaterials .material-actions .btn:last-child { margin-right: 0 !important; }
+            .btn-primary { width: 100%; padding: 0.75rem; font-size: 0.95rem; }
+            #darkModeToggle { top: 10px; right: 10px; width: 40px; height: 40px; font-size: 1.1rem; }
+        }
+        @media (max-width: 575.98px) {
+            h2 { font-size: 1.4rem; }
+            footer { padding: 1.5rem 1rem; }
+            footer p, footer small, footer .text-white a { font-size: 0.8rem; }
+            .social-icons a { font-size: 1.3rem; }
+        }
+    </style>
+    
+    <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
+    <script>
+        window.supabase = supabase.createClient(
+            'https://nptawehzfamaghytkmbk.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8'
+        );
+    </script>
+</head>
 <body class="d-flex flex-column min-vh-100">
 
 <div id="preloader">
-  <img src="assets/img/logo.png" alt="ClayRon Logo" class="preloader-logo">
-  <p class="loading-text">Caricamento...</p>
+    <img src="assets/img/logo.png" alt="ClayRon Logo" class="preloader-logo">
+    <p class="loading-text">Caricamento...</p>
 </div>
 
 <button id="darkModeToggle" class="btn btn-outline-light" title="Modalità Scura">
-  <i class="fas fa-moon"></i>
+    <i class="fas fa-moon"></i>
 </button>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
-      <a class="navbar-brand" href="index.html">
-        <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
-        aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarNavHome">
-        <ul class="navbar-nav ml-auto" id="nav-links">
-          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
-          <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
-          <li class="nav-item active"><a class="nav-link" href="contact.html">Contatti <span class="sr-only">(current)</span></a></li>
-          <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
-        </ul>
-
-        <div id="auth-area" class="ml-3"></div>
-
-        <div id="notifWrapper" class="nav-item dropdown ml-2">
-          <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown" title="Notifiche">
-            <i class="fas fa-bell"></i>
-            <span id="notifCount" class="badge badge-danger position-absolute" style="top:0; right:0; font-size:.7rem; display:none">0</span>
-          </button>
-          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notifBell" style="min-width:280px">
-            <h6 class="dropdown-header">Notifiche</h6>
-            <div id="notifList" style="max-height:300px; overflow-y:auto">
-              <div class="dropdown-item text-muted">Nessuna Notifica</div>
-            </div>
-          </div>
-        </div>
-        <button id="darkModeToggle" class="btn btn-outline-light ml-2" title="Modalità Scura">
-          <i class="fas fa-moon"></i>
+        <a class="navbar-brand" href="index.html">
+            <img src="assets/img/logo.png" alt="Logo" class="logo"> ClayRon S.P.A.
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavHome"
+            aria-controls="navbarNavHome" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
-      </div>
-    </div>
-  </nav>
 
-  <main class="container flex-fill py-5">
+        <div class="collapse navbar-collapse" id="navbarNavHome">
+            <ul class="navbar-nav ml-auto" id="nav-links">
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="materials.html">Materiali</a></li>
+                <li class="nav-item"><a class="nav-link" href="about.html">Chi Siamo</a></li>
+                <li class="nav-item active"><a class="nav-link" href="contact.html">Contatti <span class="sr-only">(current)</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+            </ul>
+
+            <div id="auth-area" class="ml-3"></div>
+
+            <div id="notifWrapper" class="nav-item dropdown ml-2">
+                <button id="notifBell" class="btn btn-outline-light position-relative" data-toggle="dropdown" title="Notifiche">
+                    <i class="fas fa-bell"></i>
+                    <span id="notifCount" class="badge badge-danger position-absolute" style="top:0; right:0; font-size:.7rem; display:none">0</span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notifBell" style="min-width:280px">
+                    <h6 class="dropdown-header">Notifiche</h6>
+                    <div id="notifList" style="max-height:300px; overflow-y:auto">
+                        <div class="dropdown-item text-muted">Nessuna Notifica</div>
+                    </div>
+                </div>
+            </div>
+            <button id="darkModeToggle" class="btn btn-outline-light ml-2" title="Modalità Scura">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<main class="container flex-fill py-5">
     <h2 class="mb-4 animate__animated animate__fadeInDown">I miei materiali scaricati</h2>
     <div id="materialsLoader" class="text-center py-4" style="display: none;">
         <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
@@ -333,29 +332,29 @@
         <p class="mt-2 mb-0">Caricamento materiali...</p>
     </div>
     <ul id="myMaterials" class="list-group mt-4 animate__animated animate__fadeInUp">
-        </ul>
-  </main>
+    </ul>
+</main>
 
 <footer class="py-4 text-white text-center">
-      <div class="container">
+    <div class="container">
         <div class="social-icons mb-3">
-          <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-          <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
         </div>
         <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
         <small>
-          <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
-          <a href="cookie.html" class="text-white">Cookie Policy</a>
+            <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
+            <a href="cookie.html" class="text-white">Cookie Policy</a>
         </small>
-      </div>
-    </footer>
+    </div>
+</footer>
 
- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
- <script>
-   document.addEventListener('DOMContentLoaded', async () => {
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
     // --- PRELOADER ---
     const preloader = document.getElementById('preloader');
     if (preloader) {
@@ -378,14 +377,14 @@
     }
     if (darkModeButton) {
         darkModeButton.addEventListener('click', function() {
-          document.body.classList.toggle('dark-mode');
-          localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
-          this.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-          updateDarkModeButtonTitle();
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
+            this.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            updateDarkModeButtonTitle();
         });
         if (localStorage.getItem('darkMode') === 'enabled') {
-          document.body.classList.add('dark-mode');
-          darkModeButton.innerHTML = '<i class="fas fa-sun"></i>';
+            document.body.classList.add('dark-mode');
+            darkModeButton.innerHTML = '<i class="fas fa-sun"></i>';
         } else {
             darkModeButton.innerHTML = '<i class="fas fa-moon"></i>';
         }
@@ -395,69 +394,50 @@
     // --- AUTH & NAVBAR ---
     const { data:{ session } } = await supabase.auth.getSession();
     if (!session) {
-        window.location.href='login.html'; // O la tua pagina di login
+        window.location.href='login.html'; // Reindirizza alla pagina di login se non loggato
         return;
     }
-    if (typeof updateNavbar === 'function') { // Verifica se updateNavbar è definita (da auth.js)
-        await updateNavbar();
-    } else {
-        console.warn('La funzione updateNavbar() non è definita. Assicurati che auth.js sia caricato correttamente.');
-    }
+    // Funzione updateNavbar (ricreata qui per questa pagina, se non la importi da un file comune)
+    async function updateNavbarForAreaPage() {
+        const authArea = document.getElementById('auth-area');
+        const notifWrapper = document.getElementById('notifWrapper');
 
+        if (session) {
+            authArea.innerHTML = `
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        ${session.user.email}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                        <h6 class="dropdown-header">Benvenuto, ${session.user.email}</h6>
+                        <a class="dropdown-item" href="area.html"><i class="fas fa-user-circle mr-2"></i> Area Personale</a>
+                        <a class="dropdown-item" href="settings.html"><i class="fas fa-cog mr-2"></i> Impostazioni</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
+                    </div>
+                </div>
+            `;
 
-    // --- CARICA MATERIALI SCARICATI ---
-    const ul = $('#myMaterials');
-    const loader = $('#materialsLoader');
-    
-    loader.show(); // Mostra lo spinner
-    ul.empty(); // Pulisci la lista precedente (se c'era)
+            document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+                e.preventDefault();
+                const { error } = await supabase.auth.signOut();
+                if (error) {
+                    console.error('Errore logout:', error.message);
+                } else {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('userPlan');
+                    window.location.href = 'index.html';
+                }
+            });
 
-    let { data: items, error } = await supabase
-      .from('downloaded_materials')
-      .select('title, link, page') // Assicurati che 'page' possa essere null nel DB
-      .eq('user_id', session.user.id)
-      .order('title', { ascending: true });
-
-    loader.hide(); // Nascondi lo spinner
-
-    if (error) {
-      ul.append('<li class="list-group-item placeholder-item text-danger">Errore durante il caricamento dei materiali. Riprova più tardi.</li>');
-      console.error('Errore caricamento materiali:', error);
-      return;
-    }
-
-    if (!items || items.length === 0) {
-      ul.append('<li class="list-group-item placeholder-item">Al momento non hai scaricato nessun materiale. Esplora il sito per trovarne!</li>');
-    } else {
-      items.forEach(item => {
-        let sourceHostname = '';
-        if (item.page && item.page.startsWith('http')) {
-            try {
-                sourceHostname = new URL(item.page).hostname;
-            } catch (e) {
-                console.warn('URL pagina non valido:', item.page);
-                sourceHostname = item.page; // Mostra l'URL com'è se non valido
-            }
-        } else if (item.page) {
-            sourceHostname = item.page; // Se non è un URL completo, mostralo così
+            if (notifWrapper) notifWrapper.style.display = 'block';
+            await fetchNotifications(session.user.id);
+        } else {
+            authArea.innerHTML = `<a href="login.html" class="btn btn-outline-light">Accedi / Registrati</a>`;
+            if (notifWrapper) notifWrapper.style.display = 'none';
         }
-
-        ul.append(`
-          <li class="list-group-item">
-            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start">
-              <div class="material-info mb-2 mb-sm-0 pr-sm-3">
-                <h5 class="mb-1">${item.title || 'Titolo non disponibile'}</h5>
-                ${sourceHostname ? `<small class="text-muted d-block">Sorgente: ${sourceHostname}</small>` : ''}
-              </div>
-              <div class="material-actions text-sm-right mt-2 mt-sm-0">
-                ${item.page ? `<a href="${item.page}" target="_blank" class="btn btn-sm btn-outline-primary mr-2" title="Visualizza pagina sorgente"><i class="fas fa-external-link-alt mr-1"></i>Visualizza</a>` : ''}
-                ${item.link ? `<a href="${item.link}" download class="btn btn-sm btn-success" title="Scarica materiale"><i class="fas fa-download mr-1"></i>Scarica</a>` : '<span class="text-muted">Link non disponibile</span>'}
-              </div>
-            </div>
-          </li>
-        `);
-      });
     }
+    await updateNavbarForAreaPage(); // Chiama la funzione per aggiornare la navbar
 
     // --- NOTIFICHE (come nella pagina Impostazioni) ---
     const bellCountEl = document.getElementById('notifCount');
@@ -466,7 +446,7 @@
 
     function addNotification(htmlContent, isNew = true) {
         if (isNew && totalNotifs === 0 && notifListEl.querySelector('.text-muted')) {
-             notifListEl.innerHTML = ''; 
+            notifListEl.innerHTML = ''; 
         }
         const div = document.createElement('div');
         div.className = 'dropdown-item';
@@ -480,14 +460,15 @@
         }
     }
     
+    // Recupero eventi (sezione esistente, adattata per questa pagina)
     const dom = new Date();
     dom.setDate(dom.getDate() + 1);
     const isoD = dom.toISOString().slice(0,10);
     let { data: evs, error: eventsError } = await supabase
-      .from('events')
-      .select('title')
-      .eq('user_id', session.user.id)
-      .eq('start', isoD);
+        .from('events') // Assicurati di avere una tabella 'events' e la relativa RLS
+        .select('title')
+        .eq('user_id', session.user.id)
+        .eq('start', isoD);
 
     if (eventsError) {
         console.error("Errore nel recupero degli eventi:", eventsError);
@@ -499,37 +480,99 @@
             evs.forEach(e =>
                 addNotification(`📅 Domani hai: <strong>${e.title}</strong>`)
             );
-        } else if (totalNotifs === 0) { // Mostra solo se non ci sono altre notifiche
+        } else if (totalNotifs === 0) {
             notifListEl.innerHTML = `<div class="dropdown-item text-muted">Nessuna Notifica</div>`;
         }
     }
 
+    // Listener per nuove notifiche (da messaggi, se 'messages' è una tua tabella di chat)
     supabase
-      .channel('notif-channel-materials') // Canale diverso per evitare conflitti se la logica è la stessa
-      .on('postgres_changes',{
-        event:'INSERT', schema:'public', table:'messages',
-        filter:`room=eq.generale` // Assumendo la chat 'generale' per le notifiche
-      }, ({ new: m }) => {
-        if (m.user_id !== session.user.id) { // Solo notifiche per messaggi non propri
-            addNotification(`💬 <strong>${m.user_name}</strong> ha scritto: "${m.content.slice(0,50)}${m.content.length > 50 ? '...' : ''}"`);
-        }
-      })
-      .subscribe();
+        .channel('notif-channel-area')
+        .on('postgres_changes',{
+            event:'INSERT', schema:'public', table:'messages',
+            filter:`room=eq.generale`
+        }, ({ new: m }) => {
+            if (m.user_id !== session.user.id) {
+                addNotification(`💬 <strong>${m.user_name}</strong> ha scritto: "${m.content.slice(0,50)}${m.content.length > 50 ? '...' : ''}"`);
+            }
+        })
+        .subscribe();
     
     if (document.getElementById('notifBell')) {
         document.getElementById('notifBell').addEventListener('click', () => {
             if (!$('#notifWrapper').hasClass('show')) { 
                 if (totalNotifs > 0) {
-                     setTimeout(() => {
+                    setTimeout(() => {
                         totalNotifs = 0;
                         bellCountEl.innerText = '0';
                         bellCountEl.style.display = 'none';
-                     }, 1500);
+                    }, 1500);
                 }
             }
         });
     }
-   });
- </script>
+
+    // --- CARICA MATERIALI SCARICATI/ACQUISTATI ---
+    const ul = $('#myMaterials');
+    const loader = $('#materialsLoader');
+    
+    loader.show();
+    ul.empty();
+
+    // Query per unire i dati degli acquisti dell'utente con i dettagli dei materiali
+    let { data: purchasedMaterials, error: purchaseError } = await supabase
+        .from('user_purchases')
+        .select(`
+            material_id,
+            materials (
+                title,
+                file_url,
+                is_premium,
+                price
+            )
+        `)
+        .eq('user_id', session.user.id)
+        .order('material_id', { ascending: true }); // Ordina per ID materiale
+
+    loader.hide();
+
+    if (purchaseError) {
+        ul.append('<li class="list-group-item placeholder-item text-danger">Errore durante il caricamento dei materiali. Riprova più tardi.</li>');
+        console.error('Errore caricamento materiali acquistati:', purchaseError);
+        return;
+    }
+
+    if (!purchasedMaterials || purchasedMaterials.length === 0) {
+        ul.append('<li class="list-group-item placeholder-item">Al momento non hai scaricato o acquistato nessun materiale. Esplora la sezione <a href="materials.html">Materiali</a> per trovarne!</li>');
+    } else {
+        purchasedMaterials.forEach(purchase => {
+            const material = purchase.materials; // Accedi ai dati del materiale collegati
+            if (!material) {
+                // Questo caso dovrebbe essere raro con RLS e FK, ma utile per robustezza
+                console.warn(`Dettagli materiale non trovati per ID: ${purchase.material_id}`);
+                return;
+            }
+
+            // Determina il testo del badge in base al prezzo
+            const priceBadgeText = material.is_premium ? `Acquistato (€${material.price.toFixed(2)})` : 'Gratuito';
+            
+            ul.append(`
+                <li class="list-group-item">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start">
+                        <div class="material-info mb-2 mb-sm-0 pr-sm-3">
+                            <h5 class="mb-1">${material.title || 'Titolo non disponibile'}</h5>
+                            <small class="text-muted d-block">Tipo: ${priceBadgeText}</small>
+                        </div>
+                        <div class="material-actions text-sm-right mt-2 mt-sm-0">
+                            <a href="${material.file_url}" download class="btn btn-sm btn-success" title="Scarica materiale"><i class="fas fa-download mr-1"></i>Scarica</a>
+                            <a href="material_details.html?id=${material.id}" class="btn btn-sm btn-outline-primary ml-2" title="Visualizza dettagli"><i class="fas fa-eye mr-1"></i>Dettagli</a>
+                        </div>
+                    </div>
+                </li>
+            `);
+        });
+    }
+});
+</script>
 </body>
 </html>
