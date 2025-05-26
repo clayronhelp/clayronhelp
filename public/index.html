@@ -274,7 +274,7 @@
         window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
     </script>
     <script src="assets/js/auth.js"></script>
-    <script src="https://www.paypal.com/sdk/js?client-id=AQRZuIiWMhmluXy4yrwyt0BN2jXErr-Yfzm0tcl2q8K9Ls0hHcXUart7VRiC--rUvmJg4VdZah8vWNmB&vault=true&intent=subscription&currency=EUR"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AUXXYae4wtA4I-J0YjuSgpaKYYmK6uTWX5UxEVQO95oaCyZRs9BTBzSB-L5Oa6q7O3vTQx10ge5QoZCZ&currency=EUR"></script>
 </head>
 <body>
 
@@ -444,7 +444,7 @@
                         </div>
                         <div class="card-footer text-center">
                             <div id="paypal-button-container-basic"></div>
-                            <a href="#" class="btn btn-success btn-block btn-action" data-plan="basic" data-price="4.99" style="display:none;">Passa a Basic</a>
+                            <a href="#" class="btn btn-success btn-block btn-action" data-plan="basic" data-price="4.99">Passa a Basic</a>
                         </div>
                     </div>
                 </div>
@@ -464,7 +464,7 @@
                         </div>
                         <div class="card-footer text-center">
                             <div id="paypal-button-container-standard"></div>
-                            <a href="#" class="btn btn-info btn-block btn-action" data-plan="standard" data-price="6.99" style="display:none;">Passa a Standard</a>
+                            <a href="#" class="btn btn-info btn-block btn-action" data-plan="standard" data-price="6.99">Passa a Standard</a>
                         </div>
                     </div>
                 </div>
@@ -486,7 +486,7 @@
                         </div>
                         <div class="card-footer text-center">
                             <div id="paypal-button-container-premium"></div>
-                            <a href="#" class="btn btn-warning btn-block btn-action" data-plan="premium" data-price="9.99" style="display:none;">Passa a Premium</a>
+                            <a href="#" class="btn btn-warning btn-block btn-action" data-plan="premium" data-price="9.99">Passa a Premium</a>
                         </div>
                     </div>
                 </div>
@@ -619,13 +619,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-
-
-
         AOS.init();
         
-        
-
         // Dark Mode Toggle
         document.getElementById('darkModeToggle').addEventListener('click', function() {
             document.body.classList.toggle('dark-mode');
@@ -694,67 +689,137 @@
         })
 
         document.addEventListener('DOMContentLoaded', async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  const authArea = document.getElementById('auth-area');
-  const notifWrapper = document.getElementById('notifWrapper'); // Assicurati che questo esista anche nelle altre pagine se lo usi
-  const loginPrompt = document.getElementById('loginPrompt'); // Questo è specifico per la pagina "contatti", potresti volerlo o meno altrove
+            const { data: { session } } = await supabase.auth.getSession();
+            const authArea = document.getElementById('auth-area');
+            const notifWrapper = document.getElementById('notifWrapper'); // Assicurati che questo esista anche nelle altre pagine se lo usi
+            const loginPrompt = document.getElementById('loginPrompt'); // Questo è specifico per la pagina "contatti", potresti volerlo o meno altrove
 
-  if (session) {
-    authArea.innerHTML = `
-      <div class="dropdown">
-        <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          ${session.user.email}
-        </button>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-          <h6 class="dropdown-header">Benvenuto, ${session.user.email}</h6>
-          <a class="dropdown-item" href="area.html"><i class="fas fa-user-circle mr-2"></i> Area Personale</a>
-          <a class="dropdown-item" href="settings.html"><i class="fas fa-cog mr-2"></i> Impostazioni</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
-        </div>
-      </div>
-    `;
+            if (session) {
+                authArea.innerHTML = `
+                  <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      ${session.user.email}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                      <h6 class="dropdown-header">Benvenuto, ${session.user.email}</h6>
+                      <a class="dropdown-item" href="area.html"><i class="fas fa-user-circle mr-2"></i> Area Personale</a>
+                      <a class="dropdown-item" href="settings.html"><i class="fas fa-cog mr-2"></i> Impostazioni</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
+                    </div>
+                  </div>
+                `;
 
-    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
-      e.preventDefault();
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error('Errore logout:', error.message);
-      } else {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userPlan');
-        window.location.href = 'index.html'; // Reindirizza dopo il logout
-      }
-    });
+                document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const { error } = await supabase.auth.signOut();
+                    if (error) {
+                        console.error('Errore logout:', error.message);
+                    } else {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('userPlan');
+                        window.location.href = 'index.html'; // Reindirizza dopo il logout
+                    }
+                });
 
-    // Se hai anche il sistema di notifiche e il "loginPrompt", dovrai adattare la logica
-    // Esempio per le notifiche, se presente anche nelle altre pagine:
-    // if (notifWrapper) {
-    //   notifWrapper.style.display = 'block'; // O il display originale
-    //   await fetchNotifications(session.user.id);
-    // }
-    // if (loginPrompt) {
-    //   loginPrompt.classList.add('d-none');
-    // }
-  } else {
-    // Se non loggato, mostra il pulsante di accesso
-    authArea.innerHTML = `<a href="login.html" class="btn btn-outline-light">Accedi / Registrati</a>`;
-    // Se hai il sistema di notifiche, nascondilo se l'utente non è loggato
-    if (notifWrapper) {
-      notifWrapper.style.display = 'none';
-    }
-    // Se hai il "loginPrompt", mostralo se l'utente non è loggato
-    // if (loginPrompt) {
-    //   loginPrompt.classList.remove('d-none');
-    //   $(contactForm).find(':input').prop('disabled', true); // Disabilita il form se specifico per la pagina
-    // }
-  }
+                // Se hai anche il sistema di notifiche e il "loginPrompt", dovrai adattare la logica
+                // Esempio per le notifiche, se presente anche nelle altre pagine:
+                // if (notifWrapper) {
+                //   notifWrapper.style.display = 'block'; // O il display originale
+                //   await fetchNotifications(session.user.id);
+                // }
+                // if (loginPrompt) {
+                //   loginPrompt.classList.add('d-none');
+                // }
+            } else {
+                // Se non loggato, mostra il pulsante di accesso
+                authArea.innerHTML = `<a href="login.html" class="btn btn-outline-light">Accedi / Registrati</a>`;
+                // Se hai il sistema di notifiche, nascondilo se l'utente non è loggato
+                if (notifWrapper) {
+                    notifWrapper.style.display = 'none';
+                }
+                // Se hai il "loginPrompt", mostralo se l'utente non è loggato
+                // if (loginPrompt) {
+                //   loginPrompt.classList.remove('d-none');
+                //   $(contactForm).find(':input').prop('disabled', true); // Disabilita il form se specifico per la pagina
+                // }
+            }
 
-  // La funzione fetchNotifications() è specifica per la pagina "contatti" e le notifiche.
-  // Se la vuoi anche in altre pagine, dovrai copiare anche quella e assicurarti che il div notifWrapper esista.
-  // async function fetchNotifications(userId) { /* ... codice della funzione ... */ }
-});
-        
+            // La funzione fetchNotifications() è specifica per la pagina "contatti" e le notifiche.
+            // Se la vuoi anche in altre pagine, dovrai copiare anche quella e assicurarti che il div notifWrapper esista.
+            // async function fetchNotifications(userId) { /* ... codice della funzione ... */ }
+        });
+
+        // --- Inizializzazione Pulsanti PayPal ---
+        // Funzione per creare un ordine PayPal
+        function createPayPalOrder(price) {
+            return paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: price
+                            }
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        alert('Transazione completata da ' + details.payer.name.given_name + '!');
+                        console.log('Dettagli transazione:', details);
+                        // QUI: Aggiungi la logica per aggiornare il piano dell'utente nel tuo database (es. Supabase)
+                        // Potresti voler chiamare una funzione lato server o direttamente Supabase qui.
+                        // Esempio (richiede una funzione Supabase Edge Function o un'API):
+                        // updateSubscriptionInSupabase(session.user.id, 'nome_piano_acquistato', details.id);
+                    });
+                },
+                onCancel: function (data) {
+                    console.log('Pagamento annullato dall\'utente:', data);
+                    alert('Pagamento annullato.');
+                },
+                onError: function (err) {
+                    console.error('Errore durante il pagamento PayPal:', err);
+                    alert('Si è verificato un errore durante il pagamento. Riprova.');
+                }
+            });
+        }
+
+        // Renderizza i pulsanti PayPal in base ai loro container
+        document.addEventListener('DOMContentLoaded', () => {
+            // Piano Basic
+            const basicButtonContainer = document.getElementById('paypal-button-container-basic');
+            if (basicButtonContainer) {
+                createPayPalOrder('4.99').render(basicButtonContainer);
+                // Nascondi il pulsante Bootstrap "Passa a Basic" una volta renderizzato PayPal
+                const basicBootstrapButton = basicButtonContainer.nextElementSibling;
+                if (basicBootstrapButton && basicBootstrapButton.getAttribute('data-plan') === 'basic') {
+                    basicBootstrapButton.style.display = 'none';
+                }
+            }
+
+            // Piano Standard
+            const standardButtonContainer = document.getElementById('paypal-button-container-standard');
+            if (standardButtonContainer) {
+                createPayPalOrder('6.99').render(standardButtonContainer);
+                // Nascondi il pulsante Bootstrap "Passa a Standard" una volta renderizzato PayPal
+                const standardBootstrapButton = standardButtonContainer.nextElementSibling;
+                if (standardBootstrapButton && standardBootstrapButton.getAttribute('data-plan') === 'standard') {
+                    standardBootstrapButton.style.display = 'none';
+                }
+            }
+
+            // Piano Premium
+            const premiumButtonContainer = document.getElementById('paypal-button-container-premium');
+            if (premiumButtonContainer) {
+                createPayPalOrder('9.99').render(premiumButtonContainer);
+                // Nascondi il pulsante Bootstrap "Passa a Premium" una volta renderizzato PayPal
+                const premiumBootstrapButton = premiumButtonContainer.nextElementSibling;
+                if (premiumBootstrapButton && premiumBootstrapButton.getAttribute('data-plan') === 'premium') {
+                    premiumBootstrapButton.style.display = 'none';
+                }
+            }
+        });
+
     </script>
 </body>
 </html>

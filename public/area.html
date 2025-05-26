@@ -10,7 +10,9 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"> <link rel="stylesheet" href="assets/css/style.css"> <style>
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
     /* PRELOADER STYLES */
     #preloader {
       position: fixed;
@@ -100,6 +102,74 @@
       background-color: #e2e6ea !important;
       color: #212529 !important;
     }
+    /* Stili per i Badge */
+    .badge-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        margin-top: 30px; /* Spazio sopra la card dei badge */
+    }
+    body.dark-mode .badge-card {
+        background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    .badge-card h3 {
+        margin-bottom: 20px;
+        font-weight: 700;
+        color: #0056b3; /* Blu ClayRon */
+    }
+    body.dark-mode .badge-card h3 {
+        color: #87b6ff; /* Blu chiaro per dark mode */
+    }
+    .badge-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 20px;
+    }
+    .badge-item {
+        text-align: center;
+        padding: 15px;
+        border-radius: 10px;
+        background-color: rgba(0, 123, 255, 0.05); /* Sfondo leggero per i badge */
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    body.dark-mode .badge-item {
+        background-color: rgba(255, 255, 255, 0.08);
+    }
+    .badge-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .badge-item i {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        color: #007bff; /* Icona blu */
+    }
+    .badge-item.locked i {
+        color: #adb5bd; /* Grigio per badge bloccati */
+    }
+    .badge-item h5 {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    .badge-item p {
+        font-size: 0.75rem;
+        color: #6c757d;
+        margin-bottom: 0;
+    }
+    body.dark-mode .badge-item p {
+        color: #adb5bd;
+    }
+    .badge-item.locked {
+        opacity: 0.6;
+        filter: grayscale(80%);
+    }
+    body.dark-mode .badge-item.locked i {
+        color: #495057;
+    }
+
 
     /* Layout base */
     body {
@@ -382,27 +452,40 @@
       </a>
     </div>
   </div>
+
+  <div class="badge-card mt-5" data-aos="fade-up" data-aos-delay="700">
+    <h3><i class="fas fa-trophy mr-2"></i>I Tuoi Badge</h3>
+    <div id="badgeGrid" class="badge-grid">
+      <div class="text-center w-100">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Caricamento badge...</span>
+        </div>
+        <p>Caricamento badge...</p>
+      </div>
+    </div>
+  </div>
 </main>
 
 <footer class="py-4 text-white text-center">
-      <div class="container">
-        <div class="social-icons mb-3">
-          <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-          <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
-        </div>
-        <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
-        <small>
-          <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
-          <a href="cookie.html" class="text-white">Cookie Policy</a>
-        </small>
+    <div class="container">
+      <div class="social-icons mb-3">
+        <a href="https://www.instagram.com/clayronhelp/" target="_blank" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=61575494257613" target="_blank" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.tiktok.com/@clayronhelp" target="_blank" class="text-white mx-2"><i class="fab fa-tiktok"></i></a>
       </div>
-    </footer>
+      <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
+      <small>
+        <a href="terms.html" class="text-white">Termini & Condizioni</a> –
+        <a href="cookie.html" class="text-white">Cookie Policy</a>
+      </small>
+    </div>
+  </footer>
 
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script> <script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
     // Inizializza AOS
     AOS.init({
       duration: 800,
@@ -477,6 +560,7 @@
 
         await fetchNotifications(session.user.id);
         await checkUserPlanAndLockCards(session.user.id); // Chiama la funzione per bloccare le card
+        await loadUserBadges(session.user.id); // Carica i badge dell'utente
 
       } else {
         authArea.innerHTML = `<a href="login.html" class="btn btn-outline-light">Accedi / Registrati</a>`;
@@ -486,6 +570,8 @@
           $(this).addClass('locked');
           $(this).find('.lock-overlay').removeClass('d-none');
         });
+        // Nascondi la sezione badge se l'utente non è loggato
+        document.querySelector('.badge-card').style.display = 'none';
       }
 
       async function fetchNotifications(userId) {
@@ -552,84 +638,78 @@
         $('.col-md-4[data-required-plan]').each(function() {
           const requiredPlan = $(this).data('required-plan');
 
-          // Per ora, solo 'premium' sblocca. Se 'userPlan' non è 'premium', blocca.
-          // Puoi espandere la logica per diversi piani (es. 'standard', 'premium', 'pro')
           if (requiredPlan === 'premium' && userPlan !== 'premium') {
             $(this).addClass('locked');
             $(this).find('.lock-overlay').removeClass('d-none');
-            // Disabilita il link per le card bloccate
             $(this).find('a').addClass('disabled-link');
           }
         });
 
-        // Gestione del link "Coming Soon" per essere non cliccabile
         $('a.disabled-link').on('click', function(e) {
           e.preventDefault();
         });
       }
-    });
 
-    document.addEventListener('DOMContentLoaded', async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  const authArea = document.getElementById('auth-area');
-  const notifWrapper = document.getElementById('notifWrapper'); // Assicurati che questo esista anche nelle altre pagine se lo usi
-  const loginPrompt = document.getElementById('loginPrompt'); // Questo è specifico per la pagina "contatti", potresti volerlo o meno altrove
+      // Funzione per caricare e visualizzare i badge
+      async function loadUserBadges(userId) {
+        const badgeGrid = document.getElementById('badgeGrid');
+        badgeGrid.innerHTML = ''; // Pulisci loader iniziale
 
-  if (session) {
-    authArea.innerHTML = `
-      <div class="dropdown">
-        <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          ${session.user.email}
-        </button>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-          <h6 class="dropdown-header">Benvenuto, ${session.user.email}</h6>
-          <a class="dropdown-item" href="area.html"><i class="fas fa-user-circle mr-2"></i> Area Personale</a>
-          <a class="dropdown-item" href="settings.html"><i class="fas fa-cog mr-2"></i> Impostazioni</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
-        </div>
-      </div>
-    `;
+        try {
+          // 1. Prendi tutti i badge disponibili
+          const { data: allBadges, error: allBadgesError } = await supabase
+            .from('badges')
+            .select('id, name, description, icon_class');
 
-    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
-      e.preventDefault();
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error('Errore logout:', error.message);
-      } else {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userPlan');
-        window.location.href = 'index.html'; // Reindirizza dopo il logout
+          if (allBadgesError) throw allBadgesError;
+          if (!allBadges || allBadges.length === 0) {
+            badgeGrid.innerHTML = '<p class="text-muted text-center w-100">Nessun badge configurato al momento.</p>';
+            return;
+          }
+
+          // 2. Prendi i badge sbloccati dall'utente
+          const { data: unlockedBadgesData, error: unlockedBadgesError } = await supabase
+            .from('user_unlocked_badges')
+            .select('badge_id')
+            .eq('user_id', userId);
+
+          if (unlockedBadgesError) throw unlockedBadgesError;
+
+          const unlockedBadgeIds = unlockedBadgesData ? unlockedBadgesData.map(ub => ub.badge_id) : [];
+
+          // 3. Visualizza i badge
+          allBadges.forEach(badge => {
+            const isUnlocked = unlockedBadgeIds.includes(badge.id);
+            const badgeElement = document.createElement('div');
+            badgeElement.classList.add('badge-item');
+            if (!isUnlocked) {
+              badgeElement.classList.add('locked');
+            }
+            badgeElement.innerHTML = `
+              <i class="${badge.icon_class || 'fas fa-question-circle'}"></i>
+              <h5>${badge.name}</h5>
+              <p>${badge.description || 'Sblocca questo badge!'}</p>
+            `;
+            badgeElement.title = isUnlocked ? `${badge.name}: ${badge.description}` : `Bloccato: ${badge.description}`;
+            badgeGrid.appendChild(badgeElement);
+          });
+
+        } catch (error) {
+          console.error('Errore caricamento badge:', error);
+          badgeGrid.innerHTML = '<p class="text-danger text-center w-100">Errore nel caricamento dei badge. Riprova più tardi.</p>';
+        }
       }
+
+
     });
 
-    // Se hai anche il sistema di notifiche e il "loginPrompt", dovrai adattare la logica
-    // Esempio per le notifiche, se presente anche nelle altre pagine:
-    // if (notifWrapper) {
-    //   notifWrapper.style.display = 'block'; // O il display originale
-    //   await fetchNotifications(session.user.id);
-    // }
-    // if (loginPrompt) {
-    //   loginPrompt.classList.add('d-none');
-    // }
-  } else {
-    // Se non loggato, mostra il pulsante di accesso
-    authArea.innerHTML = `<a href="login.html" class="btn btn-outline-light">Accedi / Registrati</a>`;
-    // Se hai il sistema di notifiche, nascondilo se l'utente non è loggato
-    if (notifWrapper) {
-      notifWrapper.style.display = 'none';
-    }
-    // Se hai il "loginPrompt", mostralo se l'utente non è loggato
-    // if (loginPrompt) {
-    //   loginPrompt.classList.remove('d-none');
-    //   $(contactForm).find(':input').prop('disabled', true); // Disabilita il form se specifico per la pagina
-    // }
-  }
-
-  // La funzione fetchNotifications() è specifica per la pagina "contatti" e le notifiche.
-  // Se la vuoi anche in altre pagine, dovrai copiare anche quella e assicurarti che il div notifWrapper esista.
-  // async function fetchNotifications(userId) { /* ... codice della funzione ... */ }
-});
+    // Duplicato event listener per auth, da consolidare se possibile
+    document.addEventListener('DOMContentLoaded', async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      const authArea = document.getElementById('auth-area');
+      // ... (il resto della logica di autenticazione è già presente sopra, questo blocco potrebbe essere ridondante o necessitare di un merge attento)
+      // Se questo blocco è inteso per pagine diverse da 'area.html', assicurati che gli ID HTML esistano.
+    });
   </script>
 </body>
 </html>

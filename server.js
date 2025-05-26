@@ -19,9 +19,9 @@ const EMAIL_PASS = 'xwtvukattljrwvgh';
 
 // — PayPal (Sandbox) —
 // Client ID usato nel front-end per i bottoni PayPal
-const PAYPAL_CLIENT_ID = 'Ad3Up0PLcvijOaaaI5_tLI49rILy1cPgJpB4k6XuDjiUOoi0QSv6ZK6nqEZihQ-xo6euC-1MhWnja_qt';
+const PAYPAL_CLIENT_ID = 'AUXXYae4wtA4I-J0YjuSgpaKYYmK6uTWX5UxEVQO95oaCyZRs9BTBzSB-L5Oa6q7O3vTQx10ge5QoZCZ';
 // Segreto di sandbox (sostituisci con il tuo, se ce l’hai)
-const PAYPAL_SECRET    = 'TUO_PAYPAL_SANDBOX_SECRET';
+const PAYPAL_SECRET    = 'ENOxU1kshuehStuZpaVbkl4iR8wyf4CDOc-LfcxmNe06mZKIefmhTpOF9m5XbuWnmQtHbGmf87U0C_Sy';
 // Usa sempre sandbox finché non sei in live
 const PAYPAL_MODE      = 'sandbox';
 
