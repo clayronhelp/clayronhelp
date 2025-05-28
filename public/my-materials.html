@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>I miei materiali - ClayRon</title>
   <link rel="icon" href="assets/img/logo.png">
-  
+
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
-  
+
   <style>
     /* GLOBAL CSS VARIABLES (Identiche alle pagine precedenti) */
     :root {
@@ -65,9 +65,9 @@
       --footer-bg: var(--primary-darker-color);
       --footer-text-color: #fff;
       --footer-link-color: #b0d4ff;
-      
+
       --primary-color-rgb: 0, 85, 170;
-      --dm-link-hover-color-rgb: 169, 201, 255; 
+      --dm-link-hover-color-rgb: 169, 201, 255;
     }
 
     body.dark-mode {
@@ -159,7 +159,7 @@
     .social-icons a:hover { transform: scale(1.2); color: #fff !important; }
     footer p { font-size: 0.95rem; margin-bottom: 0.5rem; }
     footer small { display: block; font-size: 0.85rem; }
-    
+
     #notifWrapper { display: flex; align-items: center; }
     #notifBell { position: relative; background-color: transparent; border: none; color: var(--navbar-link-color); font-size: 1.3rem; padding: 0.5rem; cursor: pointer; transition: color 0.2s ease; }
     #notifBell:hover { color: var(--navbar-link-hover-color); }
@@ -180,31 +180,31 @@
         background-color: var(--card-bg);
         border: 1px solid var(--card-border-color);
         color: var(--body-color);
-        margin-bottom: 1rem; 
-        border-radius: var(--border-radius-card); 
+        margin-bottom: 1rem;
+        border-radius: var(--border-radius-card);
         box-shadow: var(--card-shadow);
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease, border-color 0.3s ease;
-        padding: 1.25rem; 
+        padding: 1.25rem;
     }
     #myMaterials .list-group-item:hover {
         transform: translateY(-3px);
         box-shadow: var(--card-hover-shadow);
     }
-    #myMaterials .list-group-item .material-info h5 { 
-        margin-bottom: 0.3rem; 
+    #myMaterials .list-group-item .material-info h5 {
+        margin-bottom: 0.3rem;
         color: var(--card-title-color);
-        font-size: 1.15rem; 
+        font-size: 1.15rem;
         font-weight: 600;
     }
      #myMaterials .list-group-item .material-info small {
         font-size: 0.8rem;
     }
     #myMaterials .material-actions .btn {
-        font-size: 0.85rem; 
+        font-size: 0.85rem;
         padding: 0.4rem 0.8rem;
     }
     #myMaterials .material-actions .btn i {
-        font-size: 0.8em; 
+        font-size: 0.8em;
     }
     #myMaterials .material-actions .btn-outline-primary {
         border-color: var(--primary-color);
@@ -220,24 +220,24 @@
     }
     body.dark-mode #myMaterials .material-actions .btn-outline-primary:hover {
         background-color: var(--link-color);
-        color: var(--card-bg); 
+        color: var(--card-bg);
     }
-    #myMaterials .list-group-item.placeholder-item { 
+    #myMaterials .list-group-item.placeholder-item {
         text-align: center;
         font-style: italic;
         color: var(--text-muted-color);
-        padding: 2rem 1rem; 
+        padding: 2rem 1rem;
         box-shadow: none;
     }
      #myMaterials .list-group-item.placeholder-item:hover {
-        transform: none; 
+        transform: none;
     }
     #materialsLoader {
-        color: var(--body-color); 
+        color: var(--body-color);
         padding: 2rem 0;
     }
     #materialsLoader .spinner-border {
-        width: 2.5rem; 
+        width: 2.5rem;
         height: 2.5rem;
     }
 
@@ -262,7 +262,7 @@
       .social-icons a { font-size: 1.3rem; }
     }
   </style>
-  
+
   <script src="https://unpkg.com/@supabase/supabase-js/dist/umd/supabase.js"></script>
   <script>
     // Inizializzazione Supabase
@@ -272,7 +272,7 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdGF3ZWh6ZmFtYWdoeXRrbWJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NzAyMzEsImV4cCI6MjA2MTQ0NjIzMX0.FifPP4WNg7hDFucB_1gBuJQCG4993mBYiKbNyQjpAM8'
     );
   </script>
-  <script src="assets/js/auth.js"></script> 
+  <script src="assets/js/auth.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
@@ -304,7 +304,7 @@
         <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
       </ul>
 
-      <div id="auth-area" class="ml-lg-3"> 
+      <div id="auth-area" class="ml-lg-3">
         </div>
 
       <div id="notifWrapper" class="nav-item dropdown ml-lg-2">
@@ -344,7 +344,7 @@
       </div>
       <p>&copy; 2025 ClayRon S.P.A. Tutti i diritti riservati.</p>
       <small>
-        <a href="terms.html" class="text-white">Termini & Condizioni</a> – 
+        <a href="terms.html" class="text-white">Termini & Condizioni</a> –
         <a href="cookie.html" class="text-white">Cookie Policy</a>
       </small>
     </div>
@@ -363,14 +363,14 @@
     if (sessionError) {
         console.error('Errore nel recupero della sessione:', sessionError.message);
         // Potresti voler mostrare un messaggio di errore all'utente o reindirizzare.
-        window.location.href = 'login.html'; 
+        window.location.href = 'login.html';
         return;
     }
 
     if (!session) {
         // Se non c'è sessione, reindirizza alla pagina di login.
-        window.location.href = 'login.html'; 
-        return; 
+        window.location.href = 'login.html';
+        return;
     }
 
     // A questo punto, la sessione è valida e l'utente è autenticato.
@@ -399,7 +399,7 @@
     // --- DARK MODE ---
     const darkModeButton = document.getElementById('darkModeToggle');
     function updateDarkModeButtonTitle() {
-        if(darkModeButton){ 
+        if(darkModeButton){
             if (document.body.classList.contains('dark-mode')) {
                 darkModeButton.title = 'Modalità Chiara';
             } else {
@@ -426,7 +426,7 @@
 
     // --- NAVBAR UPDATE ---
     // La funzione updateNavbar() dovrebbe essere definita in auth.js
-    if (typeof updateNavbar === 'function') { 
+    if (typeof updateNavbar === 'function') {
         await updateNavbar();
     } else {
         console.warn('La funzione updateNavbar() non è definita. Assicurati che auth.js sia caricato correttamente.');
@@ -462,65 +462,79 @@
         }
     }
 
-
     // --- CARICA MATERIALI SCARICATI ---
     const ul = $('#myMaterials');
     const loader = $('#materialsLoader');
-    
-    // Controlla se gli elementi DOM esistono prima di manipolarli
-    if(ul.length && loader.length){ 
-        loader.show(); // Mostra il loader
-        ul.empty();   // Pulisci la lista esistente
 
-        // Esegui la query a Supabase per i materiali scaricati dall'utente corrente
-        const { data: items, error } = await supabase
-          .from('downloaded_materials')
-          .select('title, link, page') // Seleziona solo le colonne necessarie
-          .eq('user_id', userId)       // Filtra per l'ID utente autenticato
-          .order('title', { ascending: true }); // Ordina i risultati per titolo
+    if (ul.length && loader.length) {
+      loader.show(); // Mostra il loader
+      ul.empty();   // Pulisci la lista esistente
 
-        loader.hide(); // Nascondi il loader una volta che la query è completata
+      // 1. Recupera tutti i material_id unici dalla tabella user_purchases per l'utente corrente
+      const { data: purchases, error: purchasesError } = await supabase
+        .from('user_purchases')
+        .select('material_id')
+        .eq('user_id', userId);
 
-        if (error) {
-          // Gestione degli errori durante il recupero dei dati
-          ul.append('<li class="list-group-item placeholder-item text-danger">Errore durante il caricamento dei materiali. Riprova più tardi.</li>');
-          console.error('Errore caricamento materiali:', error); // Log dell'errore per debug
-        } else if (!items || items.length === 0) {
-          // Nessun materiale scaricato trovato per l'utente
-          ul.append('<li class="list-group-item placeholder-item">Al momento non hai scaricato nessun materiale. Esplora il sito per trovarne!</li>');
-        } else {
-          // Materiali trovati: iterare e aggiungerli alla lista
-          items.forEach(item => {
-            let sourceHostname = '';
-            if (item.page) {
-                try {
-                    // Tenta di creare un URL per estrarre l'hostname
-                    const url = new URL(item.page);
-                    sourceHostname = url.hostname;
-                } catch (e) {
-                    // Se l'URL non è valido, usa il valore di 'page' così com'è
-                    console.warn('URL pagina non valido per il materiale:', item.title, item.page, e);
-                    sourceHostname = item.page; 
-                }
-            }
+      if (purchasesError) {
+        console.error('Errore nel recupero degli acquisti utente:', purchasesError);
+        ul.append('<li class="list-group-item placeholder-item text-danger">Errore durante il caricamento dei tuoi acquisti. Riprova più tardi.</li>');
+        loader.hide();
+        return;
+      }
 
-            // Aggiungi l'elemento alla lista
-            ul.append(`
-              <li class="list-group-item" data-aos="fade-up" data-aos-delay="${items.indexOf(item) * 100}">
-                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start">
-                  <div class="material-info mb-2 mb-sm-0 pr-sm-3">
-                    <h5 class="mb-1">${item.title || 'Titolo non disponibile'}</h5>
-                    ${sourceHostname ? `<small class="text-muted d-block">Sorgente: ${sourceHostname}</small>` : ''}
-                  </div>
-                  <div class="material-actions text-sm-right mt-2 mt-sm-0">
-                    ${item.page ? `<a href="${item.page}" target="_blank" class="btn btn-sm btn-outline-primary mr-2" title="Visualizza pagina sorgente"><i class="fas fa-external-link-alt mr-1"></i>Visualizza</a>` : ''}
-                    ${item.link ? `<a href="${item.link}" download class="btn btn-sm btn-success" title="Scarica materiale"><i class="fas fa-download mr-1"></i>Scarica</a>` : '<span class="text-muted">Link non disponibile</span>'}
-                  </div>
+      if (!purchases || purchases.length === 0) {
+        ul.append('<li class="list-group-item placeholder-item">Al momento non hai scaricato o acquistato nessun materiale. Esplora il sito per trovarne!</li>');
+        loader.hide();
+        return;
+      }
+
+      // Estrai gli ID unici dei materiali
+      const uniqueMaterialIds = [...new Set(purchases.map(p => p.material_id))];
+
+      // 2. Recupera i dettagli di questi materiali dalla tabella 'materials'
+      const { data: materials, error: materialsError } = await supabase
+        .from('materials')
+        .select('id, title, file_url, subject') // Seleziona le colonne necessarie
+        .in('id', uniqueMaterialIds);
+
+      loader.hide(); // Nascondi il loader una volta che la query è completata
+
+      if (materialsError) {
+        console.error('Errore nel recupero dei dettagli dei materiali:', materialsError);
+        ul.append('<li class="list-group-item placeholder-item text-danger">Errore durante il caricamento dei dettagli dei materiali.</li>');
+        return;
+      }
+
+      if (!materials || materials.length === 0) {
+        ul.append('<li class="list-group-item placeholder-item">Nessun materiale corrispondente ai tuoi acquisti trovato.</li>');
+      } else {
+        // Materiali trovati: iterare e aggiungerli alla lista
+        materials.sort((a, b) => a.title.localeCompare(b.title)); // Ordina per titolo per consistenza
+        materials.forEach(material => {
+          // Costruisci il link alla pagina di dettaglio del materiale
+          const detailPageUrl = `material_details.html?id=${material.id}`;
+
+          ul.append(`
+            <li class="list-group-item" data-aos="fade-up" data-aos-delay="${materials.indexOf(material) * 100}">
+              <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start">
+                <div class="material-info mb-2 mb-sm-0 pr-sm-3">
+                  <h5 class="mb-1">${material.title || 'Titolo non disponibile'}</h5>
+                  ${material.subject ? `<small class="text-muted d-block">Materia: ${material.subject}</small>` : ''}
                 </div>
-              </li>
-            `);
-          });
-        }
+                <div class="material-actions text-sm-right mt-2 mt-sm-0">
+                  <a href="${detailPageUrl}" class="btn btn-sm btn-outline-primary mr-2" title="Visualizza dettagli">
+                    <i class="fas fa-eye mr-1"></i>Dettagli
+                  </a>
+                  ${material.file_url ? `<a href="${material.file_url}" download class="btn btn-sm btn-success" title="Scarica materiale">
+                    <i class="fas fa-download mr-1"></i>Scarica
+                  </a>` : '<span class="text-muted">Download non disponibile</span>'}
+                </div>
+              </div>
+            </li>
+          `);
+        });
+      }
     } else {
         console.error("Elementi #myMaterials o #materialsLoader non trovati nel DOM.");
     }
@@ -534,24 +548,24 @@
     function addNotification(htmlContent, isNew = true) {
         if (!notifListEl) {
             console.warn('Elemento notifList non trovato.');
-            return; 
+            return;
         }
         // Se è la prima notifica e c'è il placeholder "Nessuna Notifica", rimuovilo.
         if (isNew && totalNotifs === 0 && notifListEl.querySelector('.text-muted')) {
-             notifListEl.innerHTML = ''; 
+             notifListEl.innerHTML = '';
         }
         const div = document.createElement('div');
         div.className = 'dropdown-item';
         div.innerHTML = htmlContent;
         notifListEl.prepend(div); // Aggiunge la nuova notifica in cima
 
-        if (isNew && bellCountEl) { 
+        if (isNew && bellCountEl) {
             totalNotifs++;
             bellCountEl.innerText = totalNotifs > 9 ? '9+' : totalNotifs;
             bellCountEl.style.display = 'inline-block'; // Mostra il badge
         }
     }
-    
+
     // Recupero eventi per il giorno successivo
     const dom = new Date();
     dom.setDate(dom.getDate() + 1);
@@ -573,7 +587,7 @@
             evs.forEach(e =>
                 addNotification(`📅 Domani hai: <strong>${e.title}</strong>`)
             );
-        } else if (notifListEl && totalNotifs === 0) { 
+        } else if (notifListEl && totalNotifs === 0) {
             // Se non ci sono eventi e nessuna notifica precedente, mostra il placeholder
             notifListEl.innerHTML = `<div class="dropdown-item text-muted">Nessuna Notifica</div>`;
         }
@@ -581,18 +595,18 @@
 
     // Listener per i cambiamenti in tempo reale sui messaggi (chat)
     supabase
-      .channel('notif-channel-my-materials') 
+      .channel('notif-channel-my-materials')
       .on('postgres_changes',{
         event:'INSERT', schema:'public', table:'messages',
         filter:`room=eq.generale` // Ascolta solo i messaggi della stanza 'generale'
       }, ({ new: m }) => {
         // Aggiunge una notifica solo se il messaggio non è dell'utente corrente
-        if (m.user_id !== userId) { 
+        if (m.user_id !== userId) {
             addNotification(`💬 <strong>${m.user_name}</strong> ha scritto: "${m.content.slice(0,50)}${m.content.length > 50 ? '...' : ''}"`);
         }
       })
       .subscribe();
-    
+
     // Gestisce la visualizzazione del badge notifiche quando il dropdown si apre/chiude
     const notifBellButton = document.getElementById('notifBell');
     if (notifBellButton) {
